@@ -15,11 +15,13 @@
   --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
   --text:#e8eaf0;--muted:#7a7f94;
   --accent:#4f8ef7;--green:#2de8a4;--warn:#f7a94f;--danger:#f75f5f;
+  --violet:#a78bfa;--pink:#f472b6;--sky:#38bdf8;--amber:#fbbf24;
   --fh:'Syne',sans-serif;--fm:'DM Mono',monospace;
   --r:10px;--rl:16px;
 }
 body{background:var(--bg);color:var(--text);font-family:var(--fh);font-size:14px;line-height:1.6;min-height:100vh}
 
+/* ── TOPBAR ── */
 .topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:54px;position:sticky;top:0;z-index:100}
 .brand{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:700;letter-spacing:.03em}
 .topbar-right{display:flex;align-items:center;gap:8px}
@@ -27,15 +29,24 @@ body{background:var(--bg);color:var(--text);font-family:var(--fh);font-size:14px
 .spinner{width:13px;height:13px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 
+/* ── VIEW TABS ── */
+.view-tabs{display:flex;gap:2px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:3px}
+.vtab{background:transparent;border:none;color:var(--muted);font-family:var(--fh);font-size:12px;font-weight:600;padding:4px 12px;border-radius:6px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:5px}
+.vtab.active{background:var(--bg2);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.4)}
+.vtab:hover:not(.active){color:var(--text)}
+
+/* ── BTNs ── */
 .btn{background:transparent;border:1px solid var(--border2);color:var(--text);font-family:var(--fh);font-size:12px;font-weight:500;padding:5px 13px;border-radius:6px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:background .15s}
 .btn:hover{background:rgba(255,255,255,.06)}
 .btn-p{background:var(--accent);border-color:var(--accent);color:#fff}
 .btn-p:hover{background:#6aa1ff;border-color:#6aa1ff}
 .btn-g{background:var(--green);border-color:var(--green);color:#0d1a14}
 .btn-g:hover{opacity:.9}
+.btn-warn{background:var(--warn);border-color:var(--warn);color:#1a1200}
+.btn-warn:hover{opacity:.9}
 
+/* ── LAYOUT ── */
 .layout{display:flex;min-height:calc(100vh - 54px)}
-
 .sidebar{width:230px;flex-shrink:0;background:var(--bg2);border-right:1px solid var(--border);padding:1.25rem .9rem;display:flex;flex-direction:column;gap:1.1rem;overflow-y:auto}
 .slabel{font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-bottom:6px;display:block}
 .fi{width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:var(--fh);font-size:12px;padding:6px 9px;border-radius:6px;outline:none;appearance:none;-webkit-appearance:none;transition:border-color .15s}
@@ -50,10 +61,9 @@ body{background:var(--bg);color:var(--text);font-family:var(--fh);font-size:14px
 .range-row input[type=range]{flex:1;accent-color:var(--accent);cursor:pointer}
 .rval{min-width:22px;text-align:right;color:var(--accent)}
 hr.sdiv{border:none;border-top:1px solid var(--border)}
-
 .main{flex:1;overflow-y:auto;padding:1.25rem 1.5rem;display:flex;flex-direction:column;gap:1.1rem}
 
-/* CONNECT */
+/* ── CONNECT ── */
 .connect{background:var(--bg2);border:1px dashed var(--border2);border-radius:var(--rl);padding:1.75rem 2rem}
 .connect h2{font-size:17px;margin-bottom:5px}
 .connect p.sub{font-size:13px;color:var(--muted);margin-bottom:1.25rem}
@@ -61,23 +71,19 @@ hr.sdiv{border:none;border-top:1px solid var(--border)}
 .tab{background:transparent;border:none;color:var(--muted);font-family:var(--fh);font-size:13px;font-weight:500;padding:7px 14px 9px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .15s,border-color .15s}
 .tab.active{color:var(--accent);border-bottom-color:var(--accent)}
 .tab-panel{display:none}.tab-panel.active{display:block}
-
 .url-row{display:flex;gap:7px}
 .url-row input{flex:1;background:var(--bg3);border:1px solid var(--border2);color:var(--text);font-family:var(--fm);font-size:12px;padding:8px 11px;border-radius:6px;outline:none}
 .url-row input:focus{border-color:var(--accent)}
 .hint{font-size:11px;color:var(--muted);margin-top:9px;line-height:1.9}
 .hint code{background:var(--bg3);padding:1px 5px;border-radius:4px;font-family:var(--fm);font-size:11px}
-
-
 .paste-area{width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);font-family:var(--fm);font-size:11px;padding:9px;border-radius:6px;outline:none;resize:vertical;min-height:100px}
 .paste-area:focus{border-color:var(--accent)}
-
 .upload-zone{border:1px dashed var(--border2);border-radius:var(--r);padding:1.5rem;text-align:center;cursor:pointer;transition:border-color .15s}
 .upload-zone:hover{border-color:var(--accent)}
 .upload-zone input{display:none}
 .upload-zone p{font-size:13px;color:var(--muted);margin:0}
 
-/* METRICS */
+/* ── METRICS ── */
 .metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:9px}
 .mcard{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:13px 15px;position:relative;overflow:hidden}
 .mcard::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--accent)}
@@ -86,7 +92,7 @@ hr.sdiv{border:none;border-top:1px solid var(--border)}
 .mval{font-size:26px;font-weight:700;line-height:1;font-family:var(--fm)}
 .msub{font-size:11px;color:var(--muted);margin-top:3px}
 
-/* CHARTS */
+/* ── CHARTS ── */
 .cgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.1rem}
 .ccard{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:1.1rem 1.25rem}
 .ctitle{font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;margin-bottom:12px;display:flex;justify-content:space-between}
@@ -96,7 +102,7 @@ hr.sdiv{border:none;border-top:1px solid var(--border)}
 .li{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted)}
 .ld{width:8px;height:8px;border-radius:2px;flex-shrink:0}
 
-/* TABLE */
+/* ── TABLE ── */
 .tcard{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden}
 .thead2{padding:.9rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
 .ttitle{font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--muted);text-transform:uppercase}
@@ -116,6 +122,9 @@ tr:hover td{background:rgba(255,255,255,.025)}
 .bd{background:rgba(45,232,164,.15);color:#2de8a4}
 .bc{background:rgba(247,95,95,.15);color:#f75f5f}
 .bw{background:rgba(247,169,79,.15);color:#f7a94f}
+.bv{background:rgba(167,139,250,.15);color:#a78bfa}
+.bs{background:rgba(56,189,248,.15);color:#38bdf8}
+.bp{background:rgba(244,114,182,.15);color:#f472b6}
 .tfoot{padding:9px 1.25rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--muted);font-family:var(--fm);flex-wrap:wrap;gap:6px}
 .pgn{display:flex;gap:3px}
 .pb{background:var(--bg3);border:1px solid var(--border);color:var(--text);font-size:11px;font-family:var(--fm);padding:2px 8px;border-radius:4px;cursor:pointer}
@@ -126,13 +135,78 @@ tr:hover td{background:rgba(255,255,255,.025)}
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
 
-/* ── PRINT ───────────────────────────────────────────────────────────────── */
+/* ── KANBAN ── */
+#kanbanView{display:none}
+.kanban-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem}
+.kanban-header h3{font-size:13px;font-weight:700;letter-spacing:.06em;color:var(--muted);text-transform:uppercase}
+.kanban-wrap{display:flex;gap:10px;overflow-x:auto;padding-bottom:1rem;align-items:flex-start}
+.kanban-wrap::-webkit-scrollbar{height:5px}
+.kcol{background:var(--bg2);border:1px solid var(--border);border-radius:12px;min-width:210px;width:210px;flex-shrink:0;display:flex;flex-direction:column;max-height:calc(100vh - 200px)}
+.kcol-head{padding:10px 12px 8px;border-bottom:1px solid var(--border);flex-shrink:0}
+.kcol-title{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;display:flex;align-items:center;gap:7px}
+.kcol-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.kcol-count{margin-left:auto;background:var(--bg3);border:1px solid var(--border);border-radius:10px;font-size:10px;font-family:var(--fm);padding:1px 7px;color:var(--muted)}
+.kcol-body{padding:8px;display:flex;flex-direction:column;gap:6px;overflow-y:auto;flex:1;min-height:80px}
+.kcol-body.drag-over{background:rgba(79,142,247,.07);border-radius:8px}
+.kcard{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 11px;cursor:grab;transition:box-shadow .15s,transform .15s,opacity .15s;position:relative;user-select:none}
+.kcard:hover{box-shadow:0 4px 16px rgba(0,0,0,.4);transform:translateY(-1px);border-color:var(--border2)}
+.kcard.dragging{opacity:.35;cursor:grabbing;transform:scale(.97)}
+.kcard-ss{font-size:10px;font-family:var(--fm);color:var(--accent);font-weight:600;margin-bottom:4px}
+.kcard-sol{font-size:11px;font-weight:600;color:var(--text);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kcard-ed{font-size:10px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kcard-dias{font-size:10px;font-family:var(--fm);margin-top:6px;font-weight:600}
+.kcard-desc{font-size:10px;color:var(--muted);margin-top:4px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.45}
+
+/* ── LOG DRAWER ── */
+.log-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;display:none;backdrop-filter:blur(3px)}
+.log-overlay.open{display:flex;justify-content:flex-end}
+.log-drawer{width:440px;max-width:95vw;background:var(--bg2);border-left:1px solid var(--border);height:100%;display:flex;flex-direction:column;animation:slideIn .2s ease}
+@keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}}
+.log-head{padding:1.1rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.log-head h3{font-size:14px;font-weight:700}
+.log-close{background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;padding:2px 6px;border-radius:4px;line-height:1}
+.log-close:hover{background:var(--bg3);color:var(--text)}
+.log-filter{padding:.7rem 1.25rem;border-bottom:1px solid var(--border);flex-shrink:0}
+.log-filter input{width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:var(--fh);font-size:12px;padding:6px 9px;border-radius:6px;outline:none}
+.log-filter input:focus{border-color:var(--accent)}
+.log-body{flex:1;overflow-y:auto;padding:.75rem 1.25rem;display:flex;flex-direction:column;gap:8px}
+.log-empty{text-align:center;padding:2rem;color:var(--muted);font-size:13px}
+.log-entry{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;position:relative;border-left:3px solid var(--border)}
+.log-entry.moved{border-left-color:var(--accent)}
+.log-entry.edited{border-left-color:var(--warn)}
+.log-entry.created{border-left-color:var(--green)}
+.log-ts{font-size:10px;color:var(--muted);font-family:var(--fm);margin-bottom:5px}
+.log-ss{font-size:11px;font-weight:700;color:var(--accent);margin-bottom:4px}
+.log-action{font-size:12px;color:var(--text);line-height:1.5}
+.log-arrow{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap}
+.log-from{color:var(--muted);font-family:var(--fm);font-size:11px;padding:1px 6px;background:var(--bg2);border-radius:4px;border:1px solid var(--border)}
+.log-to{color:var(--text);font-family:var(--fm);font-size:11px;padding:1px 6px;background:rgba(79,142,247,.15);border-radius:4px;border:1px solid rgba(79,142,247,.3)}
+.log-foot{padding:.7rem 1.25rem;border-top:1px solid var(--border);display:flex;gap:7px;flex-shrink:0}
+.log-count{font-size:11px;color:var(--muted);font-family:var(--fm);display:flex;align-items:center}
+
+/* ── STATUS EDIT MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:300;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.modal-overlay.open{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:16px;padding:1.5rem;width:400px;max-width:94vw;animation:popIn .18s ease}
+@keyframes popIn{from{transform:scale(.92);opacity:0}to{transform:scale(1);opacity:1}}
+.modal h4{font-size:14px;font-weight:700;margin-bottom:4px}
+.modal-meta{font-size:11px;color:var(--muted);font-family:var(--fm);margin-bottom:1rem}
+.status-grid{display:flex;flex-direction:column;gap:6px;max-height:320px;overflow-y:auto}
+.sopt{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 13px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:all .12s}
+.sopt:hover{border-color:var(--border2);background:var(--bg2)}
+.sopt.selected{border-color:var(--accent);background:rgba(79,142,247,.1)}
+.sopt-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.sopt-label{font-size:12px;font-weight:600;color:var(--text)}
+.sopt-sub{font-size:10px;color:var(--muted);margin-left:auto;font-family:var(--fm)}
+.modal-actions{display:flex;gap:8px;margin-top:1rem;justify-content:flex-end}
+
+/* ── PRINT ── */
 #printTable{display:none}
 @media print{
   *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   @page{size:A4 landscape;margin:12mm 10mm}
   body{background:#fff!important;color:#111!important;font-family:Arial,sans-serif;font-size:10px}
-  .topbar,.sidebar,.connect,#dash .cgrid,#dash .metrics,.thead2 input,.tfoot,.pgn,.btn,#loadInd{display:none!important}
+  .topbar,.sidebar,.connect,#dash .cgrid,#dash .metrics,.thead2 input,.tfoot,.pgn,.btn,#loadInd,.view-tabs,#kanbanView,.log-overlay,.modal-overlay{display:none!important}
   .layout{display:block}
   .main{padding:0}
   #dash{display:block!important}
@@ -142,10 +216,6 @@ tr:hover td{background:rgba(255,255,255,.025)}
   #printTable td{padding:4px 7px;border:1px solid #ddd;color:#111!important;background:#fff!important;font-family:Arial,sans-serif;white-space:normal;word-break:break-word}
   #printTable tr:nth-child(even) td{background:#f7f7f7!important}
   #printTable .badge{padding:1px 5px;border-radius:3px;font-size:9px;font-weight:700}
-  #printTable .badge.bd{background:#d1fae5!important;color:#065f46!important}
-  #printTable .badge.bo{background:#dbeafe!important;color:#1e40af!important}
-  #printTable .badge.bc{background:#fee2e2!important;color:#991b1b!important}
-  #printTable .badge.bw{background:#fef3c7!important;color:#92400e!important}
   #printHeader{display:block!important;margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid #1a1e29}
   #printHeader h1{font-size:16px;margin-bottom:4px;color:#111}
   #printHeader .ph-meta{font-size:10px;color:#555;margin-bottom:6px}
@@ -154,7 +224,7 @@ tr:hover td{background:rgba(255,255,255,.025)}
   .twrap table{display:none}
 }
 
-/* ── MOBILE ──────────────────────────────────────────────────────────────── */
+/* ── MOBILE ── */
 @media(max-width:768px){
   .topbar{padding:0 .9rem;height:50px}
   .topbar .btn:not(#btnAtualizar){display:none}
@@ -174,6 +244,8 @@ tr:hover td{background:rgba(255,255,255,.025)}
   td,th{padding:6px 8px}
   .tfoot{padding:7px .9rem;font-size:10px}
   .pb{padding:2px 6px}
+  .kcol{min-width:175px;width:175px}
+  .log-drawer{width:100vw}
 }
 @media(max-width:480px){
   .metrics{grid-template-columns:repeat(2,1fr)}
@@ -186,6 +258,7 @@ tr:hover td{background:rgba(255,255,255,.025)}
 </head>
 <body>
 
+<!-- ═══════════════════════════ TOPBAR ═══════════════════════════ -->
 <div class="topbar">
   <div class="brand">
     <svg width="19" height="19" viewBox="0 0 20 20" fill="none"><rect x="1" y="1" width="7" height="7" rx="2" fill="#4f8ef7"/><rect x="12" y="1" width="7" height="7" rx="2" fill="#4f8ef7" opacity=".5"/><rect x="1" y="12" width="7" height="7" rx="2" fill="#4f8ef7" opacity=".5"/><rect x="12" y="12" width="7" height="7" rx="2" fill="#2de8a4"/></svg>
@@ -193,14 +266,19 @@ tr:hover td{background:rgba(255,255,255,.025)}
   </div>
   <div class="topbar-right">
     <div id="loadInd"><div class="spinner"></div>Carregando...</div>
-    <button class="btn" onclick="exportCSV()">⬇ Exportar CSV</button>
+    <div class="view-tabs" id="viewTabs" style="display:none">
+      <button class="vtab active" onclick="setView('dash',this)">📊 Dashboard</button>
+      <button class="vtab" onclick="setView('kanban',this)">🗂 Kanban</button>
+    </div>
+    <button class="btn" onclick="openLog()" id="btnLog" style="display:none" title="Ver histórico de edições">📋 Log <span id="logBadge" style="display:none;background:var(--warn);color:#000;border-radius:8px;font-size:10px;padding:1px 5px;margin-left:2px"></span></button>
+    <button class="btn" onclick="exportCSV()">⬇ CSV</button>
     <button class="btn" onclick="printDash()">🖨 Imprimir</button>
     <button class="btn" id="btnAtualizar" onclick="autoLoad()">⟳ Atualizar</button>
-    
   </div>
 </div>
 
 <div class="layout">
+  <!-- ═══════════════ SIDEBAR ═══════════════ -->
   <aside class="sidebar" id="sidebar" style="display:none">
     <div><span class="slabel">Busca livre</span><input class="fi" type="text" id="fSearch" placeholder="Solicitante, sala, serviço..." oninput="apply()"></div>
     <div><span class="slabel">Período de abertura</span><div class="date-row"><input class="fi" type="date" id="fDf" onchange="apply()"><input class="fi" type="date" id="fDt" onchange="apply()"></div></div>
@@ -216,7 +294,10 @@ tr:hover td{background:rgba(255,255,255,.025)}
     <button class="btn" style="width:100%;justify-content:center" onclick="reset()">✕ Limpar filtros</button>
   </aside>
 
+  <!-- ═══════════════ MAIN ═══════════════ -->
   <main class="main">
+
+    <!-- CONNECT PANEL -->
     <div class="connect" id="cp" style="display:none">
       <h2>Conectar dados</h2>
       <p class="sub">Escolha como quer carregar sua planilha</p>
@@ -226,7 +307,6 @@ tr:hover td{background:rgba(255,255,255,.025)}
         <button class="tab" onclick="switchTab('t3',this)">📁 Upload arquivo</button>
         <button class="tab" onclick="switchTab('t4',this)">▶ Demo</button>
       </div>
-
       <div class="tab-panel active" id="t1">
         <div style="background:rgba(45,232,164,.08);border:1px solid rgba(45,232,164,.3);border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:12px;color:var(--green);line-height:1.9">
           🔒 <strong>Modo seguro:</strong> sua planilha permanece <strong>privada</strong>. Só o script expõe os dados — e apenas para quem tiver esta URL.
@@ -236,46 +316,41 @@ tr:hover td{background:rgba(255,255,255,.025)}
           <button class="btn btn-p" onclick="loadScript()">Conectar</button>
           <button class="btn" id="btnRefresh" style="display:none" onclick="refreshScript()">⟳ Atualizar</button>
         </div>
-        <div id="scriptErr" style="color:var(--danger);font-size:12px;margin-top:7px;display:none">❌ Não foi possível carregar. Verifique se a URL está correta e se o acesso está como "Qualquer pessoa".</div>
-        <div id="scriptOk" style="color:var(--green);font-size:12px;margin-top:7px;display:none">✔ Conectado! <span id="scriptInfo" style="color:var(--muted)"></span></div>
+        <div id="scriptErr" style="color:var(--danger);font-size:12px;margin-top:7px;display:none">❌ Não foi possível carregar.</div>
+        <div id="scriptOk" style="color:var(--green);font-size:12px;margin-top:7px;display:none">✔ Conectado!</div>
         <p class="hint">
           <strong>Como configurar o Apps Script:</strong><br>
-          1. Na planilha: <code>Extensões → Apps Script</code> → cole o script fornecido e salve<br>
+          1. Na planilha: <code>Extensões → Apps Script</code> → cole o script e salve<br>
           2. <code>Implantar → Nova implantação → App da Web</code><br>
           3. Executar como: <strong>Eu</strong> · Acesso: <strong>Qualquer pessoa</strong> → Implantar<br>
-          4. Autorize e copie a URL gerada → cole acima e clique Conectar<br>
-          <span style="color:var(--green)">✔</span> A planilha fica <strong>privada</strong> — ninguém acessa sem esta URL<br>
-          <span style="color:var(--accent)">ℹ</span> URL começa com <code>https://script.google.com/macros/s/</code>
+          4. Copie a URL gerada → cole acima e clique Conectar
         </p>
       </div>
-
       <div class="tab-panel" id="t2">
-        <p style="font-size:12px;color:var(--muted);margin-bottom:8px">No Google Sheets: <strong>Arquivo → Fazer download → Valores separados por vírgula (.csv)</strong><br>Abra o arquivo com o Bloco de Notas, selecione tudo (Ctrl+A), copie e cole abaixo:</p>
-        <textarea class="paste-area" id="csvPaste" placeholder="Cole o conteúdo CSV aqui...&#10;DATA,Solicitante,Edificação,..."></textarea>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:8px">No Google Sheets: <strong>Arquivo → Fazer download → CSV</strong><br>Abra com Bloco de Notas, Ctrl+A, copie e cole abaixo:</p>
+        <textarea class="paste-area" id="csvPaste" placeholder="Cole o conteúdo CSV aqui..."></textarea>
         <button class="btn btn-g" style="margin-top:9px" onclick="loadPaste()">Processar CSV colado</button>
       </div>
-
       <div class="tab-panel" id="t3">
         <div class="upload-zone" onclick="document.getElementById('fileIn').click()">
           <input type="file" id="fileIn" accept=".csv,.tsv" onchange="loadFile(this)">
-          <p>Clique aqui ou arraste o arquivo <strong>.csv</strong> baixado do Google Sheets</p>
-          <p style="margin-top:6px;font-size:11px">Arquivo → Fazer download → CSV</p>
+          <p>Clique aqui ou arraste o arquivo <strong>.csv</strong></p>
         </div>
       </div>
-
       <div class="tab-panel" id="t4">
-        <p style="font-size:13px;color:var(--muted);margin-bottom:12px">Carrega dados de exemplo para explorar o dashboard sem precisar de uma planilha.</p>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:12px">Carrega dados de exemplo para explorar o dashboard.</p>
         <button class="btn btn-g" onclick="loadDemo()">▶ Carregar dados de exemplo</button>
       </div>
     </div>
 
+    <!-- DASHBOARD VIEW -->
     <div id="dash" style="display:none">
       <div class="metrics" id="mrow"></div>
       <div class="cgrid">
-        <div class="ccard"><div class="ctitle">OS por edificação <span class="ccnt" id="cntE"></span></div><div class="cwrap" style="height:210px"><canvas id="cEdif" role="img" aria-label="OS por edificação"></canvas></div></div>
-        <div class="ccard"><div class="ctitle">Status <span class="ccnt" id="cntS"></span></div><div class="legend" id="legS"></div><div class="cwrap" style="height:170px"><canvas id="cSt" role="img" aria-label="Status das OS"></canvas></div></div>
-        <div class="ccard"><div class="ctitle">Tipo de OS <span class="ccnt" id="cntT"></span></div><div class="cwrap" id="wTp" style="height:190px"><canvas id="cTp" role="img" aria-label="Tipos de OS"></canvas></div></div>
-        <div class="ccard"><div class="ctitle">Abertura por mês <span class="ccnt" id="cntP"></span></div><div class="cwrap" style="height:190px"><canvas id="cPr" role="img" aria-label="OS por período"></canvas></div></div>
+        <div class="ccard"><div class="ctitle">OS por edificação <span class="ccnt" id="cntE"></span></div><div class="cwrap" style="height:210px"><canvas id="cEdif"></canvas></div></div>
+        <div class="ccard"><div class="ctitle">Status <span class="ccnt" id="cntS"></span></div><div class="legend" id="legS"></div><div class="cwrap" style="height:170px"><canvas id="cSt"></canvas></div></div>
+        <div class="ccard"><div class="ctitle">Tipo de OS <span class="ccnt" id="cntT"></span></div><div class="cwrap" id="wTp" style="height:190px"><canvas id="cTp"></canvas></div></div>
+        <div class="ccard"><div class="ctitle">Abertura por mês <span class="ccnt" id="cntP"></span></div><div class="cwrap" style="height:190px"><canvas id="cPr"></canvas></div></div>
       </div>
       <div class="tcard">
         <div class="thead2">
@@ -294,143 +369,272 @@ tr:hover td{background:rgba(255,255,255,.025)}
           <th onclick="sortBy('dias')">Dias s/ atend. <span class="si" id="sdias">↕</span></th>
           <th onclick="sortBy('status')">Status <span class="si" id="sstatus">↕</span></th>
           <th>Conclusão</th>
-          
         </tr></thead><tbody id="tb"></tbody></table>
         <div class="nodata" id="nd" style="display:none">Nenhum registro encontrado</div>
         <table id="printTable" style="display:none"></table></div>
         <div class="tfoot"><span id="tInfo">—</span><div class="pgn" id="pgn"></div></div>
       </div>
     </div>
+
+    <!-- KANBAN VIEW -->
+    <div id="kanbanView">
+      <div class="kanban-header">
+        <h3>Quadro Kanban — arraste para mover entre status</h3>
+        <span style="font-size:11px;color:var(--muted);font-family:var(--fm)" id="kanbanInfo"></span>
+      </div>
+      <div class="kanban-wrap" id="kanbanWrap"></div>
+    </div>
+
   </main>
 </div>
 
+<!-- ═══════════════ LOG DRAWER ═══════════════ -->
+<div class="log-overlay" id="logOverlay" onclick="if(event.target===this)closeLog()">
+  <div class="log-drawer">
+    <div class="log-head">
+      <h3>📋 Histórico de Edições</h3>
+      <button class="log-close" onclick="closeLog()">✕</button>
+    </div>
+    <div class="log-filter"><input type="text" id="logSearch" placeholder="Filtrar por SS, status..." oninput="renderLog()"></div>
+    <div class="log-body" id="logBody"></div>
+    <div class="log-foot">
+      <span class="log-count" id="logCount">0 registros</span>
+      <div style="flex:1"></div>
+      <button class="btn" onclick="exportLog()">⬇ Exportar log</button>
+      <button class="btn" style="color:var(--danger);border-color:rgba(247,95,95,.3)" onclick="clearLog()">🗑 Limpar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ STATUS MODAL ═══════════════ -->
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <h4 id="modalTitle">Alterar Status</h4>
+    <div class="modal-meta" id="modalMeta"></div>
+    <div class="status-grid" id="statusGrid"></div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-p" onclick="confirmStatusChange()">Confirmar</button>
+    </div>
+  </div>
+</div>
+
 <script>
+// ═══════════════════════════════════════════════════════════════
+//  CONSTANTS & STATE
+// ═══════════════════════════════════════════════════════════════
 let ALL=[],FIL=[],charts={},sortF='data',sortD=-1,lastSort='data',pg=0;
 const PS=20;
+const LOG_KEY='os_dashboard_log_v2';
+const STATUS_OVERRIDES_KEY='os_status_overrides_v1';
 
-function gf(r,...ks){for(const k of ks){for(const rk of Object.keys(r)){if(rk.trim().toLowerCase()===k.toLowerCase())return(r[rk]||'').trim()}}return''}
+// Status definitions (kanban columns)
+// Coluna U da planilha deve conter um desses códigos/textos.
+// Valores não reconhecidos → fallback '02'
+const KANBAN_STATUSES=[
+  {code:'00',label:'Em análise pela CMPE',color:'#a78bfa',cls:'bv'},
+  {code:'01',label:'Solicitação indeferida',color:'#f75f5f',cls:'bc'},
+  {code:'02',label:'Aguardando empresa',color:'#f7a94f',cls:'bw'},
+  {code:'03',label:'Em execução',color:'#38bdf8',cls:'bs'},
+  {code:'04',label:'Em aquisição',color:'#fbbf24',cls:'bw'},
+  {code:'05',label:'Finalizada / Concluída',color:'#2de8a4',cls:'bd'},
+  {code:'06',label:'Em espera (orçamento)',color:'#f472b6',cls:'bp'},
+];
 
-function getSit(r){
-  const ss=gf(r,'SS');
-  if(/CANCELADA/i.test(ss))return'Cancelada';
-  if(gf(r,'Data da Conclusão da OS','Data da Conclusao da OS'))return'Concluída';
-  const d=parseInt(gf(r,'DIAS DA DEMANDA SEM ATENDIMENTO'))||0;
-  return d>0?'Em aberto':'Aguardando';
+// Aliases: valores que a planilha pode ter na coluna Status → código kanban
+const STATUS_ALIASES={
+  // código direto
+  '00':'00','01':'01','02':'02','03':'03','04':'04','05':'05','06':'06',
+  // textos completos com prefixo numérico (ex: "05 - Solicitação finalizada")
+  '00 - em análise pela cmpe':'00',
+  '01 - solicitação indeferida':'01',
+  '02 - solicitação aprovada / aguardando empresa':'02',
+  '02 - aguardando empresa':'02',
+  '03 - em execução':'03',
+  '04 - necessita de materiais. em aquisição':'04',
+  '04 - em aquisição':'04',
+  '05 - solicitação finalizada':'05',
+  '06- em espera. devido limitação orçamentária.':'06',
+  '06 - em espera. devido limitação orçamentária.':'06',
+  '06 - limitação orçamentária':'06',
+  // termos soltos usados no sistema antigo
+  'finalizada':'05','concluída':'05','concluida':'05','concluído':'05',
+  'cancelada':'01',  // cancelada → indeferida
+  'em aberto':'03',  // em aberto → em execução (melhor aproximação)
+  'aguardando':'02', // aguardando → aguardando empresa
+  'em atendimento':'03',
+};
+
+// Modal state
+let modalRecord=null, modalSelectedStatus=null;
+
+// ═══════════════════════════════════════════════════════════════
+//  PERSISTENCE
+// ═══════════════════════════════════════════════════════════════
+function getLog(){try{return JSON.parse(localStorage.getItem(LOG_KEY)||'[]')}catch{return[]}}
+function saveLog(l){try{localStorage.setItem(LOG_KEY,JSON.stringify(l))}catch{}}
+function getOverrides(){try{return JSON.parse(localStorage.getItem(STATUS_OVERRIDES_KEY)||'{}')}catch{return{}}}
+function saveOverrides(o){try{localStorage.setItem(STATUS_OVERRIDES_KEY,JSON.stringify(o))}catch{}}
+
+function addLogEntry(entry){
+  const log=getLog();
+  log.unshift({...entry,ts:new Date().toISOString(),id:Date.now()});
+  if(log.length>500)log.splice(500);
+  saveLog(log);
+  updateLogBadge();
 }
 
-function bCls(s){return{'Concluída':'bd','Cancelada':'bc','Em aberto':'bo','Aguardando':'bw'}[s]||'bw'}
+function updateLogBadge(){
+  const l=getLog();
+  const b=document.getElementById('logBadge');
+  if(l.length>0){b.textContent=l.length;b.style.display='inline'}
+  else b.style.display='none';
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  VIEW SWITCHING
+// ═══════════════════════════════════════════════════════════════
+let currentView='dash';
+function setView(v,el){
+  currentView=v;
+  document.querySelectorAll('.vtab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('dash').style.display=v==='dash'?'flex':'none';
+  if(v==='dash'){document.getElementById('dash').style.display='block'}
+  document.getElementById('kanbanView').style.display=v==='kanban'?'block':'none';
+  if(v==='kanban')renderKanban();
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════════════════════════
+function gf(r,...ks){for(const k of ks){for(const rk of Object.keys(r)){if(rk.trim().toLowerCase()===k.toLowerCase())return(r[rk]||'').trim()}}return''}
+
+function getEffectiveStatus(r){
+  const ss=getRecordKey(r);
+  const ov=getOverrides();
+  if(ov[ss])return ov[ss];
+  // fallback to original logic
+  return getOriginalSit(r);
+}
+
+function getOriginalSit(r){
+  // 1. Lê a coluna U — "Status" (aceita variações de nome)
+  const raw=gf(r,'Status','status','STATUS','Situação','situacao').trim();
+
+  if(raw){
+    // Tenta match direto pela chave do alias (lowercase)
+    const key=raw.toLowerCase().trim();
+    if(STATUS_ALIASES[key])return STATUS_ALIASES[key];
+    // Tenta match por código numérico puro (ex: "5" → "05")
+    if(/^\d+$/.test(raw)){
+      const padded=raw.padStart(2,'0');
+      if(STATUS_ALIASES[padded])return STATUS_ALIASES[padded];
+    }
+    // Tenta match parcial: se começa com "05" etc
+    const codeMatch=raw.match(/^0*(\d+)/);
+    if(codeMatch){
+      const padded=codeMatch[1].padStart(2,'0');
+      if(STATUS_ALIASES[padded])return STATUS_ALIASES[padded];
+    }
+  }
+
+  // 2. Fallback: usa lógica original da coluna SS + Data Conclusão
+  const ss=gf(r,'SS');
+  if(/CANCELADA/i.test(ss))return'01'; // Cancelada → Indeferida
+  if(gf(r,'Data da Conclusão da OS','Data da Conclusao da OS'))return'05'; // Tem data conclusão → Finalizada
+  const dias=parseInt(gf(r,'DIAS DA DEMANDA SEM ATENDIMENTO'))||0;
+  if(dias>0)return'03'; // Tem dias abertos → Em execução
+  // Sem status identificável → Aguardando empresa
+  return'02';
+}
+
+function getSit(r){return getEffectiveStatus(r)}
+
+function getRecordKey(r){return gf(r,'SS')||JSON.stringify(r).slice(0,40)}
+
+// Map new codes to display labels
+function statusLabel(codeOrLabel){
+  const found=KANBAN_STATUSES.find(s=>s.code===codeOrLabel||s.label===codeOrLabel);
+  return found?`${found.code} - ${found.label}`:codeOrLabel;
+}
+
+function statusColor(codeOrLabel){
+  const found=KANBAN_STATUSES.find(s=>s.code===codeOrLabel);
+  if(found)return found.color;
+  // fallback for any stray legacy value
+  return'#7a7f94';
+}
+
+function bCls(s){
+  const found=KANBAN_STATUSES.find(k=>k.code===s);
+  return found?found.cls:'bw';
+}
 
 function pDate(s){
   if(!s||s==='')return null;
   s=String(s).trim();
-  // Serial numérico do Excel/Sheets (ex: 45123)
   const n=Number(s);
-  if(!isNaN(n)&&n>1&&s!==''){
-    const d=new Date(Date.UTC(1899,11,30));
-    d.setUTCDate(d.getUTCDate()+Math.floor(n));
-    return d;
-  }
-  // DD/MM/AAAA ou DD/MM/AA
+  if(!isNaN(n)&&n>1&&s!==''){const d=new Date(Date.UTC(1899,11,30));d.setUTCDate(d.getUTCDate()+Math.floor(n));return d;}
   const sl=s.split('/');
-  if(sl.length===3){
-    let [d,m,y]=sl;
-    if(y.length===2)y='20'+y;
-    const dt=new Date(`${y}-${m.padStart(2,'0')}-${d.padStart(2,'0')}`);
-    if(!isNaN(dt))return dt;
-  }
-  // AAAA-MM-DD (ISO) com ou sem hora
+  if(sl.length===3){let [d,m,y]=sl;if(y.length===2)y='20'+y;const dt=new Date(`${y}-${m.padStart(2,'0')}-${d.padStart(2,'0')}`);if(!isNaN(dt))return dt;}
   const iso=s.match(/^(\d{4})-(\d{2})-(\d{2})/);
   if(iso)return new Date(`${iso[1]}-${iso[2]}-${iso[3]}`);
-  // Fallback genérico
-  const fb=new Date(s);
-  return isNaN(fb)?null:fb;
+  const fb=new Date(s);return isNaN(fb)?null:fb;
 }
 
 function fmtDate(s){
-  const d=pDate(s);
-  if(!d||isNaN(d))return s||'—';
-  const dd=String(d.getDate()).padStart(2,'0');
-  const mm=String(d.getMonth()+1).padStart(2,'0');
-  const yyyy=d.getFullYear();
-  return `${dd}/${mm}/${yyyy}`;
+  const d=pDate(s);if(!d||isNaN(d))return s||'—';
+  return`${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
 }
+
+function fmtTs(iso){
+  const d=new Date(iso);
+  return d.toLocaleDateString('pt-BR')+' '+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+}
+
+function hasValidOS(r){return/^\d/.test(String(gf(r,'SS')||'').trim())}
 
 function switchTab(id,el){
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  el.classList.add('active');
+  document.getElementById(id).classList.add('active');el.classList.add('active');
 }
 
 function showLoading(v){document.getElementById('loadInd').style.display=v?'flex':'none'}
-function showConnect(){document.getElementById('cp').style.display='block';document.getElementById('dash').style.display='none';document.getElementById('sidebar').style.display='none'}
 
-// ── LOADERS ──────────────────────────────────────────────────────────────────
-function loadScript(){
-  const url=document.getElementById('scriptUrl').value.trim();
-  const err=document.getElementById('scriptErr');
-  const ok=document.getElementById('scriptOk');
-  err.style.display='none';ok.style.display='none';
-  if(!url)return;
-  doFetchScript(url);
-}
-
-function refreshScript(){
-  const url=document.getElementById('scriptUrl').value.trim();
-  if(!url)return;
-  doFetchScript(url);
-}
-
+// ═══════════════════════════════════════════════════════════════
+//  LOADERS
+// ═══════════════════════════════════════════════════════════════
 const SCRIPT_URL='https://script.google.com/macros/s/AKfycbzsiNvnxQz031wzM49ybwx_tH0rFBEtaMtWbOIynr0z59R-MYuSkn-SD6Epv0FbiqjQIw/exec';
 
 function autoLoad(){
   showLoading(true);
   fetch(SCRIPT_URL)
     .then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json()})
-    .then(json=>{
-      // Aceita array direto ou {data:[...]}
-      ALL=Array.isArray(json)?json:(json.data||[]);
-      if(!ALL.length)throw new Error('Nenhum dado retornado');
-      initDash();showLoading(false);
-    })
-    .catch(e=>{
-      showLoading(false);
-      alert('Erro ao carregar dados: '+e.message);
-    });
+    .then(json=>{ALL=Array.isArray(json)?json:(json.data||[]);if(!ALL.length)throw new Error('Sem dados');initDash();showLoading(false);})
+    .catch(e=>{showLoading(false);alert('Erro ao carregar dados: '+e.message);});
 }
 
-function doFetchScript(url){
+function loadScript(){
+  const url=document.getElementById('scriptUrl').value.trim();
+  if(!url)return;
   showLoading(true);
-  fetch(url)
-    .then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json()})
-    .then(json=>{
-      ALL=Array.isArray(json)?json:(json.data||[]);
-      initDash();showLoading(false);
-    })
+  fetch(url).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json()})
+    .then(json=>{ALL=Array.isArray(json)?json:(json.data||[]);initDash();showLoading(false);})
     .catch(e=>{showLoading(false);alert('Erro: '+e.message);});
 }
 
-function loadPaste(){
-  const txt=document.getElementById('csvPaste').value.trim();
-  if(!txt)return;
-  parseCsv(txt);
-}
+function refreshScript(){const url=document.getElementById('scriptUrl').value.trim();if(url)loadScript();}
+
+function loadPaste(){const txt=document.getElementById('csvPaste').value.trim();if(!txt)return;parseCsv(txt);}
 
 function loadFile(inp){
-  const f=inp.files[0];
-  if(!f)return;
-  showLoading(true);
-  const r=new FileReader();
-  r.onload=e=>{parseCsv(e.target.result);showLoading(false)};
-  r.onerror=()=>showLoading(false);
-  r.readAsText(f,'UTF-8');
+  const f=inp.files[0];if(!f)return;showLoading(true);
+  const r=new FileReader();r.onload=e=>{parseCsv(e.target.result);showLoading(false)};r.onerror=()=>showLoading(false);r.readAsText(f,'UTF-8');
 }
 
-function parseCsv(csv){
-  const res=Papa.parse(csv,{header:true,skipEmptyLines:true,dynamicTyping:false});
-  ALL=res.data;
-  initDash();
-}
+function parseCsv(csv){const res=Papa.parse(csv,{header:true,skipEmptyLines:true,dynamicTyping:false});ALL=res.data;initDash();}
 
 function loadDemo(){
   ALL=[
@@ -450,13 +654,16 @@ function loadDemo(){
   initDash();
 }
 
-// ── INIT ─────────────────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════════════
 function initDash(){
   document.getElementById('cp').style.display='none';
   document.getElementById('dash').style.display='block';
   document.getElementById('sidebar').style.display='flex';
-  buildDrop();
-  apply();
+  document.getElementById('viewTabs').style.display='flex';
+  document.getElementById('btnLog').style.display='inline-flex';
+  buildDrop();apply();updateLogBadge();
 }
 
 function uniq(fn){return[...new Set(ALL.map(fn).filter(Boolean))].sort()}
@@ -474,31 +681,28 @@ function buildDrop(){
   fillSel('fPv',uniq(r=>gf(r,'Pavimento')));
   fillSel('fPr',uniq(r=>gf(r,'Tipo de problema predial')));
   fillSel('fEn',uniq(r=>gf(r,'Envio')));
-
-  // Build month/year options from actual data
   const meses={};
   const nomeMes=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
   ALL.forEach(r=>{
     const d=pDate(gf(r,'DATA DE ABERTURA','DATA'));
     if(!d||isNaN(d))return;
     const k=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
-    const label=`${nomeMes[d.getMonth()]} ${d.getFullYear()}`;
-    meses[k]=label;
+    meses[k]=`${nomeMes[d.getMonth()]} ${d.getFullYear()}`;
   });
-  const sm=document.getElementById('fMes');
-  const pv=sm.value;
+  const sm=document.getElementById('fMes');const pv=sm.value;
   sm.innerHTML='<option value="">Todos os meses</option>';
-  Object.keys(meses).sort().forEach(k=>{
-    const o=document.createElement('option');o.value=k;o.textContent=meses[k];sm.appendChild(o);
-  });
+  Object.keys(meses).sort().forEach(k=>{const o=document.createElement('option');o.value=k;o.textContent=meses[k];sm.appendChild(o)});
   if(pv)sm.value=pv;
 
-  const sits=[...new Set(ALL.map(r=>getSit(r)))].sort();
-  const cols={'Concluída':'#2de8a4','Em aberto':'#4f8ef7','Cancelada':'#f75f5f','Aguardando':'#f7a94f'};
+  // Build status checkboxes — all statuses are now 00-06 codes
   const c=document.getElementById('chkSt');c.innerHTML='';
-  sits.forEach(s=>{
+  const presentSits=[...new Set(ALL.map(r=>getSit(r)))].sort();
+  presentSits.forEach(s=>{
+    const si=KANBAN_STATUSES.find(k=>k.code===s);
+    const col=si?si.color:'#7a7f94';
+    const label=si?`${s} - ${si.label}`:s;
     const l=document.createElement('label');l.className='chk-item';
-    l.innerHTML=`<input type="checkbox" value="${s}" checked onchange="apply()"><span style="width:8px;height:8px;border-radius:2px;background:${cols[s]||'#7a7f94'};flex-shrink:0"></span>${s}`;
+    l.innerHTML=`<input type="checkbox" value="${s}" checked onchange="apply()"><span style="width:8px;height:8px;border-radius:2px;background:${col};flex-shrink:0"></span><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${label}">${label}</span>`;
     c.appendChild(l);
   });
 
@@ -507,21 +711,20 @@ function buildDrop(){
   document.getElementById('rv').textContent=sl.value;
 }
 
-// ── APPLY FILTERS ────────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════
+//  FILTERS
+// ═══════════════════════════════════════════════════════════════
 function apply(){
   const q=(document.getElementById('fSearch').value+document.getElementById('tSrch').value).toLowerCase();
-  const ed=document.getElementById('fEd').value;
-  const tp=document.getElementById('fTp').value;
-  const pv=document.getElementById('fPv').value;
-  const pr=document.getElementById('fPr').value;
-  const en=document.getElementById('fEn').value;
-  const df=document.getElementById('fDf').value;
-  const dt=document.getElementById('fDt').value;
-  const mes=document.getElementById('fMes').value;
+  const ed=document.getElementById('fEd').value,tp=document.getElementById('fTp').value,
+    pv=document.getElementById('fPv').value,pr=document.getElementById('fPr').value,
+    en=document.getElementById('fEn').value,df=document.getElementById('fDf').value,
+    dt=document.getElementById('fDt').value,mes=document.getElementById('fMes').value;
   const mx=parseInt(document.getElementById('fDi').value)||9999;
   const chk=[...document.querySelectorAll('#chkSt input:checked')].map(c=>c.value);
 
-  FIL=ALL.filter(r=>{ if(!hasValidOS(r))return false;
+  FIL=ALL.filter(r=>{
+    if(!hasValidOS(r))return false;
     const sit=getSit(r);
     const dias=parseInt(gf(r,'DIAS DA DEMANDA SEM ATENDIMENTO'))||0;
     const da=pDate(gf(r,'DATA DE ABERTURA','DATA'));
@@ -534,15 +737,13 @@ function apply(){
     if(en&&gf(r,'Envio')!==en)return false;
     if(!chk.includes(sit))return false;
     if(dias>mx)return false;
-    if(df&&da){const _df=new Date(df+'T00:00:00');if(da<_df)return false;}
-    if(dt&&da){const _dt=new Date(dt+'T23:59:59');if(da>_dt)return false;}
-    if(mes&&da){
-      const k=`${da.getFullYear()}-${String(da.getMonth()+1).padStart(2,'0')}`;
-      if(k!==mes)return false;
-    }
+    if(df&&da){if(da<new Date(df+'T00:00:00'))return false;}
+    if(dt&&da){if(da>new Date(dt+'T23:59:59'))return false;}
+    if(mes&&da){const k=`${da.getFullYear()}-${String(da.getMonth()+1).padStart(2,'0')}`;if(k!==mes)return false;}
     return true;
   });
   pg=0;doSort();renderAll();
+  if(currentView==='kanban')renderKanban();
 }
 
 function reset(){
@@ -553,7 +754,9 @@ function reset(){
   apply();
 }
 
-// ── SORT ─────────────────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════
+//  SORT
+// ═══════════════════════════════════════════════════════════════
 function sortBy(f){
   if(lastSort===f)sortD*=-1;else{sortD=1;lastSort=f}
   sortF=f;
@@ -570,32 +773,26 @@ function doSort(){
     pav:r=>gf(r,'Pavimento'),sala:r=>gf(r,'Sala'),
     dias:r=>parseInt(gf(r,'DIAS DA DEMANDA SEM ATENDIMENTO'))||0,
     status:r=>getSit(r),
-    diasconc:r=>{
-      const aberturaVal=gf(r,'DATA','DATA DE ABERTURA');
-      const dAb=pDate(aberturaVal);
-      const dCo=pDate(gf(r,'Data da Conclusão da OS','Data da Conclusao da OS'));
-      if(dAb&&dCo&&dCo>=dAb)return Math.round((dCo-dAb)/(1000*60*60*24));
-      return 9999;
-    }
   };
-  const fn=mp[sortF]||(r=>gf(r,'DATA DE ABERTURA','DATA'));
+  const fn=mp[sortF]||(r=>pDate(gf(r,'DATA DE ABERTURA','DATA'))||new Date(0));
   FIL.sort((a,b)=>{const va=fn(a),vb=fn(b);return va<vb?-sortD:va>vb?sortD:0});
 }
 
 function renderAll(){renderMetrics();renderCharts();renderTable()}
 
-// ── METRICS ──────────────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════
+//  METRICS
+// ═══════════════════════════════════════════════════════════════
 function renderMetrics(){
-  const tot=FIL.length,conc=FIL.filter(r=>getSit(r)==='Concluída').length,
-    ab=FIL.filter(r=>getSit(r)==='Em aberto').length,
-    cn=FIL.filter(r=>getSit(r)==='Cancelada').length,
-    ag=FIL.filter(r=>getSit(r)==='Aguardando').length;
+  const tot=FIL.length;
+  const conc=FIL.filter(r=>getSit(r)==='05').length;
+  const exec=FIL.filter(r=>getSit(r)==='03').length;
+  const ag=FIL.filter(r=>getSit(r)==='02').length;
+  const ind=FIL.filter(r=>getSit(r)==='01').length;
   const ds=FIL.map(r=>parseInt(gf(r,'DIAS DA DEMANDA SEM ATENDIMENTO'))||0);
   const med=ds.length?Math.round(ds.reduce((a,b)=>a+b,0)/ds.length):0;
-  const mx=ds.length?Math.max(...ds):0;
-
-  // Média de dias para concluir (apenas OS concluídas com data válida)
-  const diasConclArr=FIL.filter(r=>getSit(r)==='Concluída').map(r=>{
+  const mxd=ds.length?Math.max(...ds):0;
+  const diasConclArr=FIL.filter(r=>getSit(r)==='05').map(r=>{
     const dAb=pDate(gf(r,'DATA DE ABERTURA','DATA'));
     const dCo=pDate(gf(r,'Data da Conclusão da OS','Data da Conclusao da OS'));
     if(dAb&&dCo&&dCo>=dAb)return Math.round((dCo-dAb)/(1000*60*60*24));
@@ -606,34 +803,36 @@ function renderMetrics(){
 
   document.getElementById('mrow').innerHTML=`
     <div class="mcard"><div class="mlabel">Total OS</div><div class="mval">${tot}</div><div class="msub">de ${ALL.filter(hasValidOS).length} total</div></div>
-    <div class="mcard cg"><div class="mlabel">Concluídas</div><div class="mval" style="color:var(--green)">${conc}</div><div class="msub">${tot?Math.round(conc/tot*100):0}%</div></div>
-    <div class="mcard"><div class="mlabel">Em aberto</div><div class="mval" style="color:var(--accent)">${ab}</div></div>
-    <div class="mcard cw"><div class="mlabel">Aguardando</div><div class="mval" style="color:var(--warn)">${ag}</div></div>
-    <div class="mcard cd"><div class="mlabel">Canceladas</div><div class="mval" style="color:var(--danger)">${cn}</div></div>
-    <div class="mcard cm"><div class="mlabel">Dias s/ atend. médio</div><div class="mval">${med}</div><div class="msub">máx: ${mx}d</div></div>
-    <div class="mcard cg"><div class="mlabel">Dias médios p/ concluir</div><div class="mval" style="color:var(--green)">${medConc!==null?medConc+'d':'—'}</div><div class="msub">${mxConc!==null?'máx: '+mxConc+'d':diasConclArr.length+' c/ data'}</div></div>`;
+    <div class="mcard cg"><div class="mlabel">Finalizadas</div><div class="mval" style="color:var(--green)">${conc}</div><div class="msub">${tot?Math.round(conc/tot*100):0}%</div></div>
+    <div class="mcard"><div class="mlabel">Em execução</div><div class="mval" style="color:var(--sky)">${exec}</div></div>
+    <div class="mcard cw"><div class="mlabel">Aguardando empresa</div><div class="mval" style="color:var(--warn)">${ag}</div></div>
+    <div class="mcard cd"><div class="mlabel">Indeferidas</div><div class="mval" style="color:var(--danger)">${ind}</div></div>
+    <div class="mcard cm"><div class="mlabel">Dias s/ atend. médio</div><div class="mval">${med}</div><div class="msub">máx: ${mxd}d</div></div>
+    <div class="mcard cg"><div class="mlabel">Dias p/ concluir</div><div class="mval" style="color:var(--green)">${medConc!==null?medConc+'d':'—'}</div><div class="msub">${mxConc!==null?'máx: '+mxConc+'d':diasConclArr.length+' c/ data'}</div></div>`;
 }
 
-// ── CHARTS ───────────────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════
+//  CHARTS
+// ═══════════════════════════════════════════════════════════════
 function cntBy(fn){const m={};FIL.forEach(r=>{const k=fn(r)||'Outros';m[k]=(m[k]||0)+1});return m}
 function dChart(id){if(charts[id]){charts[id].destroy();delete charts[id]}}
-
-const SC={'Concluída':'#2de8a4','Em aberto':'#4f8ef7','Cancelada':'#f75f5f','Aguardando':'#f7a94f'};
-const tx={color:'#7a7f94',font:{size:10}};
-const grid={color:'rgba(255,255,255,.05)'};
+const tx={color:'#7a7f94',font:{size:10}};const grid={color:'rgba(255,255,255,.05)'};
 
 function renderCharts(){
   dChart('e');dChart('s');dChart('t');dChart('p');
-
   const eM=cntBy(r=>gf(r,'Edificação','Edificacao'));
   const eL=Object.keys(eM).slice(0,10);
   document.getElementById('cntE').textContent=eL.length+' unidades';
   charts.e=new Chart(document.getElementById('cEdif'),{type:'bar',data:{labels:eL,datasets:[{data:eL.map(l=>eM[l]),backgroundColor:'#4f8ef7',borderRadius:4,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{...tx,maxRotation:30,autoSkip:false},grid:{display:false}},y:{ticks:{...tx,stepSize:1},grid}}}});
 
   const sM=cntBy(r=>getSit(r));
-  const sL=Object.keys(sM),sCl=sL.map(l=>SC[l]||'#a78bfa');
+  const sL=Object.keys(sM),sCl=sL.map(l=>statusColor(l));
   document.getElementById('cntS').textContent=FIL.length+' OS';
-  document.getElementById('legS').innerHTML=sL.map((l,i)=>`<div class="li"><div class="ld" style="background:${sCl[i]}"></div>${l} (${sM[l]})</div>`).join('');
+  document.getElementById('legS').innerHTML=sL.map((l,i)=>{
+    const si=KANBAN_STATUSES.find(s=>s.code===l);
+    const lbl=si?`${l} - ${si.label}`:l;
+    return`<div class="li"><div class="ld" style="background:${sCl[i]}"></div>${lbl} (${sM[l]})</div>`;
+  }).join('');
   charts.s=new Chart(document.getElementById('cSt'),{type:'doughnut',data:{labels:sL,datasets:[{data:sL.map(l=>sM[l]),backgroundColor:sCl,borderWidth:0,hoverOffset:5}]},options:{responsive:true,maintainAspectRatio:false,cutout:'68%',plugins:{legend:{display:false}}}});
 
   const tM=cntBy(r=>gf(r,'Tipo de OS'));
@@ -650,13 +849,9 @@ function renderCharts(){
   charts.p=new Chart(document.getElementById('cPr'),{type:'line',data:{labels:pL,datasets:[{data:pL.map(l=>pM[l]),borderColor:'#f7a94f',backgroundColor:'rgba(247,169,79,.1)',tension:.4,fill:true,pointBackgroundColor:'#f7a94f',pointRadius:4,pointHoverRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{...tx,autoSkip:false,maxRotation:30},grid:{display:false}},y:{ticks:{...tx,stepSize:1},grid}}}});
 }
 
-// ── TABLE ────────────────────────────────────────────────────────────────────
-function hasValidOS(r){
-  const ss=String(gf(r,'SS')||'').trim();
-  // Só aceita se começa com número
-  return /^\d/.test(ss);
-}
-
+// ═══════════════════════════════════════════════════════════════
+//  TABLE
+// ═══════════════════════════════════════════════════════════════
 function renderTable(){
   const s=pg*PS,sl=FIL.slice(s,s+PS);
   const tb=document.getElementById('tb'),nd=document.getElementById('nd');
@@ -666,23 +861,27 @@ function renderTable(){
     tb.innerHTML=sl.map(r=>{
       const sit=getSit(r),desc=gf(r,'Descrição do serviço','Descricao do servico'),
         conc=gf(r,'Data da Conclusão da OS','Data da Conclusao da OS');
-      const aberturaVal=gf(r,'DATA','DATA DE ABERTURA');
-      const dAb=pDate(aberturaVal);
+      const dAb=pDate(gf(r,'DATA','DATA DE ABERTURA'));
       const dCo=pDate(conc);
-      const hoje=new Date(); hoje.setHours(0,0,0,0);
+      const hoje=new Date();hoje.setHours(0,0,0,0);
       let diasCell='—',diasCol='var(--muted)';
       if(dAb){
-        if(dCo&&dCo>=dAb){
-          const nd=Math.round((dCo-dAb)/(1000*60*60*24));
-          diasCell=nd+'d';
-          diasCol='var(--green)';
-        } else {
-          const nd=Math.round((hoje-dAb)/(1000*60*60*24));
-          diasCell=nd+'d';
-          diasCol='var(--danger)';
-        }
+        if(dCo&&dCo>=dAb){diasCell=Math.round((dCo-dAb)/(1000*60*60*24))+'d';diasCol='var(--green)';}
+        else{diasCell=Math.round((hoje-dAb)/(1000*60*60*24))+'d';diasCol='var(--danger)';}
       }
-      return`<tr><td>${gf(r,'SS')||'—'}</td><td>${fmtDate(gf(r,'DATA','DATA DE ABERTURA'))}</td><td style="font-family:var(--fh);font-size:12px">${gf(r,'Solicitante')||'—'}</td><td style="font-family:var(--fh);font-size:12px">${gf(r,'Edificação','Edificacao')||'—'}</td><td>${gf(r,'Pavimento')||'—'}</td><td>${gf(r,'Sala')||'—'}</td><td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;font-family:var(--fh);font-size:11px;color:var(--muted)" title="${desc}">${desc.slice(0,38)+(desc.length>38?'…':'')||'—'}</td><td style="color:${diasCol};font-weight:600;font-family:var(--fm)">${diasCell}</td><td><span class="badge ${bCls(sit)}">${sit}</span></td><td style="color:var(--muted)">${fmtDate(conc)||'—'}</td></tr>`;
+      const sitLabel=KANBAN_STATUSES.find(k=>k.code===sit)?`${sit} - ${KANBAN_STATUSES.find(k=>k.code===sit).label}`:sit;
+      return`<tr>
+        <td>${gf(r,'SS')||'—'}</td>
+        <td>${fmtDate(gf(r,'DATA','DATA DE ABERTURA'))}</td>
+        <td style="font-family:var(--fh);font-size:12px">${gf(r,'Solicitante')||'—'}</td>
+        <td style="font-family:var(--fh);font-size:12px">${gf(r,'Edificação','Edificacao')||'—'}</td>
+        <td>${gf(r,'Pavimento')||'—'}</td>
+        <td>${gf(r,'Sala')||'—'}</td>
+        <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;font-family:var(--fh);font-size:11px;color:var(--muted)" title="${desc}">${desc.slice(0,38)+(desc.length>38?'…':'')||'—'}</td>
+        <td style="color:${diasCol};font-weight:600;font-family:var(--fm)">${diasCell}</td>
+        <td><span class="badge ${bCls(sit)}" title="${sitLabel}">${sitLabel.length>20?sitLabel.slice(0,18)+'…':sitLabel}</span></td>
+        <td style="color:var(--muted)">${fmtDate(conc)||'—'}</td>
+      </tr>`;
     }).join('');
   }
   const tot=FIL.length,tp=Math.ceil(tot/PS);
@@ -698,82 +897,332 @@ function renderTable(){
 
 function goP(p){if(p<0||p>=Math.ceil(FIL.length/PS))return;pg=p;renderTable()}
 
+// ═══════════════════════════════════════════════════════════════
+//  KANBAN
+// ═══════════════════════════════════════════════════════════════
+let dragRecord=null,dragCol=null;
+
+function renderKanban(){
+  const wrap=document.getElementById('kanbanWrap');
+  wrap.innerHTML='';
+
+  // Group FIL by effective status (all statuses are now 00-06 codes)
+  const groups={};
+  KANBAN_STATUSES.forEach(s=>{groups[s.code]=[]});
+
+  FIL.forEach(r=>{
+    const sit=getSit(r);
+    if(!groups[sit])groups[sit]=['placeholder'];  // safety: unknown goes to 02
+    if(groups[sit][0]==='placeholder')groups[sit]=[];
+    // if code unknown, push to 02
+    const target=groups[sit]?sit:'02';
+    if(!groups[target])groups[target]=[];
+    groups[target].push(r);
+  });
+
+  KANBAN_STATUSES.forEach(sInfo=>{
+    const code=sInfo.code;
+    const recs=groups[code]||[];
+    const color=sInfo.color;
+    const label=`${code} - ${sInfo.label}`;
+
+    const col=document.createElement('div');
+    col.className='kcol';
+    col.dataset.status=code;
+    col.innerHTML=`
+      <div class="kcol-head">
+        <div class="kcol-title">
+          <span class="kcol-dot" style="background:${color}"></span>
+          <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1" title="${label}">${label}</span>
+          <span class="kcol-count">${recs.length}</span>
+        </div>
+      </div>
+      <div class="kcol-body" data-col="${code}"></div>`;
+
+    const body=col.querySelector('.kcol-body');
+
+    // Drag-over handlers
+    body.addEventListener('dragover',e=>{e.preventDefault();body.classList.add('drag-over')});
+    body.addEventListener('dragleave',()=>body.classList.remove('drag-over'));
+    body.addEventListener('drop',e=>{
+      e.preventDefault();
+      body.classList.remove('drag-over');
+      if(dragRecord){
+        const newStatus=col.dataset.status;
+        const oldStatus=getSit(dragRecord);
+        if(newStatus!==oldStatus){
+          openStatusModal(dragRecord,newStatus);
+        }
+        dragRecord=null;
+      }
+    });
+
+    recs.forEach(r=>{
+      const card=createKanbanCard(r,color);
+      body.appendChild(card);
+    });
+
+    wrap.appendChild(col);
+  });
+
+  document.getElementById('kanbanInfo').textContent=`${FIL.length} OS visíveis`;
+}
+
+function createKanbanCard(r,colColor){
+  const card=document.createElement('div');
+  card.className='kcard';
+  card.draggable=true;
+
+  const dias=parseInt(gf(r,'DIAS DA DEMANDA SEM ATENDIMENTO'))||0;
+  const desc=gf(r,'Descrição do serviço','Descricao do servico');
+  const dAb=pDate(gf(r,'DATA','DATA DE ABERTURA'));
+  const dCo=pDate(gf(r,'Data da Conclusão da OS','Data da Conclusao da OS'));
+  const hoje=new Date();hoje.setHours(0,0,0,0);
+  let diasTxt='—',diasColor='var(--muted)';
+  if(dAb){
+    if(dCo&&dCo>=dAb){diasTxt=Math.round((dCo-dAb)/(1000*60*60*24))+'d';diasColor='var(--green)';}
+    else{const d=Math.round((hoje-dAb)/(1000*60*60*24));diasTxt=d+'d';diasColor=d>15?'var(--danger)':d>7?'var(--warn)':'var(--muted)';}
+  }
+
+  card.innerHTML=`
+    <div class="kcard-ss">${gf(r,'SS')||'—'}</div>
+    <div class="kcard-sol">${gf(r,'Solicitante')||'—'}</div>
+    <div class="kcard-ed">${gf(r,'Edificação','Edificacao')||'—'} · ${gf(r,'Sala')||'—'}</div>
+    <div class="kcard-desc" title="${desc}">${desc||'—'}</div>
+    <div class="kcard-dias" style="color:${diasColor}">⏱ ${diasTxt}</div>`;
+
+  // Left accent
+  card.style.borderLeft=`3px solid ${colColor}`;
+
+  // Drag events
+  card.addEventListener('dragstart',e=>{
+    dragRecord=r;
+    card.classList.add('dragging');
+    e.dataTransfer.effectAllowed='move';
+  });
+  card.addEventListener('dragend',()=>{card.classList.remove('dragging');dragRecord=null});
+
+  // Click to open status modal
+  card.addEventListener('click',()=>openStatusModal(r,null));
+
+  return card;
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  STATUS MODAL
+// ═══════════════════════════════════════════════════════════════
+function openStatusModal(r,preselect){
+  modalRecord=r;
+  modalSelectedStatus=preselect||getSit(r);
+
+  document.getElementById('modalTitle').textContent='Alterar Status — '+gf(r,'SS');
+  document.getElementById('modalMeta').textContent=
+    `${gf(r,'Solicitante')||'—'} · ${gf(r,'Edificação','Edificacao')||'—'} · Status atual: ${getSit(r)}`;
+
+  const grid=document.getElementById('statusGrid');
+  grid.innerHTML=KANBAN_STATUSES.map(s=>`
+    <div class="sopt ${modalSelectedStatus===s.code?'selected':''}" onclick="selectStatus('${s.code}',this)">
+      <span class="sopt-dot" style="background:${s.color}"></span>
+      <span class="sopt-label">${s.code} - ${s.label}</span>
+    </div>`).join('');
+
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function selectStatus(code,el){
+  modalSelectedStatus=code;
+  document.querySelectorAll('.sopt').forEach(e=>e.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function closeModal(){
+  document.getElementById('modalOverlay').classList.remove('open');
+  modalRecord=null;modalSelectedStatus=null;
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SYNC TO SHEET
+// ═══════════════════════════════════════════════════════════════
+function getSyncUrl(){
+  // Uses the same URL as the data loader (SCRIPT_URL or the one typed by the user)
+  const typed=(document.getElementById('scriptUrl')||{}).value||'';
+  return typed.trim()||SCRIPT_URL;
+}
+
+function showSyncToast(msg,ok){
+  let t=document.getElementById('syncToast');
+  if(!t){
+    t=document.createElement('div');t.id='syncToast';
+    t.style.cssText='position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;padding:10px 18px;border-radius:8px;font-size:12px;font-family:var(--fh);font-weight:600;box-shadow:0 4px 20px rgba(0,0,0,.5);transition:opacity .4s;pointer-events:none';
+    document.body.appendChild(t);
+  }
+  t.textContent=msg;
+  t.style.background=ok?'rgba(45,232,164,.18)':'rgba(247,95,95,.18)';
+  t.style.border='1px solid '+(ok?'rgba(45,232,164,.5)':'rgba(247,95,95,.5)');
+  t.style.color=ok?'#2de8a4':'#f75f5f';
+  t.style.opacity='1';
+  clearTimeout(t._timer);
+  t._timer=setTimeout(()=>{t.style.opacity='0'},3200);
+}
+
+async function syncToSheet(ss, newStatusCode){
+  const url=getSyncUrl();
+  if(!url)return;
+  const sInfo=KANBAN_STATUSES.find(s=>s.code===newStatusCode);
+  const statusText=sInfo?`${newStatusCode} - ${sInfo.label}`:newStatusCode;
+  try{
+    const params=new URLSearchParams({
+      action:'updateStatus',
+      ss: ss,
+      statusText: statusText
+    });
+    const res=await fetch(url+'?'+params.toString());
+    const json=await res.json();
+    if(json.result==='success'){
+      showSyncToast('✔ Planilha atualizada: '+ss,true);
+    } else {
+      showSyncToast('⚠ Erro: '+(json.message||json.result),false);
+      console.warn('syncToSheet resposta:',json);
+    }
+  }catch(e){
+    showSyncToast('⚠ Não foi possível sincronizar',false);
+    console.warn('syncToSheet error:',e);
+  }
+}
+
+function confirmStatusChange(){
+  if(!modalRecord||!modalSelectedStatus)return closeModal();
+  const key=getRecordKey(modalRecord);
+  const oldStatus=getSit(modalRecord);
+  const newStatus=modalSelectedStatus;
+
+  if(oldStatus===newStatus){closeModal();return;}
+
+  // Save override locally
+  const ov=getOverrides();
+  ov[key]=newStatus;
+  saveOverrides(ov);
+
+  // Log entry
+  const sInfo=KANBAN_STATUSES.find(s=>s.code===newStatus);
+  addLogEntry({
+    type:'moved',
+    ss:gf(modalRecord,'SS'),
+    sol:gf(modalRecord,'Solicitante'),
+    edif:gf(modalRecord,'Edificação','Edificacao'),
+    from:oldStatus,
+    to:newStatus,
+    toLabel:sInfo?`${newStatus} - ${sInfo.label}`:newStatus,
+  });
+
+  // Sync to Google Sheet
+  const ssNum=gf(modalRecord,'SS');
+  if(ssNum)syncToSheet(ssNum,newStatus);
+
+  closeModal();
+  apply();
+  if(currentView==='kanban')renderKanban();
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  LOG DRAWER
+// ═══════════════════════════════════════════════════════════════
+function openLog(){
+  renderLog();
+  document.getElementById('logOverlay').classList.add('open');
+}
+function closeLog(){document.getElementById('logOverlay').classList.remove('open')}
+
+function renderLog(){
+  const log=getLog();
+  const q=(document.getElementById('logSearch').value||'').toLowerCase();
+  const filtered=q?log.filter(e=>(e.ss||'').toLowerCase().includes(q)||(e.from||'').toLowerCase().includes(q)||(e.to||'').toLowerCase().includes(q)||(e.sol||'').toLowerCase().includes(q)):log;
+
+  const body=document.getElementById('logBody');
+  document.getElementById('logCount').textContent=filtered.length+' registro'+(filtered.length!==1?'s':'');
+
+  if(!filtered.length){
+    body.innerHTML=`<div class="log-empty">${log.length?'Nenhum registro corresponde à busca.':'Nenhuma edição registrada ainda.<br><small>Mova cards no Kanban para gerar o log.</small>'}</div>`;
+    return;
+  }
+
+  body.innerHTML=filtered.map(e=>{
+    const fromLabel=KANBAN_STATUSES.find(s=>s.code===e.from)?`${e.from} - ${KANBAN_STATUSES.find(s=>s.code===e.from).label}`:e.from;
+    const toLabel=e.toLabel||e.to;
+    return`<div class="log-entry moved">
+      <div class="log-ts">${fmtTs(e.ts)}</div>
+      <div class="log-ss">${e.ss||'—'} · ${e.sol||'—'} · ${e.edif||'—'}</div>
+      <div class="log-action">
+        <span class="log-arrow">
+          <span class="log-from">${fromLabel||'—'}</span>
+          <span style="color:var(--muted)">→</span>
+          <span class="log-to">${toLabel||'—'}</span>
+        </span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function clearLog(){
+  if(!confirm('Limpar todo o histórico de edições?'))return;
+  localStorage.removeItem(LOG_KEY);
+  updateLogBadge();
+  renderLog();
+}
+
+function exportLog(){
+  const log=getLog();
+  if(!log.length)return;
+  const rows=['Data/Hora,SS,Solicitante,Edificação,De,Para',...log.map(e=>`"${fmtTs(e.ts)}","${e.ss||''}","${e.sol||''}","${e.edif||''}","${e.from||''}","${e.toLabel||e.to||''}"`)];
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([rows.join('\n')],{type:'text/csv;charset=utf-8;'}));
+  a.download='log_edicoes_os.csv';a.click();
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  PRINT / EXPORT
+// ═══════════════════════════════════════════════════════════════
 function getActiveFilters(){
   const tags=[];
-  const mes=document.getElementById('fMes').value;
-  const ed=document.getElementById('fEd').value;
-  const tp=document.getElementById('fTp').value;
-  const pv=document.getElementById('fPv').value;
-  const pr=document.getElementById('fPr').value;
-  const en=document.getElementById('fEn').value;
-  const df=document.getElementById('fDf').value;
-  const dt=document.getElementById('fDt').value;
-  const q=document.getElementById('fSearch').value.trim();
-  const mx=document.getElementById('fDi').value;
-  const chk=[...document.querySelectorAll('#chkSt input:checked')].map(c=>c.value);
+  const mes=document.getElementById('fMes').value,ed=document.getElementById('fEd').value,
+    tp=document.getElementById('fTp').value,pv=document.getElementById('fPv').value,
+    pr=document.getElementById('fPr').value,en=document.getElementById('fEn').value,
+    df=document.getElementById('fDf').value,dt=document.getElementById('fDt').value,
+    q=document.getElementById('fSearch').value.trim(),mx=document.getElementById('fDi').value;
   const unchk=[...document.querySelectorAll('#chkSt input:not(:checked)')].map(c=>c.value);
+  const chk=[...document.querySelectorAll('#chkSt input:checked')].map(c=>c.value);
   if(mes){const sel=document.getElementById('fMes');tags.push('Mês: '+sel.options[sel.selectedIndex].text)}
-  if(ed)tags.push('Edificação: '+ed);
-  if(tp)tags.push('Tipo OS: '+tp);
-  if(pv)tags.push('Pavimento: '+pv);
-  if(pr)tags.push('Problema: '+pr);
-  if(en)tags.push('Envio: '+en);
-  if(df||dt)tags.push('Período: '+(df||'início')+' → '+(dt||'hoje'));
-  if(q)tags.push('Busca: "'+q+'"');
-  if(parseInt(mx)<90)tags.push('Dias s/ atend. ≤ '+mx);
+  if(ed)tags.push('Edificação: '+ed);if(tp)tags.push('Tipo OS: '+tp);
+  if(pv)tags.push('Pavimento: '+pv);if(pr)tags.push('Problema: '+pr);
+  if(en)tags.push('Envio: '+en);if(df||dt)tags.push('Período: '+(df||'início')+' → '+(dt||'hoje'));
+  if(q)tags.push('Busca: "'+q+'"');if(parseInt(mx)<90)tags.push('Dias ≤ '+mx);
   if(unchk.length>0)tags.push('Status: '+chk.join(', '));
   return tags;
 }
 
 function buildPrintTable(){
   const cols=[
-    {label:'SS',fn:r=>gf(r,'SS')||'—'},
-    {label:'Data Abertura',fn:r=>gf(r,'DATA DE ABERTURA','DATA')||'—'},
-    {label:'Solicitante',fn:r=>gf(r,'Solicitante')||'—'},
-    {label:'Contato',fn:r=>gf(r,'Contato')||'—'},
-    {label:'Edificação',fn:r=>gf(r,'Edificação','Edificacao')||'—'},
-    {label:'Pavimento',fn:r=>gf(r,'Pavimento')||'—'},
-    {label:'Sala',fn:r=>gf(r,'Sala')||'—'},
+    {label:'SS',fn:r=>gf(r,'SS')||'—'},{label:'Data',fn:r=>fmtDate(gf(r,'DATA DE ABERTURA','DATA'))},
+    {label:'Solicitante',fn:r=>gf(r,'Solicitante')||'—'},{label:'Edificação',fn:r=>gf(r,'Edificação','Edificacao')||'—'},
+    {label:'Pavimento',fn:r=>gf(r,'Pavimento')||'—'},{label:'Sala',fn:r=>gf(r,'Sala')||'—'},
     {label:'Serviço',fn:r=>gf(r,'Descrição do serviço','Descricao do servico')||'—'},
-    {label:'Dias s/ atend.',fn:r=>gf(r,'DIAS DA DEMANDA SEM ATENDIMENTO')||'0'},
-    {label:'Status',fn:r=>getSit(r),badge:true},
-    {label:'Conclusão',fn:r=>gf(r,'Data da Conclusão da OS','Data da Conclusao da OS')||'—'},
-    {label:'Abertura',fn:r=>gf(r,'DATA')||'—'}
+    {label:'Dias',fn:r=>gf(r,'DIAS DA DEMANDA SEM ATENDIMENTO')||'0'},
+    {label:'Status',fn:r=>{const s=getSit(r);const si=KANBAN_STATUSES.find(k=>k.code===s);return si?`${s} - ${si.label}`:s},badge:true},
+    {label:'Conclusão',fn:r=>fmtDate(gf(r,'Data da Conclusão da OS','Data da Conclusao da OS'))||'—'}
   ];
-  const colWidths={
-    'SS':'4%','Data Abertura':'7%','Solicitante':'9%','Contato':'8%','Edificação':'9%',
-    'Pavimento':'5%','Sala':'8%','Serviço':'22%','Dias s/ atend.':'5%',
-    'Status':'6%','Conclusão':'7%','Abertura':'7%'
-  };
-  const colgroupHtml='<colgroup>'+cols.map(col=>`<col style="width:${colWidths[col.label]||'auto'}">`).join('')+'</colgroup>';
-  const thead=colgroupHtml+'<thead><tr>'+cols.map(c=>`<th>${c.label}</th>`).join('')+'</tr></thead>';
-  const tbody='<tbody>'+FIL.map(r=>{
-    return '<tr>'+cols.map(col=>{
-      if(col.badge){const s=col.fn(r);return`<td><span class="badge ${bCls(s)}">${s}</span></td>`}
-      return`<td>${col.fn(r)}</td>`;
-    }).join('')+'</tr>';
-  }).join('')+'</tbody>';
+  const thead='<thead><tr>'+cols.map(c=>`<th>${c.label}</th>`).join('')+'</tr></thead>';
+  const tbody='<tbody>'+FIL.map(r=>`<tr>${cols.map(col=>{if(col.badge){const s=getSit(r);return`<td><span class="badge ${bCls(s)}">${col.fn(r)}</span></td>`}return`<td>${col.fn(r)}</td>`}).join('')}</tr>`).join('')+'</tbody>';
   document.getElementById('printTable').innerHTML=thead+tbody;
 }
 
 function buildPrintHeader(){
   const tags=getActiveFilters();
   const now=new Date().toLocaleString('pt-BR');
-  const tagsHtml=tags.length
-    ?'<div class="ph-tags">'+tags.map(t=>`<span class="ph-tag">${t}</span>`).join('')+'</div>'
-    :'<div style="font-size:10px;color:#888;margin-top:4px">Sem filtros ativos — exibindo todos os registros</div>';
-  document.getElementById('printHeader').innerHTML=`
-    <h1>Relatório de Ordens de Serviço</h1>
-    <div class="ph-meta">Gerado em: ${now} &nbsp;|&nbsp; Total de registros: <strong>${FIL.length}</strong></div>
-    ${tagsHtml}`;
+  const tagsHtml=tags.length?'<div class="ph-tags">'+tags.map(t=>`<span class="ph-tag">${t}</span>`).join('')+'</div>':'<div style="font-size:10px;color:#888;margin-top:4px">Sem filtros ativos</div>';
+  document.getElementById('printHeader').innerHTML=`<h1>Relatório de Ordens de Serviço</h1><div class="ph-meta">Gerado em: ${now} &nbsp;|&nbsp; Total: <strong>${FIL.length}</strong></div>${tagsHtml}`;
 }
 
-function printDash(){
-  if(!FIL.length)return;
-  buildPrintHeader();
-  buildPrintTable();
-  window.print();
-}
+function printDash(){if(!FIL.length)return;buildPrintHeader();buildPrintTable();window.print()}
 
 function exportCSV(){
   if(!FIL.length)return;
@@ -783,7 +1232,11 @@ function exportCSV(){
   a.href=URL.createObjectURL(new Blob([rows.join('\n')],{type:'text/csv;charset=utf-8;'}));
   a.download='os_filtradas.csv';a.click();
 }
-window.addEventListener("load",autoLoad);
+
+// ═══════════════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════════════
+window.addEventListener('load',autoLoad);
 </script>
 </body>
 </html>

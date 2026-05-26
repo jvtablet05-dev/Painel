@@ -1025,6 +1025,16 @@ document.getElementById('tb').addEventListener('touchend',function(e){
   const badge=e.target.closest('.badge[data-idx]');
   if(badge){ e.preventDefault(); openStatusModalByIdx(parseInt(badge.dataset.idx)); }
 });
+
+document.getElementById('tb').addEventListener('click',function(e){
+  const badge=e.target.closest('.badge[data-idx]');
+  if(badge) openStatusModalByIdx(parseInt(badge.dataset.idx));
+});
+
+document.getElementById('tb').addEventListener('touchend',function(e){
+  const badge=e.target.closest('.badge[data-idx]');
+  if(badge){ e.preventDefault(); openStatusModalByIdx(parseInt(badge.dataset.idx)); }
+});
 function openStatusModal(r,preselect){
   modalRecord=r;
   modalSelectedStatus=preselect||getSit(r);

@@ -879,7 +879,7 @@ function renderTable(){
         <td>${gf(r,'Sala')||'—'}</td>
         <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;font-family:var(--fh);font-size:11px;color:var(--muted)" title="${desc}">${desc.slice(0,38)+(desc.length>38?'…':'')||'—'}</td>
         <td style="color:${diasCol};font-weight:600;font-family:var(--fm)">${diasCell}</td>
-        <td><span class="badge ${bCls(sit)}" title="${sitLabel}">${sitLabel.length>20?sitLabel.slice(0,18)+'…':sitLabel}</span></td>
+        <td><span class="badge ${bCls(sit)}" title="${sitLabel}" data-idx="${FIL.indexOf(r)}" style="cursor:pointer;user-select:none">${sitLabel.length>20?sitLabel.slice(0,18)+'…':sitLabel}</span></td>
         <td style="color:var(--muted)">${fmtDate(conc)||'—'}</td>
       </tr>`;
     }).join('');
@@ -1011,6 +1011,20 @@ function createKanbanCard(r,colColor){
 // ═══════════════════════════════════════════════════════════════
 //  STATUS MODAL
 // ═══════════════════════════════════════════════════════════════
+function openStatusModalByIdx(idx){
+  const r=FIL[idx];
+  if(r) openStatusModal(r, null);
+}
+
+document.getElementById('tb').addEventListener('click',function(e){
+  const badge=e.target.closest('.badge[data-idx]');
+  if(badge) openStatusModalByIdx(parseInt(badge.dataset.idx));
+});
+
+document.getElementById('tb').addEventListener('touchend',function(e){
+  const badge=e.target.closest('.badge[data-idx]');
+  if(badge){ e.preventDefault(); openStatusModalByIdx(parseInt(badge.dataset.idx)); }
+});
 function openStatusModal(r,preselect){
   modalRecord=r;
   modalSelectedStatus=preselect||getSit(r);

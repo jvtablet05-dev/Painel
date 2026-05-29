@@ -165,7 +165,7 @@ tr:hover td{background:rgba(255,255,255,.025)}
 .kcard-desc{font-size:10px;color:var(--muted);margin-top:4px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.45}
 
 /* ── LOG DRAWER ── */
-.log-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;display:none;backdrop-filter:blur(3px)}
+.log-overlay{position:fixed;top:0;left:0;right:0;bottom:0;width:100%;height:100%;background:rgba(0,0,0,.6);z-index:200;display:none;backdrop-filter:blur(3px)}
 .log-overlay.open{display:flex;justify-content:flex-end}
 .log-drawer{width:440px;max-width:95vw;background:var(--bg2);border-left:1px solid var(--border);height:100%;display:flex;flex-direction:column;animation:slideIn .2s ease}
 @keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}}
@@ -192,7 +192,8 @@ tr:hover td{background:rgba(255,255,255,.025)}
 .log-count{font-size:11px;color:var(--muted);font-family:var(--fm);display:flex;align-items:center}
 
 /* ── STATUS EDIT MODAL ── */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:300;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;width:100%;height:100%;background:rgba(0,0,0,.7);z-index:300;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.modal-overlay.open{display:flex;-webkit-overflow-scrolling:touch;}
 .modal-overlay.open{display:flex}
 .modal{background:var(--bg2);border:1px solid var(--border2);border-radius:16px;padding:1.5rem;width:400px;max-width:94vw;animation:popIn .18s ease}
 @keyframes popIn{from{transform:scale(.92);opacity:0}to{transform:scale(1);opacity:1}}
@@ -994,11 +995,7 @@ function openStatusModalByIdx(idx){
   if(r)openStatusModal(r,null);
 }
 
-document.getElementById('tb').addEventListener('click',function(e){
-  const badge=e.target.closest('.badge[data-idx]');
-  if(badge)openStatusModalByIdx(parseInt(badge.dataset.idx));
-});
-document.getElementById('tb').addEventListener('touchend',function(e){
+document.getElementById('tb').addEventListener('pointerup',function(e){
   const badge=e.target.closest('.badge[data-idx]');
   if(badge){e.preventDefault();openStatusModalByIdx(parseInt(badge.dataset.idx));}
 });

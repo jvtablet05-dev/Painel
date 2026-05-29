@@ -61,6 +61,13 @@ body{background:var(--bg);color:var(--text);font-family:var(--fh);font-size:14px
 .range-row input[type=range]{flex:1;accent-color:var(--accent);cursor:pointer}
 .rval{min-width:22px;text-align:right;color:var(--accent)}
 hr.sdiv{border:none;border-top:1px solid var(--border)}
+
+/* ── FILTRO CONCLUSÃO destaque visual ── */
+.filter-section-conclusao{background:rgba(45,232,164,.04);border:1px solid rgba(45,232,164,.15);border-radius:8px;padding:9px 10px}
+.filter-section-conclusao .slabel{color:var(--green);margin-bottom:6px}
+.filter-section-conclusao .fi{border-color:rgba(45,232,164,.2)}
+.filter-section-conclusao .fi:focus{border-color:var(--green)}
+
 .main{flex:1;overflow-y:auto;padding:1.25rem 1.5rem;display:flex;flex-direction:column;gap:1.1rem}
 
 /* ── CONNECT ── */
@@ -282,6 +289,17 @@ tr:hover td{background:rgba(255,255,255,.025)}
   <aside class="sidebar" id="sidebar" style="display:none">
     <div><span class="slabel">Busca livre</span><input class="fi" type="text" id="fSearch" placeholder="Solicitante, sala, serviço..." oninput="apply()"></div>
     <div><span class="slabel">Período de abertura</span><div class="date-row"><input class="fi" type="date" id="fDf" onchange="apply()"><input class="fi" type="date" id="fDt" onchange="apply()"></div></div>
+
+    <!-- ✅ NOVO: Filtro por período de conclusão -->
+    <div class="filter-section-conclusao">
+      <span class="slabel">✔ Período de conclusão</span>
+      <div class="date-row">
+        <input class="fi" type="date" id="fDcf" onchange="apply()" title="Concluída a partir de">
+        <input class="fi" type="date" id="fDct" onchange="apply()" title="Concluída até">
+      </div>
+      <div style="font-size:10px;color:var(--green);margin-top:5px;opacity:.7">Exibe apenas OS com data de conclusão no período</div>
+    </div>
+
     <div><span class="slabel">Mês de abertura</span><select class="fi" id="fMes" onchange="apply()"><option value="">Todos os meses</option></select></div>
     <div><span class="slabel">Status</span><div class="chk-grp" id="chkSt"></div></div>
     <div><span class="slabel">Edificação</span><select class="fi" id="fEd" onchange="apply()"><option value="">Todas</option></select></div>
@@ -368,7 +386,7 @@ tr:hover td{background:rgba(255,255,255,.025)}
           <th>Serviço</th>
           <th onclick="sortBy('dias')">Dias s/ atend. <span class="si" id="sdias">↕</span></th>
           <th onclick="sortBy('status')">Status <span class="si" id="sstatus">↕</span></th>
-          <th>Conclusão</th>
+          <th onclick="sortBy('concl')">Conclusão <span class="si" id="sconcl">↕</span></th>
         </tr></thead><tbody id="tb"></tbody></table>
         <div class="nodata" id="nd" style="display:none">Nenhum registro encontrado</div>
         <table id="printTable" style="display:none"></table></div>
@@ -428,9 +446,6 @@ const PS=20;
 const LOG_KEY='os_dashboard_log_v2';
 const STATUS_OVERRIDES_KEY='os_status_overrides_v1';
 
-// Status definitions (kanban columns)
-// Coluna U da planilha deve conter um desses códigos/textos.
-// Valores não reconhecidos → fallback '02'
 const KANBAN_STATUSES=[
   {code:'00',label:'Em análise pela CMPE',color:'#a78bfa',cls:'bv'},
   {code:'01',label:'Solicitação indeferida',color:'#f75f5f',cls:'bc'},
@@ -441,11 +456,8 @@ const KANBAN_STATUSES=[
   {code:'06',label:'Em espera (orçamento)',color:'#f472b6',cls:'bp'},
 ];
 
-// Aliases: valores que a planilha pode ter na coluna Status → código kanban
 const STATUS_ALIASES={
-  // código direto
   '00':'00','01':'01','02':'02','03':'03','04':'04','05':'05','06':'06',
-  // textos completos com prefixo numérico (ex: "05 - Solicitação finalizada")
   '00 - em análise pela cmpe':'00',
   '01 - solicitação indeferida':'01',
   '02 - solicitação aprovada / aguardando empresa':'02',
@@ -457,15 +469,13 @@ const STATUS_ALIASES={
   '06- em espera. devido limitação orçamentária.':'06',
   '06 - em espera. devido limitação orçamentária.':'06',
   '06 - limitação orçamentária':'06',
-  // termos soltos usados no sistema antigo
   'finalizada':'05','concluída':'05','concluida':'05','concluído':'05',
-  'cancelada':'01',  // cancelada → indeferida
-  'em aberto':'03',  // em aberto → em execução (melhor aproximação)
-  'aguardando':'02', // aguardando → aguardando empresa
+  'cancelada':'01',
+  'em aberto':'03',
+  'aguardando':'02',
   'em atendimento':'03',
 };
 
-// Modal state
 let modalRecord=null, modalSelectedStatus=null;
 
 // ═══════════════════════════════════════════════════════════════
@@ -499,8 +509,7 @@ function setView(v,el){
   currentView=v;
   document.querySelectorAll('.vtab').forEach(t=>t.classList.remove('active'));
   el.classList.add('active');
-  document.getElementById('dash').style.display=v==='dash'?'flex':'none';
-  if(v==='dash'){document.getElementById('dash').style.display='block'}
+  document.getElementById('dash').style.display=v==='dash'?'block':'none';
   document.getElementById('kanbanView').style.display=v==='kanban'?'block':'none';
   if(v==='kanban')renderKanban();
 }
@@ -514,55 +523,38 @@ function getEffectiveStatus(r){
   const ss=getRecordKey(r);
   const ov=getOverrides();
   if(ov[ss])return ov[ss];
-  // fallback to original logic
   return getOriginalSit(r);
 }
 
 function getOriginalSit(r){
-  // 1. Lê a coluna U — "Status" (aceita variações de nome)
   const raw=gf(r,'Status','status','STATUS','Situação','situacao').trim();
-
   if(raw){
-    // Tenta match direto pela chave do alias (lowercase)
     const key=raw.toLowerCase().trim();
     if(STATUS_ALIASES[key])return STATUS_ALIASES[key];
-    // Tenta match por código numérico puro (ex: "5" → "05")
     if(/^\d+$/.test(raw)){
       const padded=raw.padStart(2,'0');
       if(STATUS_ALIASES[padded])return STATUS_ALIASES[padded];
     }
-    // Tenta match parcial: se começa com "05" etc
     const codeMatch=raw.match(/^0*(\d+)/);
     if(codeMatch){
       const padded=codeMatch[1].padStart(2,'0');
       if(STATUS_ALIASES[padded])return STATUS_ALIASES[padded];
     }
   }
-
-  // 2. Fallback: usa lógica original da coluna SS + Data Conclusão
   const ss=gf(r,'SS');
-  if(/CANCELADA/i.test(ss))return'01'; // Cancelada → Indeferida
-  if(gf(r,'Data da Conclusão da OS','Data da Conclusao da OS'))return'05'; // Tem data conclusão → Finalizada
+  if(/CANCELADA/i.test(ss))return'01';
+  if(gf(r,'Data da Conclusão da OS','Data da Conclusao da OS'))return'05';
   const dias=parseInt(gf(r,'DIAS DA DEMANDA SEM ATENDIMENTO'))||0;
-  if(dias>0)return'03'; // Tem dias abertos → Em execução
-  // Sem status identificável → Aguardando empresa
+  if(dias>0)return'03';
   return'02';
 }
 
 function getSit(r){return getEffectiveStatus(r)}
-
 function getRecordKey(r){return gf(r,'SS')||JSON.stringify(r).slice(0,40)}
-
-// Map new codes to display labels
-function statusLabel(codeOrLabel){
-  const found=KANBAN_STATUSES.find(s=>s.code===codeOrLabel||s.label===codeOrLabel);
-  return found?`${found.code} - ${found.label}`:codeOrLabel;
-}
 
 function statusColor(codeOrLabel){
   const found=KANBAN_STATUSES.find(s=>s.code===codeOrLabel);
   if(found)return found.color;
-  // fallback for any stray legacy value
   return'#7a7f94';
 }
 
@@ -626,7 +618,6 @@ function loadScript(){
 }
 
 function refreshScript(){const url=document.getElementById('scriptUrl').value.trim();if(url)loadScript();}
-
 function loadPaste(){const txt=document.getElementById('csvPaste').value.trim();if(!txt)return;parseCsv(txt);}
 
 function loadFile(inp){
@@ -694,7 +685,6 @@ function buildDrop(){
   Object.keys(meses).sort().forEach(k=>{const o=document.createElement('option');o.value=k;o.textContent=meses[k];sm.appendChild(o)});
   if(pv)sm.value=pv;
 
-  // Build status checkboxes — all statuses are now 00-06 codes
   const c=document.getElementById('chkSt');c.innerHTML='';
   const presentSits=[...new Set(ALL.map(r=>getSit(r)))].sort();
   presentSits.forEach(s=>{
@@ -721,6 +711,11 @@ function apply(){
     en=document.getElementById('fEn').value,df=document.getElementById('fDf').value,
     dt=document.getElementById('fDt').value,mes=document.getElementById('fMes').value;
   const mx=parseInt(document.getElementById('fDi').value)||9999;
+
+  // ✅ Novos: filtro por período de conclusão
+  const dcf=document.getElementById('fDcf').value;
+  const dct=document.getElementById('fDct').value;
+
   const chk=[...document.querySelectorAll('#chkSt input:checked')].map(c=>c.value);
 
   FIL=ALL.filter(r=>{
@@ -740,6 +735,15 @@ function apply(){
     if(df&&da){if(da<new Date(df+'T00:00:00'))return false;}
     if(dt&&da){if(da>new Date(dt+'T23:59:59'))return false;}
     if(mes&&da){const k=`${da.getFullYear()}-${String(da.getMonth()+1).padStart(2,'0')}`;if(k!==mes)return false;}
+
+    // ✅ Filtro por data de conclusão
+    if(dcf||dct){
+      const dConclVal=pDate(gf(r,'Data da Conclusão da OS','Data da Conclusao da OS'));
+      if(!dConclVal)return false; // sem data de conclusão → excluir do filtro
+      if(dcf&&dConclVal<new Date(dcf+'T00:00:00'))return false;
+      if(dct&&dConclVal>new Date(dct+'T23:59:59'))return false;
+    }
+
     return true;
   });
   pg=0;doSort();renderAll();
@@ -747,7 +751,8 @@ function apply(){
 }
 
 function reset(){
-  ['fSearch','tSrch','fDf','fDt'].forEach(id=>document.getElementById(id).value='');
+  // ✅ fDcf e fDct incluídos no reset
+  ['fSearch','tSrch','fDf','fDt','fDcf','fDct'].forEach(id=>document.getElementById(id).value='');
   ['fEd','fTp','fPv','fPr','fEn','fMes'].forEach(id=>document.getElementById(id).value='');
   document.querySelectorAll('#chkSt input').forEach(c=>c.checked=true);
   const sl=document.getElementById('fDi');sl.value=sl.max;document.getElementById('rv').textContent=sl.max;
@@ -773,6 +778,7 @@ function doSort(){
     pav:r=>gf(r,'Pavimento'),sala:r=>gf(r,'Sala'),
     dias:r=>parseInt(gf(r,'DIAS DA DEMANDA SEM ATENDIMENTO'))||0,
     status:r=>getSit(r),
+    concl:r=>pDate(gf(r,'Data da Conclusão da OS','Data da Conclusao da OS'))||new Date(0),
   };
   const fn=mp[sortF]||(r=>pDate(gf(r,'DATA DE ABERTURA','DATA'))||new Date(0));
   FIL.sort((a,b)=>{const va=fn(a),vb=fn(b);return va<vb?-sortD:va>vb?sortD:0});
@@ -880,7 +886,7 @@ function renderTable(){
         <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;font-family:var(--fh);font-size:11px;color:var(--muted)" title="${desc}">${desc.slice(0,38)+(desc.length>38?'…':'')||'—'}</td>
         <td style="color:${diasCol};font-weight:600;font-family:var(--fm)">${diasCell}</td>
         <td><span class="badge ${bCls(sit)}" title="${sitLabel}" data-idx="${FIL.indexOf(r)}" style="cursor:pointer;user-select:none">${sitLabel.length>20?sitLabel.slice(0,18)+'…':sitLabel}</span></td>
-        <td style="color:var(--muted)">${fmtDate(conc)||'—'}</td>
+        <td style="color:${dCo?'var(--green)':'var(--muted)'}">${fmtDate(conc)||'—'}</td>
       </tr>`;
     }).join('');
   }
@@ -905,27 +911,20 @@ let dragRecord=null,dragCol=null;
 function renderKanban(){
   const wrap=document.getElementById('kanbanWrap');
   wrap.innerHTML='';
-
-  // Group FIL by effective status (all statuses are now 00-06 codes)
   const groups={};
   KANBAN_STATUSES.forEach(s=>{groups[s.code]=[]});
-
   FIL.forEach(r=>{
     const sit=getSit(r);
-    if(!groups[sit])groups[sit]=['placeholder'];  // safety: unknown goes to 02
-    if(groups[sit][0]==='placeholder')groups[sit]=[];
-    // if code unknown, push to 02
+    if(!groups[sit])groups[sit]=[];
     const target=groups[sit]?sit:'02';
     if(!groups[target])groups[target]=[];
     groups[target].push(r);
   });
-
   KANBAN_STATUSES.forEach(sInfo=>{
     const code=sInfo.code;
     const recs=groups[code]||[];
     const color=sInfo.color;
     const label=`${code} - ${sInfo.label}`;
-
     const col=document.createElement('div');
     col.className='kcol';
     col.dataset.status=code;
@@ -938,10 +937,7 @@ function renderKanban(){
         </div>
       </div>
       <div class="kcol-body" data-col="${code}"></div>`;
-
     const body=col.querySelector('.kcol-body');
-
-    // Drag-over handlers
     body.addEventListener('dragover',e=>{e.preventDefault();body.classList.add('drag-over')});
     body.addEventListener('dragleave',()=>body.classList.remove('drag-over'));
     body.addEventListener('drop',e=>{
@@ -950,21 +946,16 @@ function renderKanban(){
       if(dragRecord){
         const newStatus=col.dataset.status;
         const oldStatus=getSit(dragRecord);
-        if(newStatus!==oldStatus){
-          openStatusModal(dragRecord,newStatus);
-        }
+        if(newStatus!==oldStatus){openStatusModal(dragRecord,newStatus);}
         dragRecord=null;
       }
     });
-
     recs.forEach(r=>{
       const card=createKanbanCard(r,color);
       body.appendChild(card);
     });
-
     wrap.appendChild(col);
   });
-
   document.getElementById('kanbanInfo').textContent=`${FIL.length} OS visíveis`;
 }
 
@@ -972,7 +963,6 @@ function createKanbanCard(r,colColor){
   const card=document.createElement('div');
   card.className='kcard';
   card.draggable=true;
-
   const dias=parseInt(gf(r,'DIAS DA DEMANDA SEM ATENDIMENTO'))||0;
   const desc=gf(r,'Descrição do serviço','Descricao do servico');
   const dAb=pDate(gf(r,'DATA','DATA DE ABERTURA'));
@@ -983,28 +973,16 @@ function createKanbanCard(r,colColor){
     if(dCo&&dCo>=dAb){diasTxt=Math.round((dCo-dAb)/(1000*60*60*24))+'d';diasColor='var(--green)';}
     else{const d=Math.round((hoje-dAb)/(1000*60*60*24));diasTxt=d+'d';diasColor=d>15?'var(--danger)':d>7?'var(--warn)':'var(--muted)';}
   }
-
   card.innerHTML=`
     <div class="kcard-ss">${gf(r,'SS')||'—'}</div>
     <div class="kcard-sol">${gf(r,'Solicitante')||'—'}</div>
     <div class="kcard-ed">${gf(r,'Edificação','Edificacao')||'—'} · ${gf(r,'Sala')||'—'}</div>
     <div class="kcard-desc" title="${desc}">${desc||'—'}</div>
     <div class="kcard-dias" style="color:${diasColor}">⏱ ${diasTxt}</div>`;
-
-  // Left accent
   card.style.borderLeft=`3px solid ${colColor}`;
-
-  // Drag events
-  card.addEventListener('dragstart',e=>{
-    dragRecord=r;
-    card.classList.add('dragging');
-    e.dataTransfer.effectAllowed='move';
-  });
+  card.addEventListener('dragstart',e=>{dragRecord=r;card.classList.add('dragging');e.dataTransfer.effectAllowed='move';});
   card.addEventListener('dragend',()=>{card.classList.remove('dragging');dragRecord=null});
-
-  // Click to open status modal
   card.addEventListener('click',()=>openStatusModal(r,null));
-
   return card;
 }
 
@@ -1013,43 +991,30 @@ function createKanbanCard(r,colColor){
 // ═══════════════════════════════════════════════════════════════
 function openStatusModalByIdx(idx){
   const r=FIL[idx];
-  if(r) openStatusModal(r, null);
+  if(r)openStatusModal(r,null);
 }
 
 document.getElementById('tb').addEventListener('click',function(e){
   const badge=e.target.closest('.badge[data-idx]');
-  if(badge) openStatusModalByIdx(parseInt(badge.dataset.idx));
+  if(badge)openStatusModalByIdx(parseInt(badge.dataset.idx));
 });
-
 document.getElementById('tb').addEventListener('touchend',function(e){
   const badge=e.target.closest('.badge[data-idx]');
-  if(badge){ e.preventDefault(); openStatusModalByIdx(parseInt(badge.dataset.idx)); }
+  if(badge){e.preventDefault();openStatusModalByIdx(parseInt(badge.dataset.idx));}
 });
 
-document.getElementById('tb').addEventListener('click',function(e){
-  const badge=e.target.closest('.badge[data-idx]');
-  if(badge) openStatusModalByIdx(parseInt(badge.dataset.idx));
-});
-
-document.getElementById('tb').addEventListener('touchend',function(e){
-  const badge=e.target.closest('.badge[data-idx]');
-  if(badge){ e.preventDefault(); openStatusModalByIdx(parseInt(badge.dataset.idx)); }
-});
 function openStatusModal(r,preselect){
   modalRecord=r;
   modalSelectedStatus=preselect||getSit(r);
-
   document.getElementById('modalTitle').textContent='Alterar Status — '+gf(r,'SS');
   document.getElementById('modalMeta').textContent=
     `${gf(r,'Solicitante')||'—'} · ${gf(r,'Edificação','Edificacao')||'—'} · Status atual: ${getSit(r)}`;
-
   const grid=document.getElementById('statusGrid');
   grid.innerHTML=KANBAN_STATUSES.map(s=>`
     <div class="sopt ${modalSelectedStatus===s.code?'selected':''}" onclick="selectStatus('${s.code}',this)">
       <span class="sopt-dot" style="background:${s.color}"></span>
       <span class="sopt-label">${s.code} - ${s.label}</span>
     </div>`).join('');
-
   document.getElementById('modalOverlay').classList.add('open');
 }
 
@@ -1068,7 +1033,6 @@ function closeModal(){
 //  SYNC TO SHEET
 // ═══════════════════════════════════════════════════════════════
 function getSyncUrl(){
-  // Uses the same URL as the data loader (SCRIPT_URL or the one typed by the user)
   const typed=(document.getElementById('scriptUrl')||{}).value||'';
   return typed.trim()||SCRIPT_URL;
 }
@@ -1089,29 +1053,18 @@ function showSyncToast(msg,ok){
   t._timer=setTimeout(()=>{t.style.opacity='0'},3200);
 }
 
-async function syncToSheet(ss, newStatusCode){
+async function syncToSheet(ss,newStatusCode){
   const url=getSyncUrl();
   if(!url)return;
   const sInfo=KANBAN_STATUSES.find(s=>s.code===newStatusCode);
   const statusText=sInfo?`${newStatusCode} - ${sInfo.label}`:newStatusCode;
   try{
-    const params=new URLSearchParams({
-      action:'updateStatus',
-      ss: ss,
-      statusText: statusText
-    });
+    const params=new URLSearchParams({action:'updateStatus',ss:ss,statusText:statusText});
     const res=await fetch(url+'?'+params.toString());
     const json=await res.json();
-    if(json.result==='success'){
-      showSyncToast('✔ Planilha atualizada: '+ss,true);
-    } else {
-      showSyncToast('⚠ Erro: '+(json.message||json.result),false);
-      console.warn('syncToSheet resposta:',json);
-    }
-  }catch(e){
-    showSyncToast('⚠ Não foi possível sincronizar',false);
-    console.warn('syncToSheet error:',e);
-  }
+    if(json.result==='success'){showSyncToast('✔ Planilha atualizada: '+ss,true);}
+    else{showSyncToast('⚠ Erro: '+(json.message||json.result),false);console.warn('syncToSheet resposta:',json);}
+  }catch(e){showSyncToast('⚠ Não foi possível sincronizar',false);console.warn('syncToSheet error:',e);}
 }
 
 function confirmStatusChange(){
@@ -1119,57 +1072,38 @@ function confirmStatusChange(){
   const key=getRecordKey(modalRecord);
   const oldStatus=getSit(modalRecord);
   const newStatus=modalSelectedStatus;
-
   if(oldStatus===newStatus){closeModal();return;}
-
-  // Save override locally
   const ov=getOverrides();
   ov[key]=newStatus;
   saveOverrides(ov);
-
-  // Log entry
   const sInfo=KANBAN_STATUSES.find(s=>s.code===newStatus);
   addLogEntry({
-    type:'moved',
-    ss:gf(modalRecord,'SS'),
-    sol:gf(modalRecord,'Solicitante'),
-    edif:gf(modalRecord,'Edificação','Edificacao'),
-    from:oldStatus,
-    to:newStatus,
+    type:'moved',ss:gf(modalRecord,'SS'),sol:gf(modalRecord,'Solicitante'),
+    edif:gf(modalRecord,'Edificação','Edificacao'),from:oldStatus,to:newStatus,
     toLabel:sInfo?`${newStatus} - ${sInfo.label}`:newStatus,
   });
-
-  // Sync to Google Sheet
   const ssNum=gf(modalRecord,'SS');
   if(ssNum)syncToSheet(ssNum,newStatus);
-
-  closeModal();
-  apply();
+  closeModal();apply();
   if(currentView==='kanban')renderKanban();
 }
 
 // ═══════════════════════════════════════════════════════════════
 //  LOG DRAWER
 // ═══════════════════════════════════════════════════════════════
-function openLog(){
-  renderLog();
-  document.getElementById('logOverlay').classList.add('open');
-}
+function openLog(){renderLog();document.getElementById('logOverlay').classList.add('open');}
 function closeLog(){document.getElementById('logOverlay').classList.remove('open')}
 
 function renderLog(){
   const log=getLog();
   const q=(document.getElementById('logSearch').value||'').toLowerCase();
   const filtered=q?log.filter(e=>(e.ss||'').toLowerCase().includes(q)||(e.from||'').toLowerCase().includes(q)||(e.to||'').toLowerCase().includes(q)||(e.sol||'').toLowerCase().includes(q)):log;
-
   const body=document.getElementById('logBody');
   document.getElementById('logCount').textContent=filtered.length+' registro'+(filtered.length!==1?'s':'');
-
   if(!filtered.length){
     body.innerHTML=`<div class="log-empty">${log.length?'Nenhum registro corresponde à busca.':'Nenhuma edição registrada ainda.<br><small>Mova cards no Kanban para gerar o log.</small>'}</div>`;
     return;
   }
-
   body.innerHTML=filtered.map(e=>{
     const fromLabel=KANBAN_STATUSES.find(s=>s.code===e.from)?`${e.from} - ${KANBAN_STATUSES.find(s=>s.code===e.from).label}`:e.from;
     const toLabel=e.toLabel||e.to;
@@ -1189,9 +1123,7 @@ function renderLog(){
 
 function clearLog(){
   if(!confirm('Limpar todo o histórico de edições?'))return;
-  localStorage.removeItem(LOG_KEY);
-  updateLogBadge();
-  renderLog();
+  localStorage.removeItem(LOG_KEY);updateLogBadge();renderLog();
 }
 
 function exportLog(){
@@ -1213,12 +1145,17 @@ function getActiveFilters(){
     pr=document.getElementById('fPr').value,en=document.getElementById('fEn').value,
     df=document.getElementById('fDf').value,dt=document.getElementById('fDt').value,
     q=document.getElementById('fSearch').value.trim(),mx=document.getElementById('fDi').value;
+  // ✅ Conclusão
+  const dcf=document.getElementById('fDcf').value,dct=document.getElementById('fDct').value;
   const unchk=[...document.querySelectorAll('#chkSt input:not(:checked)')].map(c=>c.value);
   const chk=[...document.querySelectorAll('#chkSt input:checked')].map(c=>c.value);
   if(mes){const sel=document.getElementById('fMes');tags.push('Mês: '+sel.options[sel.selectedIndex].text)}
   if(ed)tags.push('Edificação: '+ed);if(tp)tags.push('Tipo OS: '+tp);
   if(pv)tags.push('Pavimento: '+pv);if(pr)tags.push('Problema: '+pr);
-  if(en)tags.push('Envio: '+en);if(df||dt)tags.push('Período: '+(df||'início')+' → '+(dt||'hoje'));
+  if(en)tags.push('Envio: '+en);
+  if(df||dt)tags.push('Abertura: '+(df||'início')+' → '+(dt||'hoje'));
+  // ✅ Tag de conclusão no cabeçalho de impressão
+  if(dcf||dct)tags.push('Conclusão: '+(dcf||'início')+' → '+(dct||'hoje'));
   if(q)tags.push('Busca: "'+q+'"');if(parseInt(mx)<90)tags.push('Dias ≤ '+mx);
   if(unchk.length>0)tags.push('Status: '+chk.join(', '));
   return tags;

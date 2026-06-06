@@ -761,7 +761,7 @@ function getEffectiveStatus(r){const ss=getRecordKey(r);const ov=getOverrides();
 function getOriginalSit(r){
   const raw=gf(r,'Status','status','STATUS','Situação','situacao').trim();
   if(raw){const key=raw.toLowerCase().trim();if(STATUS_ALIASES[key])return STATUS_ALIASES[key];if(/^\d+$/.test(raw)){const p=raw.padStart(2,'0');if(STATUS_ALIASES[p])return STATUS_ALIASES[p];}const m=raw.match(/^0*(\d+)/);if(m){const p=m[1].padStart(2,'0');if(STATUS_ALIASES[p])return STATUS_ALIASES[p];}}
-  const ss=gf(r,'SS');if(/CANCELADA/i.test(ss))return'01';if(gf(r,'Data da Conclusão da OS','Data da Conclusao da OS'))return'05';const dias=parseInt(gf(r,'DIAS DA DEMANDA SEM ATENDIMENTO'))||0;if(dias>0)return'03';return'02';
+  const ss=gf(r,'SS');if(/CANCELADA/i.test(ss))return'01';if(gf(r,'Data da Conclusão da OS','Data da Conclusao da OS'))return'05';return'02';
 }
 
 function getSit(r){return getEffectiveStatus(r)}
@@ -992,7 +992,7 @@ function renderTable(){
       let dc='—',col='var(--muted)';
       if(dAb){if(dCo&&dCo>=dAb){dc=Math.round((dCo-dAb)/(1000*60*60*24))+'d';col='var(--green)'}else{dc=Math.round((hoje-dAb)/(1000*60*60*24))+'d';col='var(--danger)'}}
       const sitLabel=KANBAN_STATUSES.find(k=>k.code===sit)?`${sit} - ${KANBAN_STATUSES.find(k=>k.code===sit).label}`:sit;
-      return`<tr><td>${gf(r,'SS')||'—'}</td><td>${fmtDate(gf(r,'DATA','DATA DE ABERTURA'))}</td><td style="font-family:var(--fh);font-size:12px">${gf(r,'Solicitante')||'—'}</td><td style="font-family:var(--fh);font-size:12px">${gf(r,'Edificação','Edificacao')||'—'}</td><td>${gf(r,'Pavimento')||'—'}</td><td>${gf(r,'Sala')||'—'}</td><td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;font-family:var(--fh);font-size:11px;color:var(--muted)" title="${desc}">${desc.slice(0,38)+(desc.length>38?'…':'')||'—'}</td><td style="color:${col};font-weight:600;font-family:var(--fm)">${dc}</td><td><span class="badge ${bCls(sit)}" title="${sitLabel}" data-idx="${FIL.indexOf(r)}" style="cursor:pointer;user-select:none">${sitLabel.length>20?sitLabel.slice(0,18)+'…':sitLabel}</span></td><td style="color:${dCo?'var(--green)':'var(--muted)'}">${fmtDate(conc)||'—'}</td></tr>`;
+      return`<tr><td>${gf(r,'SS')||'—'}</td><td>${fmtDate(gf(r,'DATA','DATA DE ABERTURA'))}</td><td style="font-family:var(--fh);font-size:12px">${gf(r,'Solicitante')||'—'}</td><td style="font-family:var(--fh);font-size:12px">${gf(r,'Edificação','Edificacao')||'—'}</td><td>${gf(r,'Pavimento')||'—'}</td><td>${gf(r,'Sala')||'—'}</td><td style="font-family:var(--fh);font-size:11px;color:var(--muted)" title="${desc}">${desc||'—'}</td><td style="color:${col};font-weight:600;font-family:var(--fm)">${dc}</td><td><span class="badge ${bCls(sit)}" title="${sitLabel}" data-idx="${FIL.indexOf(r)}" style="cursor:pointer;user-select:none">${sitLabel.length>20?sitLabel.slice(0,18)+'…':sitLabel}</span></td><td style="color:${dCo?'var(--green)':'var(--muted)'}">${fmtDate(conc)||'—'}</td></tr>`;
     }).join('');
   }
   const tot=FIL.length,tp=Math.ceil(tot/PS);

@@ -285,7 +285,7 @@ tr:hover td{background:rgba(255,255,255,.025)}
   .thead2{padding:.7rem .9rem;gap:.5rem}
   .tsearch{width:100%;font-size:13px}
   .twrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
-  table{font-size:11px;min-width:700px}
+  table{font-size:11px;min-width:900px}
   td,th{padding:6px 8px}
   .tfoot{padding:7px .9rem;font-size:10px}
   .pb{padding:2px 6px}
@@ -418,7 +418,7 @@ tr:hover td{background:rgba(255,255,255,.025)}
           <th onclick="sortBy('edif')">Edificação <span class="si" id="sedif">↕</span></th>
           <th onclick="sortBy('pav')">Pavimento <span class="si" id="spav">↕</span></th>
           <th onclick="sortBy('sala')">Sala <span class="si" id="ssala">↕</span></th>
-          <th>Serviço</th>
+          <th style="max-width:220px;width:220px">Serviço</th>
           <th onclick="sortBy('dias')">Dias s/ atend. <span class="si" id="sdias">↕</span></th>
           <th onclick="sortBy('status')">Status <span class="si" id="sstatus">↕</span></th>
           <th onclick="sortBy('concl')">Conclusão <span class="si" id="sconcl">↕</span></th>
@@ -714,7 +714,7 @@ function nosSubmit(){
         const hoje2=new Date();
         const ds2=`${String(hoje2.getDate()).padStart(2,'0')}/${String(hoje2.getMonth()+1).padStart(2,'0')}/${hoje2.getFullYear()}`;
         ALL.push({'SS':json.ss,'DATA':ds2,'DATA DE ABERTURA':ds2,'Email':email,'Solicitante':nome,'Edificação':edif,'Pavimento':pav,'Sala':sala,'Descrição do serviço':desc,'Tipo de OS':tipoOS,'Tipo de problema predial':tipoProb,'AREA_CODIG':areaCod,'DIAS DA DEMANDA SEM ATENDIMENTO':'0','Status':'02','Envio':'pendente'});
-        buildDrop();apply();
+        apply();
       }
       addLogEntry({type:'created',ss:json.ss||'Nova OS',sol:nome,edif:edif,from:'—',to:'02',toLabel:'02 - Aguardando empresa'});
       nosShowSuccess();
@@ -883,12 +883,14 @@ function buildDrop(){
   sm.innerHTML='<option value="">Todos os meses</option>';
   Object.keys(meses).sort().forEach(k=>{const o=document.createElement('option');o.value=k;o.textContent=meses[k];sm.appendChild(o)});
   if(pv)sm.value=pv;
-  const c=document.getElementById('chkSt');c.innerHTML='';
-  const presentSits=[...new Set(ALL.map(r=>getSit(r)))].sort();
-  presentSits.forEach(s=>{
-    const si=KANBAN_STATUSES.find(k=>k.code===s);const col=si?si.color:'#7a7f94';const label=si?`${s} - ${si.label}`:s;
+  const c=document.getElementById('chkSt');
+  const prevChecked=[...document.querySelectorAll('#chkSt input:checked')].map(x=>x.value);
+  const prevExists=prevChecked.length>0;
+  c.innerHTML='';
+  KANBAN_STATUSES.forEach(s=>{
+    const checked=!prevExists||prevChecked.includes(s.code);
     const l=document.createElement('label');l.className='chk-item';
-    l.innerHTML=`<input type="checkbox" value="${s}" checked onchange="apply()"><span style="width:8px;height:8px;border-radius:2px;background:${col};flex-shrink:0"></span><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${label}">${label}</span>`;
+    l.innerHTML=`<input type="checkbox" value="${s.code}" ${checked?'checked':''} onchange="apply()"><span style="width:8px;height:8px;border-radius:2px;background:${s.color};flex-shrink:0"></span><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${s.code} - ${s.label}">${s.code} - ${s.label}</span>`;
     c.appendChild(l);
   });
   const mx=Math.max(0,...ALL.map(r=>parseInt(gf(r,'DIAS DA DEMANDA SEM ATENDIMENTO'))||0));
@@ -1008,7 +1010,7 @@ function renderTable(){
       let dc='—',col='var(--muted)';
       if(dAb){if(dCo&&dCo>=dAb){dc=Math.round((dCo-dAb)/(1000*60*60*24))+'d';col='var(--green)'}else{dc=Math.round((hoje-dAb)/(1000*60*60*24))+'d';col='var(--danger)'}}
       const sitLabel=KANBAN_STATUSES.find(k=>k.code===sit)?`${sit} - ${KANBAN_STATUSES.find(k=>k.code===sit).label}`:sit;
-      return`<tr><td>${gf(r,'SS')||'—'}</td><td>${fmtDate(gf(r,'DATA','DATA DE ABERTURA'))}</td><td style="font-family:var(--fh);font-size:12px">${gf(r,'Solicitante')||'—'}</td><td style="font-family:var(--fh);font-size:12px">${gf(r,'Edificação','Edificacao')||'—'}</td><td>${gf(r,'Pavimento')||'—'}</td><td>${gf(r,'Sala')||'—'}</td><td style="font-family:var(--fh);font-size:11px;color:var(--muted)" title="${desc}">${desc||'—'}</td><td style="color:${col};font-weight:600;font-family:var(--fm)">${dc}</td><td><span class="badge ${bCls(sit)}" title="${sitLabel}" data-idx="${FIL.indexOf(r)}" style="cursor:pointer;user-select:none">${sitLabel.length>20?sitLabel.slice(0,18)+'…':sitLabel}</span></td><td style="color:${dCo?'var(--green)':'var(--muted)'}">${fmtDate(conc)||'—'}</td></tr>`;
+      return`<tr><td>${gf(r,'SS')||'—'}</td><td>${fmtDate(gf(r,'DATA','DATA DE ABERTURA'))}</td><td style="font-family:var(--fh);font-size:12px">${gf(r,'Solicitante')||'—'}</td><td style="font-family:var(--fh);font-size:12px">${gf(r,'Edificação','Edificacao')||'—'}</td><td>${gf(r,'Pavimento')||'—'}</td><td>${gf(r,'Sala')||'—'}</td><td style="font-family:var(--fh);font-size:11px;color:var(--muted);max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${desc}">${desc||'—'}</td><td style="color:${col};font-weight:600;font-family:var(--fm)">${dc}</td><td><span class="badge ${bCls(sit)}" title="${sitLabel}" data-idx="${FIL.indexOf(r)}" style="cursor:pointer;user-select:none">${sitLabel.length>20?sitLabel.slice(0,18)+'…':sitLabel}</span></td><td style="color:${dCo?'var(--green)':'var(--muted)'}">${fmtDate(conc)||'—'}</td></tr>`;
     }).join('');
   }
   const tot=FIL.length,tp=Math.ceil(tot/PS);

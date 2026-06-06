@@ -249,24 +249,46 @@ tr:hover td{background:rgba(255,255,255,.025)}
 #printTable{display:none}
 @media print{
   *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  @page{size:A4 landscape;margin:12mm 10mm}
-  body{background:#fff!important;color:#111!important;font-family:Arial,sans-serif;font-size:10px}
-  .topbar,.sidebar,.connect,#dash .cgrid,#dash .metrics,.thead2 input,.tfoot,.pgn,.btn,#loadInd,.view-tabs,#kanbanView,.log-overlay,.modal-overlay,.nos-overlay{display:none!important}
-  .layout{display:block}
-  .main{padding:0}
+  @page{size:A4 landscape;margin:6mm}
+  body{background:#0d0f14!important;color:#e8eaf0!important;font-family:Arial,sans-serif;font-size:8px}
+  .topbar,.sidebar,.connect,#dash .cgrid,#dash .metrics,.thead2,#dash .tfoot,.pgn,.btn,#loadInd,.view-tabs,#kanbanView,.log-overlay,.modal-overlay,.nos-overlay{display:none!important}
+  .layout{display:block!important}
+  .main{padding:0!important;overflow:visible!important}
   #dash{display:block!important}
-  .tcard{border:none;box-shadow:none;border-radius:0}
-  #printTable{display:table!important;width:100%;border-collapse:collapse;font-size:10px}
-  #printTable th{background:#1a1e29!important;color:#fff!important;padding:5px 7px;text-align:left;font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;border:1px solid #ccc}
-  #printTable td{padding:4px 7px;border:1px solid #ddd;color:#111!important;background:#fff!important;font-family:Arial,sans-serif;white-space:normal;word-break:break-word}
-  #printTable tr:nth-child(even) td{background:#f7f7f7!important}
-  #printTable .badge{padding:1px 5px;border-radius:3px;font-size:9px;font-weight:700}
-  #printHeader{display:block!important;margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid #1a1e29}
-  #printHeader h1{font-size:16px;margin-bottom:4px;color:#111}
-  #printHeader .ph-meta{font-size:10px;color:#555;margin-bottom:6px}
-  #printHeader .ph-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
-  #printHeader .ph-tag{background:#e8eaf0;border-radius:4px;padding:2px 8px;font-size:9px;color:#333;font-weight:600}
-  .twrap table{display:none}
+  .tcard{border:none!important;border-radius:0!important;background:transparent!important}
+  .twrap{overflow:visible!important}
+  .twrap table{display:none!important}
+  /* cabeçalho */
+  #printHeader{display:block!important;background:#13161e!important;border-bottom:2px solid #4f8ef7;padding:5px 8px;margin-bottom:4px}
+  #printHeader h1{font-size:11px;color:#e8eaf0!important;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin:0 0 2px}
+  #printHeader .ph-meta{font-size:7px;color:#7a7f94!important}
+  #printHeader .ph-tags{display:flex;flex-wrap:wrap;gap:3px;margin-top:3px}
+  #printHeader .ph-tag{background:rgba(79,142,247,.2)!important;border:1px solid rgba(79,142,247,.4);border-radius:3px;padding:1px 5px;font-size:7px;color:#4f8ef7!important;font-weight:700}
+  /* tabela */
+  #printTable{display:table!important;width:100%;border-collapse:collapse;font-size:7.5px;table-layout:fixed}
+  #printTable colgroup col:nth-child(1){width:52px}   /* SS */
+  #printTable colgroup col:nth-child(2){width:55px}   /* Data */
+  #printTable colgroup col:nth-child(3){width:90px}   /* Solicitante */
+  #printTable colgroup col:nth-child(4){width:90px}   /* Edificação */
+  #printTable colgroup col:nth-child(5){width:60px}   /* Pavimento */
+  #printTable colgroup col:nth-child(6){width:70px}   /* Sala */
+  #printTable colgroup col:nth-child(7){width:auto}   /* Serviço — ocupa o resto */
+  #printTable colgroup col:nth-child(8){width:38px}   /* Dias */
+  #printTable colgroup col:nth-child(9){width:80px}   /* Status */
+  #printTable colgroup col:nth-child(10){width:55px}  /* Conclusão */
+  #printTable th{background:#13161e!important;color:#7a7f94!important;padding:4px 5px;text-align:left;font-size:7px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,.15)!important;white-space:nowrap;overflow:hidden}
+  #printTable td{padding:4px 5px;border-bottom:1px solid rgba(255,255,255,.05)!important;color:#e8eaf0!important;background:#0d0f14!important;vertical-align:top;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+  #printTable td.wrap{white-space:normal;word-break:break-word}
+  #printTable tr:nth-child(even) td{background:#13161e!important}
+  /* badges */
+  #printTable .badge{padding:2px 5px;border-radius:3px;font-size:7px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;white-space:nowrap}
+  #printTable .bd{background:rgba(45,232,164,.2)!important;color:#2de8a4!important}
+  #printTable .bc{background:rgba(247,95,95,.2)!important;color:#f75f5f!important}
+  #printTable .bw{background:rgba(247,169,79,.2)!important;color:#f7a94f!important}
+  #printTable .bv{background:rgba(167,139,250,.2)!important;color:#a78bfa!important}
+  #printTable .bs{background:rgba(56,189,248,.2)!important;color:#38bdf8!important}
+  #printTable .bp{background:rgba(244,114,182,.2)!important;color:#f472b6!important}
+  #printTable .bo{background:rgba(79,142,247,.2)!important;color:#4f8ef7!important}
 }
 
 /* MOBILE */
@@ -1039,7 +1061,7 @@ function renderKanban(){
     const body=col.querySelector('.kcol-body');
     body.addEventListener('dragover',e=>{e.preventDefault();body.classList.add('drag-over')});
     body.addEventListener('dragleave',()=>body.classList.remove('drag-over'));
-    body.addEventListener('drop',e=>{e.preventDefault();body.classList.remove('drag-over');if(dragRecord){const ns=col.dataset.status,os=getSit(dragRecord);if(ns!==os)openStatusModal(dragRecord,ns);dragRecord=null}});
+    body.addEventListener('drop',e=>{e.preventDefault();body.classList.remove('drag-over');if(dragRecord){const ns=col.dataset.status,os=getSit(dragRecord);if(ns!==os){const key=getRecordKey(dragRecord),sInfo=KANBAN_STATUSES.find(s=>s.code===ns);addLogEntry({type:'moved',ss:gf(dragRecord,'SS'),sol:gf(dragRecord,'Solicitante'),edif:gf(dragRecord,'Edificação','Edificacao'),from:os,to:ns,toLabel:sInfo?`${ns} - ${sInfo.label}`:ns});const ov=getOverrides();ov[key]=ns;saveOverrides(ov);const ssNum=gf(dragRecord,'SS');if(ssNum)syncToSheet(ssNum,ns);apply();renderKanban();}dragRecord=null}});
     recs.forEach(r=>body.appendChild(createKanbanCard(r,color)));
     wrap.appendChild(col);
   });
@@ -1154,10 +1176,32 @@ function getActiveFilters(){
 }
 
 function buildPrintTable(){
-  const cols=[{label:'SS',fn:r=>gf(r,'SS')||'—'},{label:'Data',fn:r=>fmtDate(gf(r,'DATA DE ABERTURA','DATA'))},{label:'Solicitante',fn:r=>gf(r,'Solicitante')||'—'},{label:'Edificação',fn:r=>gf(r,'Edificação','Edificacao')||'—'},{label:'Pavimento',fn:r=>gf(r,'Pavimento')||'—'},{label:'Sala',fn:r=>gf(r,'Sala')||'—'},{label:'Serviço',fn:r=>gf(r,'Descrição do serviço','Descricao do servico')||'—'},{label:'Dias',fn:r=>gf(r,'DIAS DA DEMANDA SEM ATENDIMENTO')||'0'},{label:'Status',fn:r=>{const s=getSit(r);const si=KANBAN_STATUSES.find(k=>k.code===s);return si?`${s} - ${si.label}`:s},badge:true},{label:'Conclusão',fn:r=>fmtDate(gf(r,'Data da Conclusão da OS','Data da Conclusao da OS'))||'—'}];
+  const hoje=new Date();hoje.setHours(0,0,0,0);
+  const cols=[
+    {label:'SS',fn:r=>gf(r,'SS')||'—'},
+    {label:'Data',fn:r=>fmtDate(gf(r,'DATA DE ABERTURA','DATA'))},
+    {label:'Solicitante',fn:r=>gf(r,'Solicitante')||'—'},
+    {label:'Edificação',fn:r=>gf(r,'Edificação','Edificacao')||'—'},
+    {label:'Pavimento',fn:r=>gf(r,'Pavimento')||'—'},
+    {label:'Sala',fn:r=>gf(r,'Sala')||'—'},
+    {label:'Serviço',fn:r=>gf(r,'Descrição do serviço','Descricao do servico')||'—',wrap:true},
+    {label:'Dias',fn:r=>{
+      const dAb=pDate(gf(r,'DATA','DATA DE ABERTURA'));
+      const dCo=pDate(gf(r,'Data da Conclusão da OS','Data da Conclusao da OS'));
+      if(!dAb)return'—';
+      if(dCo&&dCo>=dAb)return Math.round((dCo-dAb)/(1000*60*60*24))+'d';
+      return Math.round((hoje-dAb)/(1000*60*60*24))+'d';
+    }},
+    {label:'Status',fn:r=>{const s=getSit(r);const si=KANBAN_STATUSES.find(k=>k.code===s);return si?`${s} - ${si.label}`:s},badge:true},
+    {label:'Conclusão',fn:r=>fmtDate(gf(r,'Data da Conclusão da OS','Data da Conclusao da OS'))||'—'}
+  ];
+  const colgroup='<colgroup>'+cols.map(()=>'<col>').join('')+'</colgroup>';
   const thead='<thead><tr>'+cols.map(c=>`<th>${c.label}</th>`).join('')+'</tr></thead>';
-  const tbody='<tbody>'+FIL.map(r=>`<tr>${cols.map(col=>{if(col.badge){const s=getSit(r);return`<td><span class="badge ${bCls(s)}">${col.fn(r)}</span></td>`}return`<td>${col.fn(r)}</td>`}).join('')}</tr>`).join('')+'</tbody>';
-  document.getElementById('printTable').innerHTML=thead+tbody;
+  const tbody='<tbody>'+FIL.map(r=>`<tr>${cols.map(col=>{
+    if(col.badge){const s=getSit(r);return`<td><span class="badge ${bCls(s)}">${col.fn(r)}</span></td>`}
+    return`<td${col.wrap?' class="wrap"':''}>${col.fn(r)}</td>`
+  }).join('')}</tr>`).join('')+'</tbody>';
+  document.getElementById('printTable').innerHTML=colgroup+thead+tbody;
 }
 
 function buildPrintHeader(){

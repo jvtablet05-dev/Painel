@@ -642,15 +642,13 @@ const KANBAN_STATUSES=[
 
 const STATUS_ALIASES={
   '00':'00','01':'01','02':'02','03':'03','04':'04','05':'05','06':'06',
-  '00 - em análise pela cmpe':'00','01 - solicitação indeferida':'01',
-  '02 - solicitação aprovada / aguardando empresa':'02','02 - aguardando empresa':'02',
-  '03 - em execução':'03','04 - necessita de materiais. em aquisição':'04',
-  '04 - em aquisição':'04','05 - solicitação finalizada':'05',
-  '06- em espera. devido limitação orçamentária.':'06',
-  '06 - em espera. devido limitação orçamentária.':'06',
-  '06 - limitação orçamentária':'06',
-  'finalizada':'05','concluída':'05','concluida':'05','concluído':'05',
-  'cancelada':'01','em aberto':'03','aguardando':'02','em atendimento':'03',
+  '01 - solicitação indeferida':'01',
+  '02 - aguardando empresa':'02',
+  '03 - em execução':'03',
+  '04 - em aquisição':'04',
+  '05 - solicitação finalizada':'05',
+  '06 - em espera (orçamento)':'06',
+  '00 - em análise pela cmpe':'00',
 };
 
 let modalRecord=null,modalSelectedStatus=null;
@@ -759,9 +757,24 @@ function gf(r,...ks){for(const k of ks){for(const rk of Object.keys(r)){if(rk.tr
 function getEffectiveStatus(r){const ss=getRecordKey(r);const ov=getOverrides();if(ov[ss])return ov[ss];return getOriginalSit(r)}
 
 function getOriginalSit(r){
-  const raw=gf(r,'Status','status','STATUS','Situação','situacao').trim();
-  if(raw){const key=raw.toLowerCase().trim();if(STATUS_ALIASES[key])return STATUS_ALIASES[key];if(/^\d+$/.test(raw)){const p=raw.padStart(2,'0');if(STATUS_ALIASES[p])return STATUS_ALIASES[p];}const m=raw.match(/^0*(\d+)/);if(m){const p=m[1].padStart(2,'0');if(STATUS_ALIASES[p])return STATUS_ALIASES[p];}}
-  const ss=gf(r,'SS');if(/CANCELADA/i.test(ss))return'01';if(gf(r,'Data da Conclusão da OS','Data da Conclusao da OS'))return'05';return'02';
+  // lê coluna "Situação apresentada pela empresa" primeiro, depois "Status"
+  const raw = (
+    gf(r,'Situação apresentada pela empresa','Situacao apresentada pela empresa') ||
+    gf(r,'Status','status','STATUS','Situação','situacao')
+  ).trim();
+
+  if(raw){
+    const key=raw.toLowerCase().trim();
+    if(STATUS_ALIASES[key])return STATUS_ALIASES[key];
+    if(/^\d+$/.test(raw)){const p=raw.padStart(2,'0');if(STATUS_ALIASES[p])return STATUS_ALIASES[p];}
+    const m=raw.match(/^0*(\d+)/);
+    if(m){const p=m[1].padStart(2,'0');if(STATUS_ALIASES[p])return STATUS_ALIASES[p];}
+  }
+
+  const ss=gf(r,'SS');
+  if(/CANCELADA/i.test(ss))return'01';
+  if(gf(r,'Data da Conclusão da OS','Data da Conclusao da OS'))return'05';
+  return'02';
 }
 
 function getSit(r){return getEffectiveStatus(r)}
@@ -790,6 +803,7 @@ const SCRIPT_URL='https://script.google.com/macros/s/AKfycbzsiNvnxQz031wzM49ybwx
 
 function autoLoad(){
   showLoading(true);
+  localStorage.removeItem(STATUS_OVERRIDES_KEY); // ← limpa ANTES de buscar
   fetch(SCRIPT_URL).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json()})
     .then(json=>{ALL=Array.isArray(json)?json:(json.data||[]);if(!ALL.length)throw new Error('Sem dados');initDash();showLoading(false);})
     .catch(e=>{showLoading(false);alert('Erro ao carregar dados: '+e.message);});
@@ -834,6 +848,8 @@ function loadDemo(){
 //  INIT
 // ═══════════════════════════════════════════════════════════
 function initDash(){
+  // Limpa overrides locais — status sempre vem da planilha
+  localStorage.removeItem(STATUS_OVERRIDES_KEY);
   document.getElementById('cp').style.display='none';
   document.getElementById('dash').style.display='block';
   document.getElementById('sidebar').style.display='flex';

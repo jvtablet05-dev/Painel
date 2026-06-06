@@ -21,7 +21,7 @@
 }
 body{background:var(--bg);color:var(--text);font-family:var(--fh);font-size:14px;line-height:1.6;min-height:100vh}
 
-/* ── TOPBAR ── */
+/* TOPBAR */
 .topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:54px;position:sticky;top:0;z-index:100}
 .brand{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:700;letter-spacing:.03em}
 .topbar-right{display:flex;align-items:center;gap:8px}
@@ -29,23 +29,25 @@ body{background:var(--bg);color:var(--text);font-family:var(--fh);font-size:14px
 .spinner{width:13px;height:13px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* ── VIEW TABS ── */
+/* VIEW TABS */
 .view-tabs{display:flex;gap:2px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:3px}
 .vtab{background:transparent;border:none;color:var(--muted);font-family:var(--fh);font-size:12px;font-weight:600;padding:4px 12px;border-radius:6px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:5px}
 .vtab.active{background:var(--bg2);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.4)}
 .vtab:hover:not(.active){color:var(--text)}
 
-/* ── BTNs ── */
+/* BTNS */
 .btn{background:transparent;border:1px solid var(--border2);color:var(--text);font-family:var(--fh);font-size:12px;font-weight:500;padding:5px 13px;border-radius:6px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:background .15s}
 .btn:hover{background:rgba(255,255,255,.06)}
 .btn-p{background:var(--accent);border-color:var(--accent);color:#fff}
 .btn-p:hover{background:#6aa1ff;border-color:#6aa1ff}
 .btn-g{background:var(--green);border-color:var(--green);color:#0d1a14}
 .btn-g:hover{opacity:.9}
-.btn-warn{background:var(--warn);border-color:var(--warn);color:#1a1200}
-.btn-warn:hover{opacity:.9}
 
-/* ── LAYOUT ── */
+/* NOVA OS BTN — destaque verde na topbar */
+.btn-nova-os{background:var(--green);border:none;color:#0d1a14;font-family:var(--fh);font-size:12px;font-weight:700;padding:6px 14px;border-radius:6px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;letter-spacing:.02em;transition:opacity .15s}
+.btn-nova-os:hover{opacity:.85}
+
+/* LAYOUT */
 .layout{display:flex;min-height:calc(100vh - 54px)}
 .sidebar{width:230px;flex-shrink:0;background:var(--bg2);border-right:1px solid var(--border);padding:1.25rem .9rem;display:flex;flex-direction:column;gap:1.1rem;overflow-y:auto}
 .slabel{font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-bottom:6px;display:block}
@@ -61,8 +63,6 @@ body{background:var(--bg);color:var(--text);font-family:var(--fh);font-size:14px
 .range-row input[type=range]{flex:1;accent-color:var(--accent);cursor:pointer}
 .rval{min-width:22px;text-align:right;color:var(--accent)}
 hr.sdiv{border:none;border-top:1px solid var(--border)}
-
-/* ── FILTRO CONCLUSÃO destaque visual ── */
 .filter-section-conclusao{background:rgba(45,232,164,.04);border:1px solid rgba(45,232,164,.15);border-radius:8px;padding:9px 10px}
 .filter-section-conclusao .slabel{color:var(--green);margin-bottom:6px}
 .filter-section-conclusao .fi{border-color:rgba(45,232,164,.2)}
@@ -70,7 +70,7 @@ hr.sdiv{border:none;border-top:1px solid var(--border)}
 
 .main{flex:1;overflow-y:auto;padding:1.25rem 1.5rem;display:flex;flex-direction:column;gap:1.1rem}
 
-/* ── CONNECT ── */
+/* CONNECT */
 .connect{background:var(--bg2);border:1px dashed var(--border2);border-radius:var(--rl);padding:1.75rem 2rem}
 .connect h2{font-size:17px;margin-bottom:5px}
 .connect p.sub{font-size:13px;color:var(--muted);margin-bottom:1.25rem}
@@ -90,7 +90,7 @@ hr.sdiv{border:none;border-top:1px solid var(--border)}
 .upload-zone input{display:none}
 .upload-zone p{font-size:13px;color:var(--muted);margin:0}
 
-/* ── METRICS ── */
+/* METRICS */
 .metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:9px}
 .mcard{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:13px 15px;position:relative;overflow:hidden}
 .mcard::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--accent)}
@@ -99,7 +99,7 @@ hr.sdiv{border:none;border-top:1px solid var(--border)}
 .mval{font-size:26px;font-weight:700;line-height:1;font-family:var(--fm)}
 .msub{font-size:11px;color:var(--muted);margin-top:3px}
 
-/* ── CHARTS ── */
+/* CHARTS */
 .cgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.1rem}
 .ccard{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:1.1rem 1.25rem}
 .ctitle{font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;margin-bottom:12px;display:flex;justify-content:space-between}
@@ -109,7 +109,7 @@ hr.sdiv{border:none;border-top:1px solid var(--border)}
 .li{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted)}
 .ld{width:8px;height:8px;border-radius:2px;flex-shrink:0}
 
-/* ── TABLE ── */
+/* TABLE */
 .tcard{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden}
 .thead2{padding:.9rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
 .ttitle{font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--muted);text-transform:uppercase}
@@ -142,7 +142,7 @@ tr:hover td{background:rgba(255,255,255,.025)}
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
 
-/* ── KANBAN ── */
+/* KANBAN */
 #kanbanView{display:none}
 .kanban-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem}
 .kanban-header h3{font-size:13px;font-weight:700;letter-spacing:.06em;color:var(--muted);text-transform:uppercase}
@@ -164,7 +164,7 @@ tr:hover td{background:rgba(255,255,255,.025)}
 .kcard-dias{font-size:10px;font-family:var(--fm);margin-top:6px;font-weight:600}
 .kcard-desc{font-size:10px;color:var(--muted);margin-top:4px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.45}
 
-/* ── LOG DRAWER ── */
+/* LOG DRAWER */
 .log-overlay{position:fixed;top:0;left:0;right:0;bottom:0;width:100%;height:100%;background:rgba(0,0,0,.6);z-index:200;display:none;backdrop-filter:blur(3px)}
 .log-overlay.open{display:flex;justify-content:flex-end}
 .log-drawer{width:440px;max-width:95vw;background:var(--bg2);border-left:1px solid var(--border);height:100%;display:flex;flex-direction:column;animation:slideIn .2s ease}
@@ -180,7 +180,6 @@ tr:hover td{background:rgba(255,255,255,.025)}
 .log-empty{text-align:center;padding:2rem;color:var(--muted);font-size:13px}
 .log-entry{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;position:relative;border-left:3px solid var(--border)}
 .log-entry.moved{border-left-color:var(--accent)}
-.log-entry.edited{border-left-color:var(--warn)}
 .log-entry.created{border-left-color:var(--green)}
 .log-ts{font-size:10px;color:var(--muted);font-family:var(--fm);margin-bottom:5px}
 .log-ss{font-size:11px;font-weight:700;color:var(--accent);margin-bottom:4px}
@@ -191,9 +190,8 @@ tr:hover td{background:rgba(255,255,255,.025)}
 .log-foot{padding:.7rem 1.25rem;border-top:1px solid var(--border);display:flex;gap:7px;flex-shrink:0}
 .log-count{font-size:11px;color:var(--muted);font-family:var(--fm);display:flex;align-items:center}
 
-/* ── STATUS EDIT MODAL ── */
+/* STATUS MODAL */
 .modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;width:100%;height:100%;background:rgba(0,0,0,.7);z-index:300;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
-.modal-overlay.open{display:flex;-webkit-overflow-scrolling:touch;}
 .modal-overlay.open{display:flex}
 .modal{background:var(--bg2);border:1px solid var(--border2);border-radius:16px;padding:1.5rem;width:400px;max-width:94vw;animation:popIn .18s ease}
 @keyframes popIn{from{transform:scale(.92);opacity:0}to{transform:scale(1);opacity:1}}
@@ -205,16 +203,55 @@ tr:hover td{background:rgba(255,255,255,.025)}
 .sopt.selected{border-color:var(--accent);background:rgba(79,142,247,.1)}
 .sopt-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
 .sopt-label{font-size:12px;font-weight:600;color:var(--text)}
-.sopt-sub{font-size:10px;color:var(--muted);margin-left:auto;font-family:var(--fm)}
 .modal-actions{display:flex;gap:8px;margin-top:1rem;justify-content:flex-end}
 
-/* ── PRINT ── */
+/* =========================================
+   NOVA OS MODAL — sobreposição completa z-index:400
+   ========================================= */
+.nos-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.78);z-index:400;display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px);padding:1rem}
+.nos-overlay.open{display:flex}
+.nos-modal{background:var(--bg2);border:1px solid var(--border2);border-radius:16px;width:100%;max-width:580px;max-height:90vh;display:flex;flex-direction:column;animation:popIn .18s ease;overflow:hidden}
+.nos-head{background:var(--bg);padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;border-bottom:1px solid var(--border)}
+.nos-head h2{color:var(--text);font-size:15px;font-weight:600;display:flex;align-items:center;gap:9px;margin:0}
+.nos-badge{background:var(--accent);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;letter-spacing:.04em}
+.nos-close{background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;line-height:1;padding:2px 6px;border-radius:4px;transition:background .12s}
+.nos-close:hover{background:var(--bg3);color:var(--text)}
+.nos-body{padding:1.25rem;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:0}
+.nos-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.nos-group{display:flex;flex-direction:column;gap:5px}
+.nos-group.full{grid-column:1/-1}
+.nos-group label{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.05em;text-transform:uppercase}
+.nos-group label .req{color:var(--danger);margin-left:2px}
+.nos-group input,.nos-group select,.nos-group textarea{width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:var(--fh);font-size:13px;padding:8px 10px;border-radius:6px;outline:none;transition:border-color .15s;appearance:none;-webkit-appearance:none}
+.nos-group input::placeholder{color:var(--muted)}
+.nos-group input:focus,.nos-group select:focus,.nos-group textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(79,142,247,.12)}
+.nos-group textarea{resize:vertical;min-height:80px}
+.nos-group select option{background:var(--bg3)}
+.nos-divider{border:none;border-top:1px solid var(--border);margin:14px 0}
+.nos-section{font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-bottom:10px}
+.nos-tags{display:flex;flex-wrap:wrap;gap:6px}
+.nos-tag{background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:5px 12px;font-size:12px;cursor:pointer;transition:all .12s;color:var(--muted);user-select:none}
+.nos-tag:hover{border-color:var(--border2);color:var(--text)}
+.nos-tag.sel{background:rgba(79,142,247,.12);border-color:var(--accent);color:var(--accent);font-weight:600}
+.nos-hint{font-size:11px;color:var(--muted);margin-top:4px}
+.nos-success{background:rgba(45,232,164,.1);border:1px solid rgba(45,232,164,.3);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--green);display:none;align-items:center;gap:8px;margin-bottom:14px}
+.nos-success.show{display:flex}
+.nos-foot{padding:.9rem 1.25rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--bg);flex-shrink:0}
+.nos-foot-info{font-size:11px;color:var(--muted)}
+.nos-foot-actions{display:flex;gap:8px}
+.nos-cancel{background:transparent;border:1px solid var(--border2);border-radius:6px;color:var(--muted);font-family:var(--fh);font-size:12px;padding:6px 14px;cursor:pointer;transition:background .15s}
+.nos-cancel:hover{background:var(--bg3)}
+.nos-submit{background:var(--green);border:none;border-radius:6px;color:#0d1a14;font-family:var(--fh);font-size:12px;font-weight:700;padding:6px 18px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:opacity .15s}
+.nos-submit:hover{opacity:.85}
+.nos-submit:disabled{opacity:.4;cursor:not-allowed}
+
+/* PRINT */
 #printTable{display:none}
 @media print{
   *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   @page{size:A4 landscape;margin:12mm 10mm}
   body{background:#fff!important;color:#111!important;font-family:Arial,sans-serif;font-size:10px}
-  .topbar,.sidebar,.connect,#dash .cgrid,#dash .metrics,.thead2 input,.tfoot,.pgn,.btn,#loadInd,.view-tabs,#kanbanView,.log-overlay,.modal-overlay{display:none!important}
+  .topbar,.sidebar,.connect,#dash .cgrid,#dash .metrics,.thead2 input,.tfoot,.pgn,.btn,#loadInd,.view-tabs,#kanbanView,.log-overlay,.modal-overlay,.nos-overlay{display:none!important}
   .layout{display:block}
   .main{padding:0}
   #dash{display:block!important}
@@ -232,7 +269,7 @@ tr:hover td{background:rgba(255,255,255,.025)}
   .twrap table{display:none}
 }
 
-/* ── MOBILE ── */
+/* MOBILE */
 @media(max-width:768px){
   .topbar{padding:0 .9rem;height:50px}
   .topbar .btn:not(#btnAtualizar){display:none}
@@ -254,6 +291,8 @@ tr:hover td{background:rgba(255,255,255,.025)}
   .pb{padding:2px 6px}
   .kcol{min-width:175px;width:175px}
   .log-drawer{width:100vw}
+  .nos-grid{grid-template-columns:1fr}
+  .nos-group.full{grid-column:1}
 }
 @media(max-width:480px){
   .metrics{grid-template-columns:repeat(2,1fr)}
@@ -266,7 +305,7 @@ tr:hover td{background:rgba(255,255,255,.025)}
 </head>
 <body>
 
-<!-- ═══════════════════════════ TOPBAR ═══════════════════════════ -->
+<!-- TOPBAR -->
 <div class="topbar">
   <div class="brand">
     <svg width="19" height="19" viewBox="0 0 20 20" fill="none"><rect x="1" y="1" width="7" height="7" rx="2" fill="#4f8ef7"/><rect x="12" y="1" width="7" height="7" rx="2" fill="#4f8ef7" opacity=".5"/><rect x="1" y="12" width="7" height="7" rx="2" fill="#4f8ef7" opacity=".5"/><rect x="12" y="12" width="7" height="7" rx="2" fill="#2de8a4"/></svg>
@@ -278,7 +317,9 @@ tr:hover td{background:rgba(255,255,255,.025)}
       <button class="vtab active" onclick="setView('dash',this)">📊 Dashboard</button>
       <button class="vtab" onclick="setView('kanban',this)">🗂 Kanban</button>
     </div>
-    <button class="btn" onclick="openLog()" id="btnLog" style="display:none" title="Ver histórico de edições">📋 Log <span id="logBadge" style="display:none;background:var(--warn);color:#000;border-radius:8px;font-size:10px;padding:1px 5px;margin-left:2px"></span></button>
+    <!-- BOTÃO NOVA OS — sempre visível na topbar -->
+    <button class="btn-nova-os" onclick="openNovaOS()">＋ Nova OS</button>
+    <button class="btn" onclick="openLog()" id="btnLog" style="display:none" title="Histórico de edições">📋 Log <span id="logBadge" style="display:none;background:var(--warn);color:#000;border-radius:8px;font-size:10px;padding:1px 5px;margin-left:2px"></span></button>
     <button class="btn" onclick="exportCSV()">⬇ CSV</button>
     <button class="btn" onclick="printDash()">🖨 Imprimir</button>
     <button class="btn" id="btnAtualizar" onclick="autoLoad()">⟳ Atualizar</button>
@@ -286,21 +327,15 @@ tr:hover td{background:rgba(255,255,255,.025)}
 </div>
 
 <div class="layout">
-  <!-- ═══════════════ SIDEBAR ═══════════════ -->
+  <!-- SIDEBAR -->
   <aside class="sidebar" id="sidebar" style="display:none">
     <div><span class="slabel">Busca livre</span><input class="fi" type="text" id="fSearch" placeholder="Solicitante, sala, serviço..." oninput="apply()"></div>
     <div><span class="slabel">Período de abertura</span><div class="date-row"><input class="fi" type="date" id="fDf" onchange="apply()"><input class="fi" type="date" id="fDt" onchange="apply()"></div></div>
-
-    <!-- ✅ NOVO: Filtro por período de conclusão -->
     <div class="filter-section-conclusao">
       <span class="slabel">✔ Período de conclusão</span>
-      <div class="date-row">
-        <input class="fi" type="date" id="fDcf" onchange="apply()" title="Concluída a partir de">
-        <input class="fi" type="date" id="fDct" onchange="apply()" title="Concluída até">
-      </div>
+      <div class="date-row"><input class="fi" type="date" id="fDcf" onchange="apply()"><input class="fi" type="date" id="fDct" onchange="apply()"></div>
       <div style="font-size:10px;color:var(--green);margin-top:5px;opacity:.7">Exibe apenas OS com data de conclusão no período</div>
     </div>
-
     <div><span class="slabel">Mês de abertura</span><select class="fi" id="fMes" onchange="apply()"><option value="">Todos os meses</option></select></div>
     <div><span class="slabel">Status</span><div class="chk-grp" id="chkSt"></div></div>
     <div><span class="slabel">Edificação</span><select class="fi" id="fEd" onchange="apply()"><option value="">Todas</option></select></div>
@@ -313,9 +348,8 @@ tr:hover td{background:rgba(255,255,255,.025)}
     <button class="btn" style="width:100%;justify-content:center" onclick="reset()">✕ Limpar filtros</button>
   </aside>
 
-  <!-- ═══════════════ MAIN ═══════════════ -->
+  <!-- MAIN -->
   <main class="main">
-
     <!-- CONNECT PANEL -->
     <div class="connect" id="cp" style="display:none">
       <h2>Conectar dados</h2>
@@ -403,17 +437,13 @@ tr:hover td{background:rgba(255,255,255,.025)}
       </div>
       <div class="kanban-wrap" id="kanbanWrap"></div>
     </div>
-
   </main>
 </div>
 
-<!-- ═══════════════ LOG DRAWER ═══════════════ -->
+<!-- LOG DRAWER -->
 <div class="log-overlay" id="logOverlay" onclick="if(event.target===this)closeLog()">
   <div class="log-drawer">
-    <div class="log-head">
-      <h3>📋 Histórico de Edições</h3>
-      <button class="log-close" onclick="closeLog()">✕</button>
-    </div>
+    <div class="log-head"><h3>📋 Histórico de Edições</h3><button class="log-close" onclick="closeLog()">✕</button></div>
     <div class="log-filter"><input type="text" id="logSearch" placeholder="Filtrar por SS, status..." oninput="renderLog()"></div>
     <div class="log-body" id="logBody"></div>
     <div class="log-foot">
@@ -425,7 +455,7 @@ tr:hover td{background:rgba(255,255,255,.025)}
   </div>
 </div>
 
-<!-- ═══════════════ STATUS MODAL ═══════════════ -->
+<!-- STATUS MODAL -->
 <div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
   <div class="modal">
     <h4 id="modalTitle">Alterar Status</h4>
@@ -438,10 +468,163 @@ tr:hover td{background:rgba(255,255,255,.025)}
   </div>
 </div>
 
+<!-- NOVA OS MODAL (z-index:400 — acima de tudo) -->
+<div class="nos-overlay" id="nosOverlay" onclick="if(event.target===this)closeNovaOS()">
+  <div class="nos-modal">
+    <div class="nos-head">
+      <h2>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4f8ef7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+        Abrir Ordem de Serviço
+        <span class="nos-badge">Nova</span>
+      </h2>
+      <button class="nos-close" onclick="closeNovaOS()">✕</button>
+    </div>
+
+    <div class="nos-body">
+      <div class="nos-success" id="nosSuccess">✔ OS aberta com sucesso! Planilha atualizada.</div>
+
+      <!-- SEÇÃO 1: E-mail + Tipo -->
+      <p class="nos-section">Identificação</p>
+      <div class="nos-grid">
+        <div class="nos-group full">
+          <label>E-mail <span class="req">*</span></label>
+          <input type="email" id="nosEmail" placeholder="Seu e-mail">
+        </div>
+        <div class="nos-group full">
+          <label>Tipo <span class="req">*</span></label>
+          <select id="nosTipoGeral">
+            <option value="">Selecione...</option>
+            <option>Manutenção Predial</option>
+            <option>Manutenção de equipamentos</option>
+            <option>Manutenção de extitores>
+            <option>Outro</option>
+          </select>
+        </div>
+      </div>
+
+      <hr class="nos-divider">
+      <!-- SEÇÃO 2: Tipo de manutenção + Tipo de problema -->
+      <p class="nos-section">Tipo de manutenção predial</p>
+      <div class="nos-grid">
+        <div class="nos-group full">
+          <label>Tipo de manutenção predial</label>
+          <select id="nosTipoManut">
+            <option value="">Selecione...</option>
+            <option>Elétrica</option>
+            <option>Hidráulica</option>
+            <option>Civil</option>
+            <option>Climatização</option>
+            <option>Eletromecânica</option>
+            <option>Estrutural</option>
+            <option>Outro</option>
+          </select>
+        </div>
+        <div class="nos-group full">
+          <label>Tipo de problema predial</label>
+          <select id="nosTipoProb">
+            <option value="">Selecione...</option>
+            <option>Elétrico</option>
+            <option>Hidráulico</option>
+            <option>Estrutural</option>
+            <option>Mecânico</option>
+            <option>Civil</option>
+            <option>Climatização</option>
+            <option>Outro</option>
+          </select>
+        </div>
+      </div>
+
+      <hr class="nos-divider">
+      <!-- SEÇÃO 3: Identificação do demandante -->
+      <p class="nos-section">Identificação do demandante</p>
+      <div class="nos-grid">
+        <div class="nos-group full">
+          <label>Solicitante <span class="req">*</span></label>
+          <input type="text" id="nosNome" placeholder="Nome completo do solicitante">
+          <span class="nos-hint">O solicitante deve ser a pessoa realizando a solicitação, ao oposto de um setor ou departamento.</span>
+        </div>
+        <div class="nos-group">
+          <label>Telefone <span class="req">*</span></label>
+          <input type="text" id="nosContato" placeholder="Contato do solicitante">
+        </div>
+        <div class="nos-group">
+          <label>Edificação <span class="req">*</span></label>
+          <select id="nosEdif">
+            <option value="">Selecione...</option>
+            <option>1. Reitoria (Novo bloco)</option>
+            <option>2. Bloco A</option>
+            <option>3. Bloco B</option>
+            <option>4. Bloco C</option>
+            <option>5. Biblioteca</option>
+            <option>6. Auditório</option>
+            <option>7. Restaurante Universitário</option>
+            <option>8. Outro</option>
+            <option>9. Área externa</option>
+          </select>
+        </div>
+        <div class="nos-group">
+          <label>Pavimento <span class="req">*</span></label>
+          <select id="nosPav">
+            <option value="">Selecione...</option>
+            <option>Térreo</option>
+            <option>1 andar</option>
+            <option>2 andar</option>
+            <option>3 andar</option>
+            <option>Cobertura</option>
+          </select>
+        </div>
+        <div class="nos-group">
+          <label>Sala <span class="req">*</span></label>
+          <input type="text" id="nosSala" placeholder="Ex: 101, Recepção...">
+        </div>
+        <div class="nos-group full">
+          <label>Descrição do serviço <span class="req">*</span></label>
+          <textarea id="nosDesc" placeholder="Descreva o problema ou serviço solicitado..."></textarea>
+        </div>
+        <div class="nos-group">
+          <label>AREA_CODIG <span class="req">*</span></label>
+          <select id="nosAreaCod">
+            <option value="">Selecione...</option>
+            <option>MANUTENÇÃO CIVIL</option>
+            <option>MANUTENÇÃO ELÉTRICA</option>
+            <option>MANUTENÇÃO MECÂNICA</option>
+          </select>
+        </div>
+        <div class="nos-group">
+          <label>Tipo de OS <span class="req">*</span></label>
+          <select id="nosTipoOS">
+            <option value="">Selecione...</option>
+            <option>Corretiva</option>
+            <option>Preventiva</option>
+            <option>Preditiva</option>
+          </select>
+        </div>
+        <div class="nos-group">
+          <label>Patrimônio</label>
+          <input type="text" id="nosPatrimonio" placeholder="Número do patrimônio (opcional)">
+        </div>
+        <div class="nos-group">
+          <label>Fotos</label>
+          <input type="text" id="nosFotos" placeholder="Link de fotos (opcional)">
+        </div>
+      </div>
+     
+    </div>
+
+    <div class="nos-foot">
+      <span class="nos-foot-info" id="nosFootInfo">Campos com <span style="color:var(--danger)">*</span> são obrigatórios</span>
+      <div class="nos-foot-actions">
+        <button class="nos-cancel" onclick="closeNovaOS()">Cancelar</button>
+        <button class="nos-submit" id="nosBtnSubmit" onclick="nosSubmit()">↑ Abrir OS</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
-// ═══════════════════════════════════════════════════════════════
-//  CONSTANTS & STATE
-// ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════════════
 let ALL=[],FIL=[],charts={},sortF='data',sortD=-1,lastSort='data',pg=0;
 const PS=20;
 const LOG_KEY='os_dashboard_log_v2';
@@ -459,174 +642,175 @@ const KANBAN_STATUSES=[
 
 const STATUS_ALIASES={
   '00':'00','01':'01','02':'02','03':'03','04':'04','05':'05','06':'06',
-  '00 - em análise pela cmpe':'00',
-  '01 - solicitação indeferida':'01',
-  '02 - solicitação aprovada / aguardando empresa':'02',
-  '02 - aguardando empresa':'02',
-  '03 - em execução':'03',
-  '04 - necessita de materiais. em aquisição':'04',
-  '04 - em aquisição':'04',
-  '05 - solicitação finalizada':'05',
+  '00 - em análise pela cmpe':'00','01 - solicitação indeferida':'01',
+  '02 - solicitação aprovada / aguardando empresa':'02','02 - aguardando empresa':'02',
+  '03 - em execução':'03','04 - necessita de materiais. em aquisição':'04',
+  '04 - em aquisição':'04','05 - solicitação finalizada':'05',
   '06- em espera. devido limitação orçamentária.':'06',
   '06 - em espera. devido limitação orçamentária.':'06',
   '06 - limitação orçamentária':'06',
   'finalizada':'05','concluída':'05','concluida':'05','concluído':'05',
-  'cancelada':'01',
-  'em aberto':'03',
-  'aguardando':'02',
-  'em atendimento':'03',
+  'cancelada':'01','em aberto':'03','aguardando':'02','em atendimento':'03',
 };
 
-let modalRecord=null, modalSelectedStatus=null;
+let modalRecord=null,modalSelectedStatus=null;
+let nosSelectedTipo='',nosSelectedProb='';
 
-// ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 //  PERSISTENCE
-// ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 function getLog(){try{return JSON.parse(localStorage.getItem(LOG_KEY)||'[]')}catch{return[]}}
 function saveLog(l){try{localStorage.setItem(LOG_KEY,JSON.stringify(l))}catch{}}
 function getOverrides(){try{return JSON.parse(localStorage.getItem(STATUS_OVERRIDES_KEY)||'{}')}catch{return{}}}
 function saveOverrides(o){try{localStorage.setItem(STATUS_OVERRIDES_KEY,JSON.stringify(o))}catch{}}
 
-function addLogEntry(entry){
-  const log=getLog();
-  log.unshift({...entry,ts:new Date().toISOString(),id:Date.now()});
-  if(log.length>500)log.splice(500);
-  saveLog(log);
-  updateLogBadge();
+function addLogEntry(e){
+  const l=getLog();l.unshift({...e,ts:new Date().toISOString(),id:Date.now()});
+  if(l.length>500)l.splice(500);saveLog(l);updateLogBadge();
 }
 
 function updateLogBadge(){
-  const l=getLog();
-  const b=document.getElementById('logBadge');
-  if(l.length>0){b.textContent=l.length;b.style.display='inline'}
-  else b.style.display='none';
+  const l=getLog(),b=document.getElementById('logBadge');
+  if(l.length){b.textContent=l.length;b.style.display='inline'}else b.style.display='none';
 }
 
-// ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
+//  NOVA OS MODAL
+// ═══════════════════════════════════════════════════════════
+function openNovaOS(){nosResetForm();document.getElementById('nosOverlay').classList.add('open')}
+function closeNovaOS(){document.getElementById('nosOverlay').classList.remove('open')}
+
+function nosTag(el,group){
+  const cid=group==='tipo'?'nosTipoTags':'nosProbTags';
+  document.getElementById(cid).querySelectorAll('.nos-tag').forEach(t=>t.classList.remove('sel'));
+  el.classList.add('sel');
+  if(group==='tipo')nosSelectedTipo=el.textContent;else nosSelectedProb=el.textContent;
+}
+
+function nosSubmit(){
+  const nome=document.getElementById('nosNome').value.trim();
+  const email=document.getElementById('nosEmail').value.trim();
+  const edif=document.getElementById('nosEdif').value;
+  const pav=document.getElementById('nosPav').value;
+  const sala=document.getElementById('nosSala').value.trim();
+  const desc=document.getElementById('nosDesc').value.trim();
+  const contato=document.getElementById('nosContato').value.trim();
+  const areaCod=document.getElementById('nosAreaCod').value.trim();
+  const tipoOS=document.getElementById('nosTipoOS').value;
+  const tipoGeral=document.getElementById('nosTipoGeral').value;
+  const tipoManut=document.getElementById('nosTipoManut').value;
+  const tipoProb=document.getElementById('nosTipoProb').value;
+  const patrimonio=document.getElementById('nosPatrimonio').value.trim();
+  const fotos=document.getElementById('nosFotos').value.trim();
+  const info=document.getElementById('nosFootInfo');
+  if(!nome||!email||!edif||!pav||!desc||!contato||!areaCod||!tipoOS){info.innerHTML='<span style="color:var(--danger)">Preencha os campos obrigatórios.</span>';return;}
+  const btn=document.getElementById('nosBtnSubmit');
+  btn.disabled=true;btn.textContent='↻ Enviando...';
+  const url=getSyncUrl();
+  if(url){
+    const hoje=new Date();
+    const ds=`${String(hoje.getDate()).padStart(2,'0')}/${String(hoje.getMonth()+1).padStart(2,'0')}/${hoje.getFullYear()}`;
+    const p=new URLSearchParams({action:'insertOS',email:email,solicitante:nome,contato:contato,edificacao:edif,pavimento:pav,sala:sala,tipoGeral:tipoGeral,tipoManut:tipoManut,tipoProblema:tipoProb,descricao:desc,areaCod:areaCod,tipoOS:tipoOS,patrimonio:patrimonio,fotos:fotos,data:ds});
+    fetch(url+'?'+p.toString()).then(r=>r.json()).then(json=>{
+      if(json.ss){
+        const hoje2=new Date();
+        const ds2=`${String(hoje2.getDate()).padStart(2,'0')}/${String(hoje2.getMonth()+1).padStart(2,'0')}/${hoje2.getFullYear()}`;
+        ALL.push({'SS':json.ss,'DATA':ds2,'DATA DE ABERTURA':ds2,'Email':email,'Solicitante':nome,'Edificação':edif,'Pavimento':pav,'Sala':sala,'Descrição do serviço':desc,'Tipo de OS':tipoOS,'Tipo de problema predial':tipoProb,'AREA_CODIG':areaCod,'DIAS DA DEMANDA SEM ATENDIMENTO':'0','Status':'02','Envio':'pendente'});
+        buildDrop();apply();
+      }
+      addLogEntry({type:'created',ss:json.ss||'Nova OS',sol:nome,edif:edif,from:'—',to:'02',toLabel:'02 - Aguardando empresa'});
+      nosShowSuccess();
+    }).catch(()=>nosShowSuccess());
+  }else{setTimeout(()=>nosShowSuccess(),900);}
+}
+
+function nosShowSuccess(){
+  document.getElementById('nosSuccess').classList.add('show');
+  document.getElementById('nosBtnSubmit').textContent='✔ Enviado!';
+  document.getElementById('nosFootInfo').textContent='OS registrada com sucesso.';
+  setTimeout(()=>closeNovaOS(),2000);
+}
+
+function nosResetForm(){
+  ['nosNome','nosEmail','nosContato','nosSala','nosDesc','nosAreaCod','nosPatrimonio','nosFotos'].forEach(id=>document.getElementById(id).value='');
+  ['nosEdif','nosPav','nosTipoGeral','nosTipoManut','nosTipoProb','nosTipoOS'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('nosSuccess').classList.remove('show');
+  document.getElementById('nosFootInfo').innerHTML='Campos com <span style="color:var(--danger)">*</span> são obrigatórios';
+  const btn=document.getElementById('nosBtnSubmit');btn.disabled=false;btn.textContent='↑ Abrir OS';
+}
+
+// ═══════════════════════════════════════════════════════════
 //  VIEW SWITCHING
-// ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 let currentView='dash';
 function setView(v,el){
   currentView=v;
-  document.querySelectorAll('.vtab').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
+  document.querySelectorAll('.vtab').forEach(t=>t.classList.remove('active'));el.classList.add('active');
   document.getElementById('dash').style.display=v==='dash'?'block':'none';
   document.getElementById('kanbanView').style.display=v==='kanban'?'block':'none';
   if(v==='kanban')renderKanban();
 }
 
-// ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 //  HELPERS
-// ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 function gf(r,...ks){for(const k of ks){for(const rk of Object.keys(r)){if(rk.trim().toLowerCase()===k.toLowerCase())return(r[rk]||'').trim()}}return''}
 
-function getEffectiveStatus(r){
-  const ss=getRecordKey(r);
-  const ov=getOverrides();
-  if(ov[ss])return ov[ss];
-  return getOriginalSit(r);
-}
+function getEffectiveStatus(r){const ss=getRecordKey(r);const ov=getOverrides();if(ov[ss])return ov[ss];return getOriginalSit(r)}
 
 function getOriginalSit(r){
   const raw=gf(r,'Status','status','STATUS','Situação','situacao').trim();
-  if(raw){
-    const key=raw.toLowerCase().trim();
-    if(STATUS_ALIASES[key])return STATUS_ALIASES[key];
-    if(/^\d+$/.test(raw)){
-      const padded=raw.padStart(2,'0');
-      if(STATUS_ALIASES[padded])return STATUS_ALIASES[padded];
-    }
-    const codeMatch=raw.match(/^0*(\d+)/);
-    if(codeMatch){
-      const padded=codeMatch[1].padStart(2,'0');
-      if(STATUS_ALIASES[padded])return STATUS_ALIASES[padded];
-    }
-  }
-  const ss=gf(r,'SS');
-  if(/CANCELADA/i.test(ss))return'01';
-  if(gf(r,'Data da Conclusão da OS','Data da Conclusao da OS'))return'05';
-  const dias=parseInt(gf(r,'DIAS DA DEMANDA SEM ATENDIMENTO'))||0;
-  if(dias>0)return'03';
-  return'02';
+  if(raw){const key=raw.toLowerCase().trim();if(STATUS_ALIASES[key])return STATUS_ALIASES[key];if(/^\d+$/.test(raw)){const p=raw.padStart(2,'0');if(STATUS_ALIASES[p])return STATUS_ALIASES[p];}const m=raw.match(/^0*(\d+)/);if(m){const p=m[1].padStart(2,'0');if(STATUS_ALIASES[p])return STATUS_ALIASES[p];}}
+  const ss=gf(r,'SS');if(/CANCELADA/i.test(ss))return'01';if(gf(r,'Data da Conclusão da OS','Data da Conclusao da OS'))return'05';const dias=parseInt(gf(r,'DIAS DA DEMANDA SEM ATENDIMENTO'))||0;if(dias>0)return'03';return'02';
 }
 
 function getSit(r){return getEffectiveStatus(r)}
 function getRecordKey(r){return gf(r,'SS')||JSON.stringify(r).slice(0,40)}
-
-function statusColor(codeOrLabel){
-  const found=KANBAN_STATUSES.find(s=>s.code===codeOrLabel);
-  if(found)return found.color;
-  return'#7a7f94';
-}
-
-function bCls(s){
-  const found=KANBAN_STATUSES.find(k=>k.code===s);
-  return found?found.cls:'bw';
-}
+function statusColor(c){const f=KANBAN_STATUSES.find(s=>s.code===c);return f?f.color:'#7a7f94'}
+function bCls(s){const f=KANBAN_STATUSES.find(k=>k.code===s);return f?f.cls:'bw'}
 
 function pDate(s){
-  if(!s||s==='')return null;
-  s=String(s).trim();
-  const n=Number(s);
-  if(!isNaN(n)&&n>1&&s!==''){const d=new Date(Date.UTC(1899,11,30));d.setUTCDate(d.getUTCDate()+Math.floor(n));return d;}
-  const sl=s.split('/');
-  if(sl.length===3){let [d,m,y]=sl;if(y.length===2)y='20'+y;const dt=new Date(`${y}-${m.padStart(2,'0')}-${d.padStart(2,'0')}`);if(!isNaN(dt))return dt;}
-  const iso=s.match(/^(\d{4})-(\d{2})-(\d{2})/);
-  if(iso)return new Date(`${iso[1]}-${iso[2]}-${iso[3]}`);
+  if(!s||s==='')return null;s=String(s).trim();
+  const n=Number(s);if(!isNaN(n)&&n>1&&s!==''){const d=new Date(Date.UTC(1899,11,30));d.setUTCDate(d.getUTCDate()+Math.floor(n));return d;}
+  const sl=s.split('/');if(sl.length===3){let [d,m,y]=sl;if(y.length===2)y='20'+y;const dt=new Date(`${y}-${m.padStart(2,'0')}-${d.padStart(2,'0')}`);if(!isNaN(dt))return dt;}
+  const iso=s.match(/^(\d{4})-(\d{2})-(\d{2})/);if(iso)return new Date(`${iso[1]}-${iso[2]}-${iso[3]}`);
   const fb=new Date(s);return isNaN(fb)?null:fb;
 }
 
-function fmtDate(s){
-  const d=pDate(s);if(!d||isNaN(d))return s||'—';
-  return`${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
-}
-
-function fmtTs(iso){
-  const d=new Date(iso);
-  return d.toLocaleDateString('pt-BR')+' '+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-}
-
+function fmtDate(s){const d=pDate(s);if(!d||isNaN(d))return s||'—';return`${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`}
+function fmtTs(iso){const d=new Date(iso);return d.toLocaleDateString('pt-BR')+' '+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}
 function hasValidOS(r){return/^\d/.test(String(gf(r,'SS')||'').trim())}
-
-function switchTab(id,el){
-  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.getElementById(id).classList.add('active');el.classList.add('active');
-}
-
+function switchTab(id,el){document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.getElementById(id).classList.add('active');el.classList.add('active')}
 function showLoading(v){document.getElementById('loadInd').style.display=v?'flex':'none'}
 
-// ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 //  LOADERS
-// ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 const SCRIPT_URL='https://script.google.com/macros/s/AKfycbzsiNvnxQz031wzM49ybwx_tH0rFBEtaMtWbOIynr0z59R-MYuSkn-SD6Epv0FbiqjQIw/exec';
 
 function autoLoad(){
   showLoading(true);
-  fetch(SCRIPT_URL)
-    .then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json()})
+  fetch(SCRIPT_URL).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json()})
     .then(json=>{ALL=Array.isArray(json)?json:(json.data||[]);if(!ALL.length)throw new Error('Sem dados');initDash();showLoading(false);})
     .catch(e=>{showLoading(false);alert('Erro ao carregar dados: '+e.message);});
 }
 
 function loadScript(){
-  const url=document.getElementById('scriptUrl').value.trim();
-  if(!url)return;
-  showLoading(true);
+  const url=document.getElementById('scriptUrl').value.trim();if(!url)return;showLoading(true);
   fetch(url).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json()})
     .then(json=>{ALL=Array.isArray(json)?json:(json.data||[]);initDash();showLoading(false);})
     .catch(e=>{showLoading(false);alert('Erro: '+e.message);});
 }
 
-function refreshScript(){const url=document.getElementById('scriptUrl').value.trim();if(url)loadScript();}
-function loadPaste(){const txt=document.getElementById('csvPaste').value.trim();if(!txt)return;parseCsv(txt);}
+function refreshScript(){const url=document.getElementById('scriptUrl').value.trim();if(url)loadScript()}
+function loadPaste(){const txt=document.getElementById('csvPaste').value.trim();if(!txt)return;parseCsv(txt)}
 
 function loadFile(inp){
   const f=inp.files[0];if(!f)return;showLoading(true);
   const r=new FileReader();r.onload=e=>{parseCsv(e.target.result);showLoading(false)};r.onerror=()=>showLoading(false);r.readAsText(f,'UTF-8');
 }
 
-function parseCsv(csv){const res=Papa.parse(csv,{header:true,skipEmptyLines:true,dynamicTyping:false});ALL=res.data;initDash();}
+function parseCsv(csv){const res=Papa.parse(csv,{header:true,skipEmptyLines:true,dynamicTyping:false});ALL=res.data;initDash()}
 
 function loadDemo(){
   ALL=[
@@ -646,9 +830,9 @@ function loadDemo(){
   initDash();
 }
 
-// ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 //  INIT
-// ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 function initDash(){
   document.getElementById('cp').style.display='none';
   document.getElementById('dash').style.display='block';
@@ -676,54 +860,37 @@ function buildDrop(){
   const meses={};
   const nomeMes=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
   ALL.forEach(r=>{
-    const d=pDate(gf(r,'DATA DE ABERTURA','DATA'));
-    if(!d||isNaN(d))return;
-    const k=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
-    meses[k]=`${nomeMes[d.getMonth()]} ${d.getFullYear()}`;
+    const d=pDate(gf(r,'DATA DE ABERTURA','DATA'));if(!d||isNaN(d))return;
+    const k=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;meses[k]=`${nomeMes[d.getMonth()]} ${d.getFullYear()}`;
   });
   const sm=document.getElementById('fMes');const pv=sm.value;
   sm.innerHTML='<option value="">Todos os meses</option>';
   Object.keys(meses).sort().forEach(k=>{const o=document.createElement('option');o.value=k;o.textContent=meses[k];sm.appendChild(o)});
   if(pv)sm.value=pv;
-
   const c=document.getElementById('chkSt');c.innerHTML='';
   const presentSits=[...new Set(ALL.map(r=>getSit(r)))].sort();
   presentSits.forEach(s=>{
-    const si=KANBAN_STATUSES.find(k=>k.code===s);
-    const col=si?si.color:'#7a7f94';
-    const label=si?`${s} - ${si.label}`:s;
+    const si=KANBAN_STATUSES.find(k=>k.code===s);const col=si?si.color:'#7a7f94';const label=si?`${s} - ${si.label}`:s;
     const l=document.createElement('label');l.className='chk-item';
     l.innerHTML=`<input type="checkbox" value="${s}" checked onchange="apply()"><span style="width:8px;height:8px;border-radius:2px;background:${col};flex-shrink:0"></span><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${label}">${label}</span>`;
     c.appendChild(l);
   });
-
   const mx=Math.max(0,...ALL.map(r=>parseInt(gf(r,'DIAS DA DEMANDA SEM ATENDIMENTO'))||0));
-  const sl=document.getElementById('fDi');sl.max=mx||90;sl.value=mx||90;
-  document.getElementById('rv').textContent=sl.value;
+  const sl=document.getElementById('fDi');sl.max=mx||90;sl.value=mx||90;document.getElementById('rv').textContent=sl.value;
 }
 
-// ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 //  FILTERS
-// ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 function apply(){
   const q=(document.getElementById('fSearch').value+document.getElementById('tSrch').value).toLowerCase();
-  const ed=document.getElementById('fEd').value,tp=document.getElementById('fTp').value,
-    pv=document.getElementById('fPv').value,pr=document.getElementById('fPr').value,
-    en=document.getElementById('fEn').value,df=document.getElementById('fDf').value,
-    dt=document.getElementById('fDt').value,mes=document.getElementById('fMes').value;
+  const ed=document.getElementById('fEd').value,tp=document.getElementById('fTp').value,pv=document.getElementById('fPv').value,pr=document.getElementById('fPr').value,en=document.getElementById('fEn').value,df=document.getElementById('fDf').value,dt=document.getElementById('fDt').value,mes=document.getElementById('fMes').value;
   const mx=parseInt(document.getElementById('fDi').value)||9999;
-
-  // ✅ Novos: filtro por período de conclusão
-  const dcf=document.getElementById('fDcf').value;
-  const dct=document.getElementById('fDct').value;
-
+  const dcf=document.getElementById('fDcf').value,dct=document.getElementById('fDct').value;
   const chk=[...document.querySelectorAll('#chkSt input:checked')].map(c=>c.value);
-
   FIL=ALL.filter(r=>{
     if(!hasValidOS(r))return false;
-    const sit=getSit(r);
-    const dias=parseInt(gf(r,'DIAS DA DEMANDA SEM ATENDIMENTO'))||0;
-    const da=pDate(gf(r,'DATA DE ABERTURA','DATA'));
+    const sit=getSit(r);const dias=parseInt(gf(r,'DIAS DA DEMANDA SEM ATENDIMENTO'))||0;const da=pDate(gf(r,'DATA DE ABERTURA','DATA'));
     const hay=[gf(r,'Solicitante'),gf(r,'Sala'),gf(r,'Descrição do serviço','Descricao do servico'),gf(r,'SS'),gf(r,'Edificação','Edificacao')].join(' ').toLowerCase();
     if(q&&!hay.includes(q))return false;
     if(ed&&gf(r,'Edificação','Edificacao')!==ed)return false;
@@ -733,81 +900,49 @@ function apply(){
     if(en&&gf(r,'Envio')!==en)return false;
     if(!chk.includes(sit))return false;
     if(dias>mx)return false;
-    if(df&&da){if(da<new Date(df+'T00:00:00'))return false;}
-    if(dt&&da){if(da>new Date(dt+'T23:59:59'))return false;}
-    if(mes&&da){const k=`${da.getFullYear()}-${String(da.getMonth()+1).padStart(2,'0')}`;if(k!==mes)return false;}
-
-    // ✅ Filtro por data de conclusão
-    if(dcf||dct){
-      const dConclVal=pDate(gf(r,'Data da Conclusão da OS','Data da Conclusao da OS'));
-      if(!dConclVal)return false; // sem data de conclusão → excluir do filtro
-      if(dcf&&dConclVal<new Date(dcf+'T00:00:00'))return false;
-      if(dct&&dConclVal>new Date(dct+'T23:59:59'))return false;
-    }
-
+    if(df&&da){if(da<new Date(df+'T00:00:00'))return false}
+    if(dt&&da){if(da>new Date(dt+'T23:59:59'))return false}
+    if(mes&&da){const k=`${da.getFullYear()}-${String(da.getMonth()+1).padStart(2,'0')}`;if(k!==mes)return false}
+    if(dcf||dct){const dC=pDate(gf(r,'Data da Conclusão da OS','Data da Conclusao da OS'));if(!dC)return false;if(dcf&&dC<new Date(dcf+'T00:00:00'))return false;if(dct&&dC>new Date(dct+'T23:59:59'))return false}
     return true;
   });
-  pg=0;doSort();renderAll();
-  if(currentView==='kanban')renderKanban();
+  pg=0;doSort();renderAll();if(currentView==='kanban')renderKanban();
 }
 
 function reset(){
-  // ✅ fDcf e fDct incluídos no reset
   ['fSearch','tSrch','fDf','fDt','fDcf','fDct'].forEach(id=>document.getElementById(id).value='');
   ['fEd','fTp','fPv','fPr','fEn','fMes'].forEach(id=>document.getElementById(id).value='');
   document.querySelectorAll('#chkSt input').forEach(c=>c.checked=true);
-  const sl=document.getElementById('fDi');sl.value=sl.max;document.getElementById('rv').textContent=sl.max;
-  apply();
+  const sl=document.getElementById('fDi');sl.value=sl.max;document.getElementById('rv').textContent=sl.max;apply();
 }
 
-// ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 //  SORT
-// ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 function sortBy(f){
-  if(lastSort===f)sortD*=-1;else{sortD=1;lastSort=f}
-  sortF=f;
+  if(lastSort===f)sortD*=-1;else{sortD=1;lastSort=f}sortF=f;
   document.querySelectorAll('th').forEach(t=>t.classList.remove('srt'));
-  const el=document.getElementById('s'+f);
-  if(el){el.textContent=sortD===1?'↑':'↓';el.parentElement.classList.add('srt')}
+  const el=document.getElementById('s'+f);if(el){el.textContent=sortD===1?'↑':'↓';el.parentElement.classList.add('srt')}
   doSort();renderTable();
 }
 
 function doSort(){
-  const mp={
-    ss:r=>gf(r,'SS'),data:r=>pDate(gf(r,'DATA','DATA DE ABERTURA'))||new Date(0),
-    sol:r=>gf(r,'Solicitante'),edif:r=>gf(r,'Edificação','Edificacao'),
-    pav:r=>gf(r,'Pavimento'),sala:r=>gf(r,'Sala'),
-    dias:r=>parseInt(gf(r,'DIAS DA DEMANDA SEM ATENDIMENTO'))||0,
-    status:r=>getSit(r),
-    concl:r=>pDate(gf(r,'Data da Conclusão da OS','Data da Conclusao da OS'))||new Date(0),
-  };
+  const mp={ss:r=>gf(r,'SS'),data:r=>pDate(gf(r,'DATA','DATA DE ABERTURA'))||new Date(0),sol:r=>gf(r,'Solicitante'),edif:r=>gf(r,'Edificação','Edificacao'),pav:r=>gf(r,'Pavimento'),sala:r=>gf(r,'Sala'),dias:r=>parseInt(gf(r,'DIAS DA DEMANDA SEM ATENDIMENTO'))||0,status:r=>getSit(r),concl:r=>pDate(gf(r,'Data da Conclusão da OS','Data da Conclusao da OS'))||new Date(0)};
   const fn=mp[sortF]||(r=>pDate(gf(r,'DATA DE ABERTURA','DATA'))||new Date(0));
   FIL.sort((a,b)=>{const va=fn(a),vb=fn(b);return va<vb?-sortD:va>vb?sortD:0});
 }
 
 function renderAll(){renderMetrics();renderCharts();renderTable()}
 
-// ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 //  METRICS
-// ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 function renderMetrics(){
-  const tot=FIL.length;
-  const conc=FIL.filter(r=>getSit(r)==='05').length;
-  const exec=FIL.filter(r=>getSit(r)==='03').length;
-  const ag=FIL.filter(r=>getSit(r)==='02').length;
-  const ind=FIL.filter(r=>getSit(r)==='01').length;
+  const tot=FIL.length,conc=FIL.filter(r=>getSit(r)==='05').length,exec=FIL.filter(r=>getSit(r)==='03').length,ag=FIL.filter(r=>getSit(r)==='02').length,ind=FIL.filter(r=>getSit(r)==='01').length;
   const ds=FIL.map(r=>parseInt(gf(r,'DIAS DA DEMANDA SEM ATENDIMENTO'))||0);
-  const med=ds.length?Math.round(ds.reduce((a,b)=>a+b,0)/ds.length):0;
-  const mxd=ds.length?Math.max(...ds):0;
-  const diasConclArr=FIL.filter(r=>getSit(r)==='05').map(r=>{
-    const dAb=pDate(gf(r,'DATA DE ABERTURA','DATA'));
-    const dCo=pDate(gf(r,'Data da Conclusão da OS','Data da Conclusao da OS'));
-    if(dAb&&dCo&&dCo>=dAb)return Math.round((dCo-dAb)/(1000*60*60*24));
-    return null;
-  }).filter(v=>v!==null);
-  const medConc=diasConclArr.length?Math.round(diasConclArr.reduce((a,b)=>a+b,0)/diasConclArr.length):null;
-  const mxConc=diasConclArr.length?Math.max(...diasConclArr):null;
-
+  const med=ds.length?Math.round(ds.reduce((a,b)=>a+b,0)/ds.length):0,mxd=ds.length?Math.max(...ds):0;
+  const dca=FIL.filter(r=>getSit(r)==='05').map(r=>{const dAb=pDate(gf(r,'DATA DE ABERTURA','DATA')),dCo=pDate(gf(r,'Data da Conclusão da OS','Data da Conclusao da OS'));if(dAb&&dCo&&dCo>=dAb)return Math.round((dCo-dAb)/(1000*60*60*24));return null}).filter(v=>v!==null);
+  const medC=dca.length?Math.round(dca.reduce((a,b)=>a+b,0)/dca.length):null,mxC=dca.length?Math.max(...dca):null;
   document.getElementById('mrow').innerHTML=`
     <div class="mcard"><div class="mlabel">Total OS</div><div class="mval">${tot}</div><div class="msub">de ${ALL.filter(hasValidOS).length} total</div></div>
     <div class="mcard cg"><div class="mlabel">Finalizadas</div><div class="mval" style="color:var(--green)">${conc}</div><div class="msub">${tot?Math.round(conc/tot*100):0}%</div></div>
@@ -815,50 +950,36 @@ function renderMetrics(){
     <div class="mcard cw"><div class="mlabel">Aguardando empresa</div><div class="mval" style="color:var(--warn)">${ag}</div></div>
     <div class="mcard cd"><div class="mlabel">Indeferidas</div><div class="mval" style="color:var(--danger)">${ind}</div></div>
     <div class="mcard cm"><div class="mlabel">Dias s/ atend. médio</div><div class="mval">${med}</div><div class="msub">máx: ${mxd}d</div></div>
-    <div class="mcard cg"><div class="mlabel">Dias p/ concluir</div><div class="mval" style="color:var(--green)">${medConc!==null?medConc+'d':'—'}</div><div class="msub">${mxConc!==null?'máx: '+mxConc+'d':diasConclArr.length+' c/ data'}</div></div>`;
+    <div class="mcard cg"><div class="mlabel">Dias p/ concluir</div><div class="mval" style="color:var(--green)">${medC!==null?medC+'d':'—'}</div><div class="msub">${mxC!==null?'máx: '+mxC+'d':dca.length+' c/ data'}</div></div>`;
 }
 
-// ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 //  CHARTS
-// ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 function cntBy(fn){const m={};FIL.forEach(r=>{const k=fn(r)||'Outros';m[k]=(m[k]||0)+1});return m}
 function dChart(id){if(charts[id]){charts[id].destroy();delete charts[id]}}
-const tx={color:'#7a7f94',font:{size:10}};const grid={color:'rgba(255,255,255,.05)'};
+const tx={color:'#7a7f94',font:{size:10}};const grd={color:'rgba(255,255,255,.05)'};
 
 function renderCharts(){
   dChart('e');dChart('s');dChart('t');dChart('p');
-  const eM=cntBy(r=>gf(r,'Edificação','Edificacao'));
-  const eL=Object.keys(eM).slice(0,10);
+  const eM=cntBy(r=>gf(r,'Edificação','Edificacao')),eL=Object.keys(eM).slice(0,10);
   document.getElementById('cntE').textContent=eL.length+' unidades';
-  charts.e=new Chart(document.getElementById('cEdif'),{type:'bar',data:{labels:eL,datasets:[{data:eL.map(l=>eM[l]),backgroundColor:'#4f8ef7',borderRadius:4,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{...tx,maxRotation:30,autoSkip:false},grid:{display:false}},y:{ticks:{...tx,stepSize:1},grid}}}});
-
-  const sM=cntBy(r=>getSit(r));
-  const sL=Object.keys(sM),sCl=sL.map(l=>statusColor(l));
+  charts.e=new Chart(document.getElementById('cEdif'),{type:'bar',data:{labels:eL,datasets:[{data:eL.map(l=>eM[l]),backgroundColor:'#4f8ef7',borderRadius:4,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{...tx,maxRotation:30,autoSkip:false},grid:{display:false}},y:{ticks:{...tx,stepSize:1},grid:grd}}}});
+  const sM=cntBy(r=>getSit(r)),sL=Object.keys(sM),sCl=sL.map(l=>statusColor(l));
   document.getElementById('cntS').textContent=FIL.length+' OS';
-  document.getElementById('legS').innerHTML=sL.map((l,i)=>{
-    const si=KANBAN_STATUSES.find(s=>s.code===l);
-    const lbl=si?`${l} - ${si.label}`:l;
-    return`<div class="li"><div class="ld" style="background:${sCl[i]}"></div>${lbl} (${sM[l]})</div>`;
-  }).join('');
+  document.getElementById('legS').innerHTML=sL.map((l,i)=>{const si=KANBAN_STATUSES.find(s=>s.code===l);const lbl=si?`${l} - ${si.label}`:l;return`<div class="li"><div class="ld" style="background:${sCl[i]}"></div>${lbl} (${sM[l]})</div>`}).join('');
   charts.s=new Chart(document.getElementById('cSt'),{type:'doughnut',data:{labels:sL,datasets:[{data:sL.map(l=>sM[l]),backgroundColor:sCl,borderWidth:0,hoverOffset:5}]},options:{responsive:true,maintainAspectRatio:false,cutout:'68%',plugins:{legend:{display:false}}}});
-
-  const tM=cntBy(r=>gf(r,'Tipo de OS'));
-  const tL=Object.keys(tM).slice(0,8);
-  const h=Math.max(150,tL.length*34+40);
-  document.getElementById('wTp').style.height=h+'px';
-  document.getElementById('cntT').textContent=tL.length+' tipos';
-  charts.t=new Chart(document.getElementById('cTp'),{type:'bar',data:{labels:tL,datasets:[{data:tL.map(l=>tM[l]),backgroundColor:'#2de8a4',borderRadius:4,borderSkipped:false}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{...tx,stepSize:1},grid},y:{ticks:{color:'#e8eaf0',font:{size:11}},grid:{display:false}}}}});
-
-  const pM={};
-  FIL.forEach(r=>{const d=pDate(gf(r,'DATA DE ABERTURA','DATA'));if(!d||isNaN(d))return;const k=`${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}`;pM[k]=(pM[k]||0)+1});
-  const pL=Object.keys(pM).sort().slice(-12);
-  document.getElementById('cntP').textContent=pL.length+' meses';
-  charts.p=new Chart(document.getElementById('cPr'),{type:'line',data:{labels:pL,datasets:[{data:pL.map(l=>pM[l]),borderColor:'#f7a94f',backgroundColor:'rgba(247,169,79,.1)',tension:.4,fill:true,pointBackgroundColor:'#f7a94f',pointRadius:4,pointHoverRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{...tx,autoSkip:false,maxRotation:30},grid:{display:false}},y:{ticks:{...tx,stepSize:1},grid}}}});
+  const tM=cntBy(r=>gf(r,'Tipo de OS')),tL=Object.keys(tM).slice(0,8),h=Math.max(150,tL.length*34+40);
+  document.getElementById('wTp').style.height=h+'px';document.getElementById('cntT').textContent=tL.length+' tipos';
+  charts.t=new Chart(document.getElementById('cTp'),{type:'bar',data:{labels:tL,datasets:[{data:tL.map(l=>tM[l]),backgroundColor:'#2de8a4',borderRadius:4,borderSkipped:false}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{...tx,stepSize:1},grid:grd},y:{ticks:{color:'#e8eaf0',font:{size:11}},grid:{display:false}}}}});
+  const pM={};FIL.forEach(r=>{const d=pDate(gf(r,'DATA DE ABERTURA','DATA'));if(!d||isNaN(d))return;const k=`${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}`;pM[k]=(pM[k]||0)+1});
+  const pL=Object.keys(pM).sort().slice(-12);document.getElementById('cntP').textContent=pL.length+' meses';
+  charts.p=new Chart(document.getElementById('cPr'),{type:'line',data:{labels:pL,datasets:[{data:pL.map(l=>pM[l]),borderColor:'#f7a94f',backgroundColor:'rgba(247,169,79,.1)',tension:.4,fill:true,pointBackgroundColor:'#f7a94f',pointRadius:4,pointHoverRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{...tx,autoSkip:false,maxRotation:30},grid:{display:false}},y:{ticks:{...tx,stepSize:1},grid:grd}}}});
 }
 
-// ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 //  TABLE
-// ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 function renderTable(){
   const s=pg*PS,sl=FIL.slice(s,s+PS);
   const tb=document.getElementById('tb'),nd=document.getElementById('nd');
@@ -866,316 +987,163 @@ function renderTable(){
   else{
     nd.style.display='none';
     tb.innerHTML=sl.map(r=>{
-      const sit=getSit(r),desc=gf(r,'Descrição do serviço','Descricao do servico'),
-        conc=gf(r,'Data da Conclusão da OS','Data da Conclusao da OS');
-      const dAb=pDate(gf(r,'DATA','DATA DE ABERTURA'));
-      const dCo=pDate(conc);
-      const hoje=new Date();hoje.setHours(0,0,0,0);
-      let diasCell='—',diasCol='var(--muted)';
-      if(dAb){
-        if(dCo&&dCo>=dAb){diasCell=Math.round((dCo-dAb)/(1000*60*60*24))+'d';diasCol='var(--green)';}
-        else{diasCell=Math.round((hoje-dAb)/(1000*60*60*24))+'d';diasCol='var(--danger)';}
-      }
+      const sit=getSit(r),desc=gf(r,'Descrição do serviço','Descricao do servico'),conc=gf(r,'Data da Conclusão da OS','Data da Conclusao da OS');
+      const dAb=pDate(gf(r,'DATA','DATA DE ABERTURA')),dCo=pDate(conc),hoje=new Date();hoje.setHours(0,0,0,0);
+      let dc='—',col='var(--muted)';
+      if(dAb){if(dCo&&dCo>=dAb){dc=Math.round((dCo-dAb)/(1000*60*60*24))+'d';col='var(--green)'}else{dc=Math.round((hoje-dAb)/(1000*60*60*24))+'d';col='var(--danger)'}}
       const sitLabel=KANBAN_STATUSES.find(k=>k.code===sit)?`${sit} - ${KANBAN_STATUSES.find(k=>k.code===sit).label}`:sit;
-      return`<tr>
-        <td>${gf(r,'SS')||'—'}</td>
-        <td>${fmtDate(gf(r,'DATA','DATA DE ABERTURA'))}</td>
-        <td style="font-family:var(--fh);font-size:12px">${gf(r,'Solicitante')||'—'}</td>
-        <td style="font-family:var(--fh);font-size:12px">${gf(r,'Edificação','Edificacao')||'—'}</td>
-        <td>${gf(r,'Pavimento')||'—'}</td>
-        <td>${gf(r,'Sala')||'—'}</td>
-        <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;font-family:var(--fh);font-size:11px;color:var(--muted)" title="${desc}">${desc.slice(0,38)+(desc.length>38?'…':'')||'—'}</td>
-        <td style="color:${diasCol};font-weight:600;font-family:var(--fm)">${diasCell}</td>
-        <td><span class="badge ${bCls(sit)}" title="${sitLabel}" data-idx="${FIL.indexOf(r)}" style="cursor:pointer;user-select:none">${sitLabel.length>20?sitLabel.slice(0,18)+'…':sitLabel}</span></td>
-        <td style="color:${dCo?'var(--green)':'var(--muted)'}">${fmtDate(conc)||'—'}</td>
-      </tr>`;
+      return`<tr><td>${gf(r,'SS')||'—'}</td><td>${fmtDate(gf(r,'DATA','DATA DE ABERTURA'))}</td><td style="font-family:var(--fh);font-size:12px">${gf(r,'Solicitante')||'—'}</td><td style="font-family:var(--fh);font-size:12px">${gf(r,'Edificação','Edificacao')||'—'}</td><td>${gf(r,'Pavimento')||'—'}</td><td>${gf(r,'Sala')||'—'}</td><td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;font-family:var(--fh);font-size:11px;color:var(--muted)" title="${desc}">${desc.slice(0,38)+(desc.length>38?'…':'')||'—'}</td><td style="color:${col};font-weight:600;font-family:var(--fm)">${dc}</td><td><span class="badge ${bCls(sit)}" title="${sitLabel}" data-idx="${FIL.indexOf(r)}" style="cursor:pointer;user-select:none">${sitLabel.length>20?sitLabel.slice(0,18)+'…':sitLabel}</span></td><td style="color:${dCo?'var(--green)':'var(--muted)'}">${fmtDate(conc)||'—'}</td></tr>`;
     }).join('');
   }
   const tot=FIL.length,tp=Math.ceil(tot/PS);
   document.getElementById('tInfo').textContent=`${s+1}–${Math.min(s+PS,tot)} de ${tot} registros`;
   let ph=`<button class="pb" onclick="goP(${pg-1})" ${pg===0?'disabled':''}>‹</button>`;
-  for(let i=0;i<Math.min(tp,7);i++){
-    if(i===3&&tp>7){ph+=`<span style="color:var(--muted);padding:0 3px;font-size:12px">…</span>`;i=tp-4}
-    ph+=`<button class="pb ${i===pg?'act':''}" onclick="goP(${i})">${i+1}</button>`;
-  }
+  for(let i=0;i<Math.min(tp,7);i++){if(i===3&&tp>7){ph+=`<span style="color:var(--muted);padding:0 3px;font-size:12px">…</span>`;i=tp-4}ph+=`<button class="pb ${i===pg?'act':''}" onclick="goP(${i})">${i+1}</button>`}
   ph+=`<button class="pb" onclick="goP(${pg+1})" ${pg>=tp-1?'disabled':''}>›</button>`;
   document.getElementById('pgn').innerHTML=ph;
 }
 
 function goP(p){if(p<0||p>=Math.ceil(FIL.length/PS))return;pg=p;renderTable()}
 
-// ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 //  KANBAN
-// ═══════════════════════════════════════════════════════════════
-let dragRecord=null,dragCol=null;
+// ═══════════════════════════════════════════════════════════
+let dragRecord=null;
 
 function renderKanban(){
-  const wrap=document.getElementById('kanbanWrap');
-  wrap.innerHTML='';
-  const groups={};
-  KANBAN_STATUSES.forEach(s=>{groups[s.code]=[]});
-  FIL.forEach(r=>{
-    const sit=getSit(r);
-    if(!groups[sit])groups[sit]=[];
-    const target=groups[sit]?sit:'02';
-    if(!groups[target])groups[target]=[];
-    groups[target].push(r);
-  });
+  const wrap=document.getElementById('kanbanWrap');wrap.innerHTML='';
+  const groups={};KANBAN_STATUSES.forEach(s=>{groups[s.code]=[]});
+  FIL.forEach(r=>{const sit=getSit(r);if(!groups[sit])groups[sit]=[];groups[sit].push(r)});
   KANBAN_STATUSES.forEach(sInfo=>{
-    const code=sInfo.code;
-    const recs=groups[code]||[];
-    const color=sInfo.color;
-    const label=`${code} - ${sInfo.label}`;
-    const col=document.createElement('div');
-    col.className='kcol';
-    col.dataset.status=code;
-    col.innerHTML=`
-      <div class="kcol-head">
-        <div class="kcol-title">
-          <span class="kcol-dot" style="background:${color}"></span>
-          <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1" title="${label}">${label}</span>
-          <span class="kcol-count">${recs.length}</span>
-        </div>
-      </div>
-      <div class="kcol-body" data-col="${code}"></div>`;
+    const code=sInfo.code,recs=groups[code]||[],color=sInfo.color,label=`${code} - ${sInfo.label}`;
+    const col=document.createElement('div');col.className='kcol';col.dataset.status=code;
+    col.innerHTML=`<div class="kcol-head"><div class="kcol-title"><span class="kcol-dot" style="background:${color}"></span><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1" title="${label}">${label}</span><span class="kcol-count">${recs.length}</span></div></div><div class="kcol-body" data-col="${code}"></div>`;
     const body=col.querySelector('.kcol-body');
     body.addEventListener('dragover',e=>{e.preventDefault();body.classList.add('drag-over')});
     body.addEventListener('dragleave',()=>body.classList.remove('drag-over'));
-    body.addEventListener('drop',e=>{
-      e.preventDefault();
-      body.classList.remove('drag-over');
-      if(dragRecord){
-        const newStatus=col.dataset.status;
-        const oldStatus=getSit(dragRecord);
-        if(newStatus!==oldStatus){openStatusModal(dragRecord,newStatus);}
-        dragRecord=null;
-      }
-    });
-    recs.forEach(r=>{
-      const card=createKanbanCard(r,color);
-      body.appendChild(card);
-    });
+    body.addEventListener('drop',e=>{e.preventDefault();body.classList.remove('drag-over');if(dragRecord){const ns=col.dataset.status,os=getSit(dragRecord);if(ns!==os)openStatusModal(dragRecord,ns);dragRecord=null}});
+    recs.forEach(r=>body.appendChild(createKanbanCard(r,color)));
     wrap.appendChild(col);
   });
   document.getElementById('kanbanInfo').textContent=`${FIL.length} OS visíveis`;
 }
 
 function createKanbanCard(r,colColor){
-  const card=document.createElement('div');
-  card.className='kcard';
-  card.draggable=true;
-  const dias=parseInt(gf(r,'DIAS DA DEMANDA SEM ATENDIMENTO'))||0;
+  const card=document.createElement('div');card.className='kcard';card.draggable=true;
   const desc=gf(r,'Descrição do serviço','Descricao do servico');
-  const dAb=pDate(gf(r,'DATA','DATA DE ABERTURA'));
-  const dCo=pDate(gf(r,'Data da Conclusão da OS','Data da Conclusao da OS'));
+  const dAb=pDate(gf(r,'DATA','DATA DE ABERTURA')),dCo=pDate(gf(r,'Data da Conclusão da OS','Data da Conclusao da OS'));
   const hoje=new Date();hoje.setHours(0,0,0,0);
   let diasTxt='—',diasColor='var(--muted)';
-  if(dAb){
-    if(dCo&&dCo>=dAb){diasTxt=Math.round((dCo-dAb)/(1000*60*60*24))+'d';diasColor='var(--green)';}
-    else{const d=Math.round((hoje-dAb)/(1000*60*60*24));diasTxt=d+'d';diasColor=d>15?'var(--danger)':d>7?'var(--warn)':'var(--muted)';}
-  }
-  card.innerHTML=`
-    <div class="kcard-ss">${gf(r,'SS')||'—'}</div>
-    <div class="kcard-sol">${gf(r,'Solicitante')||'—'}</div>
-    <div class="kcard-ed">${gf(r,'Edificação','Edificacao')||'—'} · ${gf(r,'Sala')||'—'}</div>
-    <div class="kcard-desc" title="${desc}">${desc||'—'}</div>
-    <div class="kcard-dias" style="color:${diasColor}">⏱ ${diasTxt}</div>`;
+  if(dAb){if(dCo&&dCo>=dAb){diasTxt=Math.round((dCo-dAb)/(1000*60*60*24))+'d';diasColor='var(--green)'}else{const d=Math.round((hoje-dAb)/(1000*60*60*24));diasTxt=d+'d';diasColor=d>15?'var(--danger)':d>7?'var(--warn)':'var(--muted)'}}
+  card.innerHTML=`<div class="kcard-ss">${gf(r,'SS')||'—'}</div><div class="kcard-sol">${gf(r,'Solicitante')||'—'}</div><div class="kcard-ed">${gf(r,'Edificação','Edificacao')||'—'} · ${gf(r,'Sala')||'—'}</div><div class="kcard-desc" title="${desc}">${desc||'—'}</div><div class="kcard-dias" style="color:${diasColor}">⏱ ${diasTxt}</div>`;
   card.style.borderLeft=`3px solid ${colColor}`;
-  card.addEventListener('dragstart',e=>{dragRecord=r;card.classList.add('dragging');e.dataTransfer.effectAllowed='move';});
+  card.addEventListener('dragstart',e=>{dragRecord=r;card.classList.add('dragging');e.dataTransfer.effectAllowed='move'});
   card.addEventListener('dragend',()=>{card.classList.remove('dragging');dragRecord=null});
   card.addEventListener('click',()=>openStatusModal(r,null));
   return card;
 }
 
-// ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 //  STATUS MODAL
-// ═══════════════════════════════════════════════════════════════
-function openStatusModalByIdx(idx){
-  const r=FIL[idx];
-  if(r)openStatusModal(r,null);
-}
+// ═══════════════════════════════════════════════════════════
+function openStatusModalByIdx(idx){const r=FIL[idx];if(r)openStatusModal(r,null)}
 
 document.getElementById('tb').addEventListener('pointerup',function(e){
   const badge=e.target.closest('.badge[data-idx]');
-  if(badge){e.preventDefault();openStatusModalByIdx(parseInt(badge.dataset.idx));}
+  if(badge){e.preventDefault();openStatusModalByIdx(parseInt(badge.dataset.idx))}
 });
 
 function openStatusModal(r,preselect){
-  modalRecord=r;
-  modalSelectedStatus=preselect||getSit(r);
+  modalRecord=r;modalSelectedStatus=preselect||getSit(r);
   document.getElementById('modalTitle').textContent='Alterar Status — '+gf(r,'SS');
-  document.getElementById('modalMeta').textContent=
-    `${gf(r,'Solicitante')||'—'} · ${gf(r,'Edificação','Edificacao')||'—'} · Status atual: ${getSit(r)}`;
-  const grid=document.getElementById('statusGrid');
-  grid.innerHTML=KANBAN_STATUSES.map(s=>`
-    <div class="sopt ${modalSelectedStatus===s.code?'selected':''}" onclick="selectStatus('${s.code}',this)">
-      <span class="sopt-dot" style="background:${s.color}"></span>
-      <span class="sopt-label">${s.code} - ${s.label}</span>
-    </div>`).join('');
+  document.getElementById('modalMeta').textContent=`${gf(r,'Solicitante')||'—'} · ${gf(r,'Edificação','Edificacao')||'—'} · Status atual: ${getSit(r)}`;
+  document.getElementById('statusGrid').innerHTML=KANBAN_STATUSES.map(s=>`<div class="sopt ${modalSelectedStatus===s.code?'selected':''}" onclick="selectStatus('${s.code}',this)"><span class="sopt-dot" style="background:${s.color}"></span><span class="sopt-label">${s.code} - ${s.label}</span></div>`).join('');
   document.getElementById('modalOverlay').classList.add('open');
 }
 
-function selectStatus(code,el){
-  modalSelectedStatus=code;
-  document.querySelectorAll('.sopt').forEach(e=>e.classList.remove('selected'));
-  el.classList.add('selected');
-}
+function selectStatus(code,el){modalSelectedStatus=code;document.querySelectorAll('.sopt').forEach(e=>e.classList.remove('selected'));el.classList.add('selected')}
+function closeModal(){document.getElementById('modalOverlay').classList.remove('open');modalRecord=null;modalSelectedStatus=null}
 
-function closeModal(){
-  document.getElementById('modalOverlay').classList.remove('open');
-  modalRecord=null;modalSelectedStatus=null;
-}
-
-// ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 //  SYNC TO SHEET
-// ═══════════════════════════════════════════════════════════════
-function getSyncUrl(){
-  const typed=(document.getElementById('scriptUrl')||{}).value||'';
-  return typed.trim()||SCRIPT_URL;
-}
+// ═══════════════════════════════════════════════════════════
+function getSyncUrl(){const typed=(document.getElementById('scriptUrl')||{}).value||'';return typed.trim()||SCRIPT_URL}
 
 function showSyncToast(msg,ok){
   let t=document.getElementById('syncToast');
-  if(!t){
-    t=document.createElement('div');t.id='syncToast';
-    t.style.cssText='position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;padding:10px 18px;border-radius:8px;font-size:12px;font-family:var(--fh);font-weight:600;box-shadow:0 4px 20px rgba(0,0,0,.5);transition:opacity .4s;pointer-events:none';
-    document.body.appendChild(t);
-  }
-  t.textContent=msg;
-  t.style.background=ok?'rgba(45,232,164,.18)':'rgba(247,95,95,.18)';
-  t.style.border='1px solid '+(ok?'rgba(45,232,164,.5)':'rgba(247,95,95,.5)');
-  t.style.color=ok?'#2de8a4':'#f75f5f';
-  t.style.opacity='1';
-  clearTimeout(t._timer);
-  t._timer=setTimeout(()=>{t.style.opacity='0'},3200);
+  if(!t){t=document.createElement('div');t.id='syncToast';t.style.cssText='position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;padding:10px 18px;border-radius:8px;font-size:12px;font-family:var(--fh);font-weight:600;box-shadow:0 4px 20px rgba(0,0,0,.5);transition:opacity .4s;pointer-events:none';document.body.appendChild(t)}
+  t.textContent=msg;t.style.background=ok?'rgba(45,232,164,.18)':'rgba(247,95,95,.18)';t.style.border='1px solid '+(ok?'rgba(45,232,164,.5)':'rgba(247,95,95,.5)');t.style.color=ok?'#2de8a4':'#f75f5f';t.style.opacity='1';clearTimeout(t._timer);t._timer=setTimeout(()=>{t.style.opacity='0'},3200);
 }
 
 async function syncToSheet(ss,newStatusCode){
-  const url=getSyncUrl();
-  if(!url)return;
-  const sInfo=KANBAN_STATUSES.find(s=>s.code===newStatusCode);
-  const statusText=sInfo?`${newStatusCode} - ${sInfo.label}`:newStatusCode;
-  try{
-    const params=new URLSearchParams({action:'updateStatus',ss:ss,statusText:statusText});
-    const res=await fetch(url+'?'+params.toString());
-    const json=await res.json();
-    if(json.result==='success'){showSyncToast('✔ Planilha atualizada: '+ss,true);}
-    else{showSyncToast('⚠ Erro: '+(json.message||json.result),false);console.warn('syncToSheet resposta:',json);}
-  }catch(e){showSyncToast('⚠ Não foi possível sincronizar',false);console.warn('syncToSheet error:',e);}
+  const url=getSyncUrl();if(!url)return;
+  const sInfo=KANBAN_STATUSES.find(s=>s.code===newStatusCode);const statusText=sInfo?`${newStatusCode} - ${sInfo.label}`:newStatusCode;
+  try{const params=new URLSearchParams({action:'updateStatus',ss:ss,statusText:statusText});const res=await fetch(url+'?'+params.toString());const json=await res.json();if(json.result==='success')showSyncToast('✔ Planilha atualizada: '+ss,true);else showSyncToast('⚠ Erro: '+(json.message||json.result),false)}
+  catch(e){showSyncToast('⚠ Não foi possível sincronizar',false)}
 }
 
 function confirmStatusChange(){
   if(!modalRecord||!modalSelectedStatus)return closeModal();
-  const key=getRecordKey(modalRecord);
-  const oldStatus=getSit(modalRecord);
-  const newStatus=modalSelectedStatus;
-  if(oldStatus===newStatus){closeModal();return;}
-  const ov=getOverrides();
-  ov[key]=newStatus;
-  saveOverrides(ov);
+  const key=getRecordKey(modalRecord),oldStatus=getSit(modalRecord),newStatus=modalSelectedStatus;
+  if(oldStatus===newStatus){closeModal();return}
+  const ov=getOverrides();ov[key]=newStatus;saveOverrides(ov);
   const sInfo=KANBAN_STATUSES.find(s=>s.code===newStatus);
-  addLogEntry({
-    type:'moved',ss:gf(modalRecord,'SS'),sol:gf(modalRecord,'Solicitante'),
-    edif:gf(modalRecord,'Edificação','Edificacao'),from:oldStatus,to:newStatus,
-    toLabel:sInfo?`${newStatus} - ${sInfo.label}`:newStatus,
-  });
-  const ssNum=gf(modalRecord,'SS');
-  if(ssNum)syncToSheet(ssNum,newStatus);
-  closeModal();apply();
-  if(currentView==='kanban')renderKanban();
+  addLogEntry({type:'moved',ss:gf(modalRecord,'SS'),sol:gf(modalRecord,'Solicitante'),edif:gf(modalRecord,'Edificação','Edificacao'),from:oldStatus,to:newStatus,toLabel:sInfo?`${newStatus} - ${sInfo.label}`:newStatus});
+  const ssNum=gf(modalRecord,'SS');if(ssNum)syncToSheet(ssNum,newStatus);
+  closeModal();apply();if(currentView==='kanban')renderKanban();
 }
 
-// ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 //  LOG DRAWER
-// ═══════════════════════════════════════════════════════════════
-function openLog(){renderLog();document.getElementById('logOverlay').classList.add('open');}
+// ═══════════════════════════════════════════════════════════
+function openLog(){renderLog();document.getElementById('logOverlay').classList.add('open')}
 function closeLog(){document.getElementById('logOverlay').classList.remove('open')}
 
 function renderLog(){
-  const log=getLog();
-  const q=(document.getElementById('logSearch').value||'').toLowerCase();
+  const log=getLog(),q=(document.getElementById('logSearch').value||'').toLowerCase();
   const filtered=q?log.filter(e=>(e.ss||'').toLowerCase().includes(q)||(e.from||'').toLowerCase().includes(q)||(e.to||'').toLowerCase().includes(q)||(e.sol||'').toLowerCase().includes(q)):log;
   const body=document.getElementById('logBody');
   document.getElementById('logCount').textContent=filtered.length+' registro'+(filtered.length!==1?'s':'');
-  if(!filtered.length){
-    body.innerHTML=`<div class="log-empty">${log.length?'Nenhum registro corresponde à busca.':'Nenhuma edição registrada ainda.<br><small>Mova cards no Kanban para gerar o log.</small>'}</div>`;
-    return;
-  }
+  if(!filtered.length){body.innerHTML=`<div class="log-empty">${log.length?'Nenhum registro corresponde à busca.':'Nenhuma edição registrada ainda.<br><small>Mova cards no Kanban para gerar o log.</small>'}</div>`;return}
   body.innerHTML=filtered.map(e=>{
     const fromLabel=KANBAN_STATUSES.find(s=>s.code===e.from)?`${e.from} - ${KANBAN_STATUSES.find(s=>s.code===e.from).label}`:e.from;
     const toLabel=e.toLabel||e.to;
-    return`<div class="log-entry moved">
-      <div class="log-ts">${fmtTs(e.ts)}</div>
-      <div class="log-ss">${e.ss||'—'} · ${e.sol||'—'} · ${e.edif||'—'}</div>
-      <div class="log-action">
-        <span class="log-arrow">
-          <span class="log-from">${fromLabel||'—'}</span>
-          <span style="color:var(--muted)">→</span>
-          <span class="log-to">${toLabel||'—'}</span>
-        </span>
-      </div>
-    </div>`;
+    const cls=e.type==='created'?'created':'moved';
+    return`<div class="log-entry ${cls}"><div class="log-ts">${fmtTs(e.ts)}</div><div class="log-ss">${e.ss||'—'} · ${e.sol||'—'} · ${e.edif||'—'}</div><div class="log-action"><span class="log-arrow"><span class="log-from">${fromLabel||'—'}</span><span style="color:var(--muted)">→</span><span class="log-to">${toLabel||'—'}</span></span></div></div>`;
   }).join('');
 }
 
-function clearLog(){
-  if(!confirm('Limpar todo o histórico de edições?'))return;
-  localStorage.removeItem(LOG_KEY);updateLogBadge();renderLog();
-}
-
+function clearLog(){if(!confirm('Limpar todo o histórico de edições?'))return;localStorage.removeItem(LOG_KEY);updateLogBadge();renderLog()}
 function exportLog(){
-  const log=getLog();
-  if(!log.length)return;
+  const log=getLog();if(!log.length)return;
   const rows=['Data/Hora,SS,Solicitante,Edificação,De,Para',...log.map(e=>`"${fmtTs(e.ts)}","${e.ss||''}","${e.sol||''}","${e.edif||''}","${e.from||''}","${e.toLabel||e.to||''}"`)];
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(new Blob([rows.join('\n')],{type:'text/csv;charset=utf-8;'}));
-  a.download='log_edicoes_os.csv';a.click();
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([rows.join('\n')],{type:'text/csv;charset=utf-8;'}));a.download='log_edicoes_os.csv';a.click();
 }
 
-// ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 //  PRINT / EXPORT
-// ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 function getActiveFilters(){
-  const tags=[];
-  const mes=document.getElementById('fMes').value,ed=document.getElementById('fEd').value,
-    tp=document.getElementById('fTp').value,pv=document.getElementById('fPv').value,
-    pr=document.getElementById('fPr').value,en=document.getElementById('fEn').value,
-    df=document.getElementById('fDf').value,dt=document.getElementById('fDt').value,
-    q=document.getElementById('fSearch').value.trim(),mx=document.getElementById('fDi').value;
-  // ✅ Conclusão
-  const dcf=document.getElementById('fDcf').value,dct=document.getElementById('fDct').value;
-  const unchk=[...document.querySelectorAll('#chkSt input:not(:checked)')].map(c=>c.value);
+  const tags=[],mes=document.getElementById('fMes').value,ed=document.getElementById('fEd').value,tp=document.getElementById('fTp').value,pv=document.getElementById('fPv').value,pr=document.getElementById('fPr').value,en=document.getElementById('fEn').value,df=document.getElementById('fDf').value,dt=document.getElementById('fDt').value,q=document.getElementById('fSearch').value.trim(),mx=document.getElementById('fDi').value,dcf=document.getElementById('fDcf').value,dct=document.getElementById('fDct').value;
   const chk=[...document.querySelectorAll('#chkSt input:checked')].map(c=>c.value);
   if(mes){const sel=document.getElementById('fMes');tags.push('Mês: '+sel.options[sel.selectedIndex].text)}
-  if(ed)tags.push('Edificação: '+ed);if(tp)tags.push('Tipo OS: '+tp);
-  if(pv)tags.push('Pavimento: '+pv);if(pr)tags.push('Problema: '+pr);
-  if(en)tags.push('Envio: '+en);
+  if(ed)tags.push('Edificação: '+ed);if(tp)tags.push('Tipo OS: '+tp);if(pv)tags.push('Pavimento: '+pv);if(pr)tags.push('Problema: '+pr);if(en)tags.push('Envio: '+en);
   if(df||dt)tags.push('Abertura: '+(df||'início')+' → '+(dt||'hoje'));
-  // ✅ Tag de conclusão no cabeçalho de impressão
   if(dcf||dct)tags.push('Conclusão: '+(dcf||'início')+' → '+(dct||'hoje'));
   if(q)tags.push('Busca: "'+q+'"');if(parseInt(mx)<90)tags.push('Dias ≤ '+mx);
-  if(unchk.length>0)tags.push('Status: '+chk.join(', '));
+  if(chk.length<KANBAN_STATUSES.length)tags.push('Status: '+chk.join(', '));
   return tags;
 }
 
 function buildPrintTable(){
-  const cols=[
-    {label:'SS',fn:r=>gf(r,'SS')||'—'},{label:'Data',fn:r=>fmtDate(gf(r,'DATA DE ABERTURA','DATA'))},
-    {label:'Solicitante',fn:r=>gf(r,'Solicitante')||'—'},{label:'Edificação',fn:r=>gf(r,'Edificação','Edificacao')||'—'},
-    {label:'Pavimento',fn:r=>gf(r,'Pavimento')||'—'},{label:'Sala',fn:r=>gf(r,'Sala')||'—'},
-    {label:'Serviço',fn:r=>gf(r,'Descrição do serviço','Descricao do servico')||'—'},
-    {label:'Dias',fn:r=>gf(r,'DIAS DA DEMANDA SEM ATENDIMENTO')||'0'},
-    {label:'Status',fn:r=>{const s=getSit(r);const si=KANBAN_STATUSES.find(k=>k.code===s);return si?`${s} - ${si.label}`:s},badge:true},
-    {label:'Conclusão',fn:r=>fmtDate(gf(r,'Data da Conclusão da OS','Data da Conclusao da OS'))||'—'}
-  ];
+  const cols=[{label:'SS',fn:r=>gf(r,'SS')||'—'},{label:'Data',fn:r=>fmtDate(gf(r,'DATA DE ABERTURA','DATA'))},{label:'Solicitante',fn:r=>gf(r,'Solicitante')||'—'},{label:'Edificação',fn:r=>gf(r,'Edificação','Edificacao')||'—'},{label:'Pavimento',fn:r=>gf(r,'Pavimento')||'—'},{label:'Sala',fn:r=>gf(r,'Sala')||'—'},{label:'Serviço',fn:r=>gf(r,'Descrição do serviço','Descricao do servico')||'—'},{label:'Dias',fn:r=>gf(r,'DIAS DA DEMANDA SEM ATENDIMENTO')||'0'},{label:'Status',fn:r=>{const s=getSit(r);const si=KANBAN_STATUSES.find(k=>k.code===s);return si?`${s} - ${si.label}`:s},badge:true},{label:'Conclusão',fn:r=>fmtDate(gf(r,'Data da Conclusão da OS','Data da Conclusao da OS'))||'—'}];
   const thead='<thead><tr>'+cols.map(c=>`<th>${c.label}</th>`).join('')+'</tr></thead>';
   const tbody='<tbody>'+FIL.map(r=>`<tr>${cols.map(col=>{if(col.badge){const s=getSit(r);return`<td><span class="badge ${bCls(s)}">${col.fn(r)}</span></td>`}return`<td>${col.fn(r)}</td>`}).join('')}</tr>`).join('')+'</tbody>';
   document.getElementById('printTable').innerHTML=thead+tbody;
 }
 
 function buildPrintHeader(){
-  const tags=getActiveFilters();
-  const now=new Date().toLocaleString('pt-BR');
+  const tags=getActiveFilters(),now=new Date().toLocaleString('pt-BR');
   const tagsHtml=tags.length?'<div class="ph-tags">'+tags.map(t=>`<span class="ph-tag">${t}</span>`).join('')+'</div>':'<div style="font-size:10px;color:#888;margin-top:4px">Sem filtros ativos</div>';
   document.getElementById('printHeader').innerHTML=`<h1>Relatório de Ordens de Serviço</h1><div class="ph-meta">Gerado em: ${now} &nbsp;|&nbsp; Total: <strong>${FIL.length}</strong></div>${tagsHtml}`;
 }
@@ -1184,16 +1152,13 @@ function printDash(){if(!FIL.length)return;buildPrintHeader();buildPrintTable();
 
 function exportCSV(){
   if(!FIL.length)return;
-  const k=Object.keys(FIL[0]);
-  const rows=[k.join(','),...FIL.map(r=>k.map(kk=>`"${(r[kk]||'').replace(/"/g,'""')}"`).join(','))];
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(new Blob([rows.join('\n')],{type:'text/csv;charset=utf-8;'}));
-  a.download='os_filtradas.csv';a.click();
+  const k=Object.keys(FIL[0]);const rows=[k.join(','),...FIL.map(r=>k.map(kk=>`"${(r[kk]||'').replace(/"/g,'""')}"`).join(','))];
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([rows.join('\n')],{type:'text/csv;charset=utf-8;'}));a.download='os_filtradas.csv';a.click();
 }
 
-// ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 //  INIT
-// ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 window.addEventListener('load',autoLoad);
 </script>
 </body>

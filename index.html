@@ -121,7 +121,7 @@ th{text-align:left;padding:7px 11px;font-size:10px;font-weight:700;letter-spacin
 th:hover{color:var(--text)}
 th.srt .si{color:var(--accent);opacity:1}
 .si{opacity:.35;margin-left:3px}
-td{padding:8px 11px;border-bottom:1px solid var(--border);color:var(--text);white-space:nowrap;font-family:var(--fm);font-size:11px}
+td{padding:8px 11px;border-bottom:1px solid var(--border);color:var(--text);white-space:nowrap;font-family:var(--fm);font-size:11px;vertical-align:top}
 tr:last-child td{border-bottom:none}
 tr:hover td{background:rgba(255,255,255,.025)}
 .badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
@@ -1010,7 +1010,7 @@ function renderTable(){
       let dc='—',col='var(--muted)';
       if(dAb){if(dCo&&dCo>=dAb){dc=Math.round((dCo-dAb)/(1000*60*60*24))+'d';col='var(--green)'}else{dc=Math.round((hoje-dAb)/(1000*60*60*24))+'d';col='var(--danger)'}}
       const sitLabel=KANBAN_STATUSES.find(k=>k.code===sit)?`${sit} - ${KANBAN_STATUSES.find(k=>k.code===sit).label}`:sit;
-      return`<tr><td>${gf(r,'SS')||'—'}</td><td>${fmtDate(gf(r,'DATA','DATA DE ABERTURA'))}</td><td style="font-family:var(--fh);font-size:12px">${gf(r,'Solicitante')||'—'}</td><td style="font-family:var(--fh);font-size:12px">${gf(r,'Edificação','Edificacao')||'—'}</td><td>${gf(r,'Pavimento')||'—'}</td><td>${gf(r,'Sala')||'—'}</td><td style="font-family:var(--fh);font-size:11px;color:var(--muted);max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${desc}">${desc||'—'}</td><td style="color:${col};font-weight:600;font-family:var(--fm)">${dc}</td><td><span class="badge ${bCls(sit)}" title="${sitLabel}" data-idx="${FIL.indexOf(r)}" style="cursor:pointer;user-select:none">${sitLabel.length>20?sitLabel.slice(0,18)+'…':sitLabel}</span></td><td style="color:${dCo?'var(--green)':'var(--muted)'}">${fmtDate(conc)||'—'}</td></tr>`;
+      return`<tr><td>${gf(r,'SS')||'—'}</td><td>${fmtDate(gf(r,'DATA','DATA DE ABERTURA'))}</td><td style="font-family:var(--fh);font-size:12px">${gf(r,'Solicitante')||'—'}</td><td style="font-family:var(--fh);font-size:12px">${gf(r,'Edificação','Edificacao')||'—'}</td><td>${gf(r,'Pavimento')||'—'}</td><td>${gf(r,'Sala')||'—'}</td><td style="font-family:var(--fh);font-size:11px;color:var(--muted);max-width:220px;white-space:normal;word-break:break-word;line-height:1.5">${desc||'—'}</td><td style="color:${col};font-weight:600;font-family:var(--fm)">${dc}</td><td><span class="badge ${bCls(sit)}" title="${sitLabel}" data-idx="${FIL.indexOf(r)}" style="cursor:pointer;user-select:none">${sitLabel.length>20?sitLabel.slice(0,18)+'…':sitLabel}</span></td><td style="color:${dCo?'var(--green)':'var(--muted)'}">${fmtDate(conc)||'—'}</td></tr>`;
     }).join('');
   }
   const tot=FIL.length,tp=Math.ceil(tot/PS);

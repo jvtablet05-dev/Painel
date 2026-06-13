@@ -434,6 +434,7 @@ tr:hover td{background:rgba(255,255,255,.025)}
         </div>
         <div id="printHeader" style="display:none"></div>
         <div class="twrap"><table><thead><tr>
+          <th style="width:32px"></th>
           <th onclick="sortBy('ss')">SS <span class="si" id="sss">↕</span></th>
           <th onclick="sortBy('data')">Data <span class="si" id="sdata">↕</span></th>
           <th onclick="sortBy('sol')">Solicitante <span class="si" id="ssol">↕</span></th>
@@ -1044,7 +1045,8 @@ function renderTable(){
       let dc='—',col='var(--muted)';
       if(dAb){if(dCo&&dCo>=dAb){dc=Math.round((dCo-dAb)/(1000*60*60*24))+'d';col='var(--green)'}else{dc=Math.round((hoje-dAb)/(1000*60*60*24))+'d';col='var(--danger)'}}
       const sitLabel=KANBAN_STATUSES.find(k=>k.code===sit)?`${sit} - ${KANBAN_STATUSES.find(k=>k.code===sit).label}`:sit;
-      return`<tr><td>${gf(r,'SS')||'—'}</td><td>${fmtDate(gf(r,'DATA','DATA DE ABERTURA'))}</td><td style="font-family:var(--fh);font-size:12px">${gf(r,'Solicitante')||'—'}</td><td style="font-family:var(--fh);font-size:12px">${gf(r,'Edificação','Edificacao')||'—'}</td><td>${gf(r,'Pavimento')||'—'}</td><td>${gf(r,'Sala')||'—'}</td><td style="font-family:var(--fh);font-size:11px;color:var(--muted);max-width:220px;white-space:normal;word-break:break-word;line-height:1.5">${desc||'—'}</td><td style="color:${col};font-weight:600;font-family:var(--fm)">${dc}</td><td><span class="badge ${bCls(sit)}" title="${sitLabel}" data-idx="${FIL.indexOf(r)}" style="cursor:pointer;user-select:none">${sitLabel.length>20?sitLabel.slice(0,18)+'…':sitLabel}</span></td><td style="color:${dCo?'var(--green)':'var(--muted)'}">${fmtDate(conc)||'—'}</td></tr>`;
+      const idx=FIL.indexOf(r);
+      return`<tr><td style="width:32px;text-align:center;padding:6px 4px"><button title="Copiar para WhatsApp" onclick="copiarOSWhats(${idx})" style="background:none;border:none;cursor:pointer;font-size:15px;padding:2px 5px;border-radius:4px;color:var(--muted)" onmouseover="this.style.color='#25D366'" onmouseout="this.style.color='var(--muted)'">📲</button></td><td>${gf(r,'SS')||'—'}</td><td>${fmtDate(gf(r,'DATA','DATA DE ABERTURA'))}</td><td style="font-family:var(--fh);font-size:12px">${gf(r,'Solicitante')||'—'}</td><td style="font-family:var(--fh);font-size:12px">${gf(r,'Edificação','Edificacao')||'—'}</td><td>${gf(r,'Pavimento')||'—'}</td><td>${gf(r,'Sala')||'—'}</td><td style="font-family:var(--fh);font-size:11px;color:var(--muted);max-width:220px;white-space:normal;word-break:break-word;line-height:1.5">${desc||'—'}</td><td style="color:${col};font-weight:600;font-family:var(--fm)">${dc}</td><td><span class="badge ${bCls(sit)}" title="${sitLabel}" data-idx="${FIL.indexOf(r)}" style="cursor:pointer;user-select:none">${sitLabel.length>20?sitLabel.slice(0,18)+'…':sitLabel}</span></td><td style="color:${dCo?'var(--green)':'var(--muted)'}">${fmtDate(conc)||'—'}</td></tr>`;
     }).join('');
   }
   const tot=FIL.length,tp=Math.ceil(tot/PS);
@@ -1233,6 +1235,33 @@ function exportCSV(){
 // ═══════════════════════════════════════════════════════════
 //  INIT
 // ═══════════════════════════════════════════════════════════
+function copiarOSWhats(idx){
+  const r=FIL[idx];if(!r)return;
+  const hoje=new Date();hoje.setHours(0,0,0,0);
+  const ss   =gf(r,'SS')||'—';
+  const sol  =gf(r,'Solicitante')||'—';
+  const edif =gf(r,'Edificação','Edificacao')||'—';
+  const pav  =gf(r,'Pavimento')||'—';
+  const sala =gf(r,'Sala')||'—';
+  const desc =gf(r,'Descrição do serviço','Descricao do servico')||'—';
+  const sit  =getSit(r);
+  const sInfo=KANBAN_STATUSES.find(s=>s.code===sit);
+  const stLabel=sInfo?`${sit} - ${sInfo.label}`:sit;
+  const dAb  =pDate(gf(r,'DATA','DATA DE ABERTURA'));
+  const dCo  =pDate(gf(r,'Data da Conclusão da OS','Data da Conclusao da OS'));
+  let dias='—';
+  if(dAb){
+    if(dCo&&dCo>=dAb)dias=Math.round((dCo-dAb)/864e5)+'d (concluída)';
+    else dias=Math.round((hoje-dAb)/864e5)+'d em aberto';
+  }
+  const texto=`📋 *${ss}*\n👤 ${sol}\n🏢 ${edif} · ${pav} · Sala ${sala}\n🔧 ${desc}\n⏱ ${dias}\n📌 ${stLabel}`;
+  navigator.clipboard.writeText(texto).catch(()=>{
+    const ta=document.createElement('textarea');
+    ta.value=texto;document.body.appendChild(ta);ta.select();
+    document.execCommand('copy');document.body.removeChild(ta);
+  });
+  showSyncToast('✔ OS copiada! Cole no WhatsApp.',true);
+}
 window.addEventListener('load',autoLoad);
 </script>
 </body>

@@ -43,7 +43,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--fh);font-size:14px
 .btn-g{background:var(--green);border-color:var(--green);color:#0d1a14}
 .btn-g:hover{opacity:.9}
 
-/* NOVA OS BTN — destaque verde na topbar */
+/* NOVA OS BTN */
 .btn-nova-os{background:var(--green);border:none;color:#0d1a14;font-family:var(--fh);font-size:12px;font-weight:700;padding:6px 14px;border-radius:6px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;letter-spacing:.02em;transition:opacity .15s}
 .btn-nova-os:hover{opacity:.85}
 
@@ -205,9 +205,7 @@ tr:hover td{background:rgba(255,255,255,.025)}
 .sopt-label{font-size:12px;font-weight:600;color:var(--text)}
 .modal-actions{display:flex;gap:8px;margin-top:1rem;justify-content:flex-end}
 
-/* =========================================
-   NOVA OS MODAL — sobreposição completa z-index:400
-   ========================================= */
+/* NOVA OS MODAL */
 .nos-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.78);z-index:400;display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px);padding:1rem}
 .nos-overlay.open{display:flex}
 .nos-modal{background:var(--bg2);border:1px solid var(--border2);border-radius:16px;width:100%;max-width:580px;max-height:90vh;display:flex;flex-direction:column;animation:popIn .18s ease;overflow:hidden}
@@ -258,29 +256,26 @@ tr:hover td{background:rgba(255,255,255,.025)}
   .tcard{border:none!important;border-radius:0!important;background:transparent!important}
   .twrap{overflow:visible!important}
   .twrap table{display:none!important}
-  /* cabeçalho */
   #printHeader{display:block!important;background:#13161e!important;border-bottom:2px solid #4f8ef7;padding:5px 8px;margin-bottom:4px}
   #printHeader h1{font-size:11px;color:#e8eaf0!important;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin:0 0 2px}
   #printHeader .ph-meta{font-size:7px;color:#7a7f94!important}
   #printHeader .ph-tags{display:flex;flex-wrap:wrap;gap:3px;margin-top:3px}
   #printHeader .ph-tag{background:rgba(79,142,247,.2)!important;border:1px solid rgba(79,142,247,.4);border-radius:3px;padding:1px 5px;font-size:7px;color:#4f8ef7!important;font-weight:700}
-  /* tabela */
   #printTable{display:table!important;width:100%;border-collapse:collapse;font-size:7.5px;table-layout:fixed}
-  #printTable colgroup col:nth-child(1){width:45px}   /* SS */
-  #printTable colgroup col:nth-child(2){width:48px}   /* Data */
-  #printTable colgroup col:nth-child(3){width:80px}   /* Solicitante */
-  #printTable colgroup col:nth-child(4){width:80px}   /* Edificação */
-  #printTable colgroup col:nth-child(5){width:55px}   /* Pavimento */
-  #printTable colgroup col:nth-child(6){width:55px}   /* Sala */
-  #printTable colgroup col:nth-child(7){width:auto}   /* Serviço — ocupa o resto */
-  #printTable colgroup col:nth-child(8){width:32px}   /* Dias */
-  #printTable colgroup col:nth-child(9){width:75px}   /* Status */
-  #printTable colgroup col:nth-child(10){width:48px}  /* Conclusão */
+  #printTable colgroup col:nth-child(1){width:45px}
+  #printTable colgroup col:nth-child(2){width:48px}
+  #printTable colgroup col:nth-child(3){width:80px}
+  #printTable colgroup col:nth-child(4){width:80px}
+  #printTable colgroup col:nth-child(5){width:55px}
+  #printTable colgroup col:nth-child(6){width:55px}
+  #printTable colgroup col:nth-child(7){width:220px} /* Serviço — ocupa espaço generoso */
+  #printTable colgroup col:nth-child(8){width:32px}
+  #printTable colgroup col:nth-child(9){width:75px}
+  #printTable colgroup col:nth-child(10){width:48px}
   #printTable th{background:#13161e!important;color:#7a7f94!important;padding:4px 5px;text-align:left;font-size:7px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,.15)!important;white-space:nowrap;overflow:hidden}
   #printTable td{padding:4px 5px;border-bottom:1px solid rgba(255,255,255,.05)!important;color:#e8eaf0!important;background:#0d0f14!important;vertical-align:top;white-space:normal;word-break:break-word;line-height:1.4}
   #printTable td.wrap{white-space:normal;word-break:break-word;line-height:1.45}
   #printTable tr:nth-child(even) td{background:#13161e!important}
-  /* badges */
   #printTable .badge{padding:2px 5px;border-radius:3px;font-size:7px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;white-space:nowrap}
   #printTable .bd{background:rgba(45,232,164,.2)!important;color:#2de8a4!important}
   #printTable .bc{background:rgba(247,95,95,.2)!important;color:#f75f5f!important}
@@ -307,7 +302,8 @@ tr:hover td{background:rgba(255,255,255,.025)}
   .thead2{padding:.7rem .9rem;gap:.5rem}
   .tsearch{width:100%;font-size:13px}
   .twrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
-  table{font-size:11px;min-width:900px}
+  /* ▼ CORREÇÃO: min-width aumentado para acomodar coluna Serviço mais larga */
+  table{font-size:11px;min-width:1100px}
   td,th{padding:6px 8px}
   .tfoot{padding:7px .9rem;font-size:10px}
   .pb{padding:2px 6px}
@@ -339,7 +335,6 @@ tr:hover td{background:rgba(255,255,255,.025)}
       <button class="vtab active" onclick="setView('dash',this)">📊 Dashboard</button>
       <button class="vtab" onclick="setView('kanban',this)">🗂 Kanban</button>
     </div>
-    <!-- BOTÃO NOVA OS — sempre visível na topbar -->
     <button class="btn-nova-os" onclick="openNovaOS()">＋ Nova OS</button>
     <button class="btn" onclick="openLog()" id="btnLog" style="display:none" title="Histórico de edições">📋 Log <span id="logBadge" style="display:none;background:var(--warn);color:#000;border-radius:8px;font-size:10px;padding:1px 5px;margin-left:2px"></span></button>
     <button class="btn" onclick="exportCSV()">⬇ CSV</button>
@@ -441,7 +436,8 @@ tr:hover td{background:rgba(255,255,255,.025)}
           <th onclick="sortBy('edif')">Edificação <span class="si" id="sedif">↕</span></th>
           <th onclick="sortBy('pav')">Pavimento <span class="si" id="spav">↕</span></th>
           <th onclick="sortBy('sala')">Sala <span class="si" id="ssala">↕</span></th>
-          <th style="max-width:220px;width:220px">Serviço</th>
+          <!-- ▼ CORREÇÃO PRINCIPAL: min-width generoso para coluna Serviço -->
+          <th style="min-width:380px">Serviço</th>
           <th onclick="sortBy('dias')">Dias s/ atend. <span class="si" id="sdias">↕</span></th>
           <th onclick="sortBy('status')">Status <span class="si" id="sstatus">↕</span></th>
           <th onclick="sortBy('concl')">Conclusão <span class="si" id="sconcl">↕</span></th>
@@ -491,7 +487,7 @@ tr:hover td{background:rgba(255,255,255,.025)}
   </div>
 </div>
 
-<!-- NOVA OS MODAL (z-index:400 — acima de tudo) -->
+<!-- NOVA OS MODAL -->
 <div class="nos-overlay" id="nosOverlay" onclick="if(event.target===this)closeNovaOS()">
   <div class="nos-modal">
     <div class="nos-head">
@@ -506,7 +502,6 @@ tr:hover td{background:rgba(255,255,255,.025)}
     <div class="nos-body">
       <div class="nos-success" id="nosSuccess">✔ OS aberta com sucesso! Planilha atualizada.</div>
 
-      <!-- SEÇÃO 1: E-mail + Tipo -->
       <p class="nos-section">Identificação</p>
       <div class="nos-grid">
         <div class="nos-group full">
@@ -519,14 +514,13 @@ tr:hover td{background:rgba(255,255,255,.025)}
             <option value="">Selecione...</option>
             <option>Manutenção Predial</option>
             <option>Manutenção de equipamentos</option>
-            <option>Manutenção de extitores>
+            <option>Manutenção de extintores</option>
             <option>Outro</option>
           </select>
         </div>
       </div>
 
       <hr class="nos-divider">
-      <!-- SEÇÃO 2: Tipo de manutenção + Tipo de problema -->
       <p class="nos-section">Tipo de manutenção predial</p>
       <div class="nos-grid">
         <div class="nos-group full">
@@ -566,7 +560,6 @@ tr:hover td{background:rgba(255,255,255,.025)}
       </div>
 
       <hr class="nos-divider">
-      <!-- SEÇÃO 3: Identificação do demandante -->
       <p class="nos-section">Identificação do demandante</p>
       <div class="nos-grid">
         <div class="nos-group full">
@@ -643,7 +636,6 @@ tr:hover td{background:rgba(255,255,255,.025)}
           <input type="text" id="nosFotos" placeholder="Link de fotos (opcional)">
         </div>
       </div>
-     
     </div>
 
     <div class="nos-foot">
@@ -792,7 +784,6 @@ function gf(r,...ks){for(const k of ks){for(const rk of Object.keys(r)){if(rk.tr
 function getEffectiveStatus(r){const ss=getRecordKey(r);const ov=getOverrides();if(ov[ss])return ov[ss];return getOriginalSit(r)}
 
 function getOriginalSit(r){
-  // lê coluna "Situação apresentada pela empresa" primeiro, depois "Status"
   const raw = (
     gf(r,'Situação apresentada pela empresa','Situacao apresentada pela empresa') ||
     gf(r,'Status','status','STATUS','Situação','situacao')
@@ -838,7 +829,7 @@ const SCRIPT_URL='https://script.google.com/macros/s/AKfycbzsiNvnxQz031wzM49ybwx
 
 function autoLoad(){
   showLoading(true);
-  localStorage.removeItem(STATUS_OVERRIDES_KEY); // ← limpa ANTES de buscar
+  localStorage.removeItem(STATUS_OVERRIDES_KEY);
   fetch(SCRIPT_URL).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json()})
     .then(json=>{ALL=Array.isArray(json)?json:(json.data||[]);if(!ALL.length)throw new Error('Sem dados');initDash();showLoading(false);})
     .catch(e=>{showLoading(false);alert('Erro ao carregar dados: '+e.message);});
@@ -883,7 +874,6 @@ function loadDemo(){
 //  INIT
 // ═══════════════════════════════════════════════════════════
 function initDash(){
-  // Limpa overrides locais — status sempre vem da planilha
   localStorage.removeItem(STATUS_OVERRIDES_KEY);
   document.getElementById('cp').style.display='none';
   document.getElementById('dash').style.display='block';
@@ -1046,7 +1036,8 @@ function renderTable(){
       if(dAb){if(dCo&&dCo>=dAb){dc=Math.round((dCo-dAb)/(1000*60*60*24))+'d';col='var(--green)'}else{dc=Math.round((hoje-dAb)/(1000*60*60*24))+'d';col='var(--danger)'}}
       const sitLabel=KANBAN_STATUSES.find(k=>k.code===sit)?`${sit} - ${KANBAN_STATUSES.find(k=>k.code===sit).label}`:sit;
       const idx=FIL.indexOf(r);
-      return`<tr><td style="width:32px;text-align:center;padding:6px 4px"><button title="Copiar para WhatsApp" onclick="copiarOSWhats(${idx})" style="background:none;border:none;cursor:pointer;font-size:15px;padding:2px 5px;border-radius:4px;color:var(--muted)" onmouseover="this.style.color='#25D366'" onmouseout="this.style.color='var(--muted)'">📲</button></td><td>${gf(r,'SS')||'—'}</td><td>${fmtDate(gf(r,'DATA','DATA DE ABERTURA'))}</td><td style="font-family:var(--fh);font-size:12px">${gf(r,'Solicitante')||'—'}</td><td style="font-family:var(--fh);font-size:12px">${gf(r,'Edificação','Edificacao')||'—'}</td><td>${gf(r,'Pavimento')||'—'}</td><td>${gf(r,'Sala')||'—'}</td><td style="font-family:var(--fh);font-size:11px;color:var(--muted);max-width:220px;white-space:normal;word-break:break-word;line-height:1.5">${desc||'—'}</td><td style="color:${col};font-weight:600;font-family:var(--fm)">${dc}</td><td><span class="badge ${bCls(sit)}" title="${sitLabel}" data-idx="${FIL.indexOf(r)}" style="cursor:pointer;user-select:none">${sitLabel.length>20?sitLabel.slice(0,18)+'…':sitLabel}</span></td><td style="color:${dCo?'var(--green)':'var(--muted)'}">${fmtDate(conc)||'—'}</td></tr>`;
+      // ▼ CORREÇÃO: min-width:380px na célula de Serviço, sem max-width restritivo
+      return`<tr><td style="width:32px;text-align:center;padding:6px 4px"><button title="Copiar para WhatsApp" onclick="copiarOSWhats(${idx})" style="background:none;border:none;cursor:pointer;font-size:15px;padding:2px 5px;border-radius:4px;color:var(--muted)" onmouseover="this.style.color='#25D366'" onmouseout="this.style.color='var(--muted)'">📲</button></td><td>${gf(r,'SS')||'—'}</td><td>${fmtDate(gf(r,'DATA','DATA DE ABERTURA'))}</td><td style="font-family:var(--fh);font-size:12px">${gf(r,'Solicitante')||'—'}</td><td style="font-family:var(--fh);font-size:12px">${gf(r,'Edificação','Edificacao')||'—'}</td><td>${gf(r,'Pavimento')||'—'}</td><td>${gf(r,'Sala')||'—'}</td><td style="font-family:var(--fm);font-size:11px;color:var(--muted);min-width:380px;white-space:normal;word-break:break-word;line-height:1.5">${desc||'—'}</td><td style="color:${col};font-weight:600;font-family:var(--fm)">${dc}</td><td><span class="badge ${bCls(sit)}" title="${sitLabel}" data-idx="${FIL.indexOf(r)}" style="cursor:pointer;user-select:none">${sitLabel.length>20?sitLabel.slice(0,18)+'…':sitLabel}</span></td><td style="color:${dCo?'var(--green)':'var(--muted)'}">${fmtDate(conc)||'—'}</td></tr>`;
     }).join('');
   }
   const tot=FIL.length,tp=Math.ceil(tot/PS);
@@ -1233,7 +1224,7 @@ function exportCSV(){
 }
 
 // ═══════════════════════════════════════════════════════════
-//  INIT
+//  WHATSAPP COPY
 // ═══════════════════════════════════════════════════════════
 function copiarOSWhats(idx){
   const r=FIL[idx];if(!r)return;

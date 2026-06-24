@@ -119,7 +119,18 @@ hr.sdiv{border:none;border-top:1px solid var(--border)}
 .upload-zone:hover{border-color:var(--accent)}
 .upload-zone input{display:none}
 .upload-zone p{font-size:13px;color:var(--muted);margin:0}
+.upload-zone input{display:none}
+.upload-zone p{font-size:13px;color:var(--muted);margin:0}
 
+/* LOGIN SCREEN */
+.login-screen{min-height:calc(100vh - 54px);width:100%;display:flex;align-items:center;justify-content:center}
+.login-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:2.5rem 3rem;text-align:center;max-width:380px}
+.login-card svg{margin-bottom:1rem}
+.login-card h2{font-size:18px;margin-bottom:8px}
+.login-card p{font-size:13px;color:var(--muted);margin-bottom:1.5rem;line-height:1.6}
+
+/* METRICS */
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:9px}
 /* METRICS */
 .metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:9px}
 .mcard{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:13px 15px;position:relative;overflow:hidden}
@@ -397,51 +408,16 @@ tr:hover td{background:rgba(255,255,255,.025)}
 
   <!-- MAIN -->
   <main class="main">
-    <!-- CONNECT PANEL -->
-    <div class="connect" id="cp" style="display:none">
-      <h2>Conectar dados</h2>
-      <p class="sub">Escolha como quer carregar sua planilha</p>
-      <div class="tabs">
-        <button class="tab active" onclick="switchTab('t1',this)">🔒 Apps Script (seguro)</button>
-        <button class="tab" onclick="switchTab('t2',this)">📋 Colar CSV</button>
-        <button class="tab" onclick="switchTab('t3',this)">📁 Upload arquivo</button>
-        <button class="tab" onclick="switchTab('t4',this)">▶ Demo</button>
-      </div>
-      <div class="tab-panel active" id="t1">
-        <div style="background:rgba(45,232,164,.08);border:1px solid rgba(45,232,164,.3);border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:12px;color:var(--green);line-height:1.9">
-          🔒 <strong>Modo seguro:</strong> sua planilha permanece <strong>privada</strong>. Só o script expõe os dados — e apenas para quem tiver esta URL.
-        </div>
-        <div class="url-row">
-          <input type="text" id="scriptUrl" placeholder="https://script.google.com/macros/s/.../exec" />
-          <button class="btn btn-p" onclick="loadScript()">Conectar</button>
-          <button class="btn" id="btnRefresh" style="display:none" onclick="refreshScript()">⟳ Atualizar</button>
-        </div>
-        <div id="scriptErr" style="color:var(--danger);font-size:12px;margin-top:7px;display:none">❌ Não foi possível carregar.</div>
-        <div id="scriptOk" style="color:var(--green);font-size:12px;margin-top:7px;display:none">✔ Conectado!</div>
-        <p class="hint">
-          <strong>Como configurar o Apps Script:</strong><br>
-          1. Na planilha: <code>Extensões → Apps Script</code> → cole o script e salve<br>
-          2. <code>Implantar → Nova implantação → App da Web</code><br>
-          3. Executar como: <strong>Eu</strong> · Acesso: <strong>Qualquer pessoa</strong> → Implantar<br>
-          4. Copie a URL gerada → cole acima e clique Conectar
-        </p>
-      </div>
-      <div class="tab-panel" id="t2">
-        <p style="font-size:12px;color:var(--muted);margin-bottom:8px">No Google Sheets: <strong>Arquivo → Fazer download → CSV</strong><br>Abra com Bloco de Notas, Ctrl+A, copie e cole abaixo:</p>
-        <textarea class="paste-area" id="csvPaste" placeholder="Cole o conteúdo CSV aqui..."></textarea>
-        <button class="btn btn-g" style="margin-top:9px" onclick="loadPaste()">Processar CSV colado</button>
-      </div>
-      <div class="tab-panel" id="t3">
-        <div class="upload-zone" onclick="document.getElementById('fileIn').click()">
-          <input type="file" id="fileIn" accept=".csv,.tsv" onchange="loadFile(this)">
-          <p>Clique aqui ou arraste o arquivo <strong>.csv</strong></p>
-        </div>
-      </div>
-      <div class="tab-panel" id="t4">
-        <p style="font-size:13px;color:var(--muted);margin-bottom:12px">Carrega dados de exemplo para explorar o dashboard.</p>
-        <button class="btn btn-g" onclick="loadDemo()">▶ Carregar dados de exemplo</button>
-      </div>
-    </div>
+    <!-- LOGIN SCREEN -->
+<div class="login-screen" id="loginScreen" style="display:none">
+  <div class="login-card">
+    <svg width="40" height="40" viewBox="0 0 20 20" fill="none"><rect x="1" y="1" width="7" height="7" rx="2" fill="#4f8ef7"/><rect x="12" y="1" width="7" height="7" rx="2" fill="#4f8ef7" opacity=".5"/><rect x="1" y="12" width="7" height="7" rx="2" fill="#4f8ef7" opacity=".5"/><rect x="12" y="12" width="7" height="7" rx="2" fill="#2de8a4"/></svg>
+    <h2>Dashboard OS</h2>
+    <p>Faça login com sua conta Google para acessar as ordens de serviço.</p>
+    <button class="btn btn-p" style="padding:10px 22px;font-size:13px" onclick="doLogin()">🔑 Entrar com Google</button>
+  </div>
+</div>
+    
 
     <!-- DASHBOARD VIEW -->
     <div id="dash" style="display:none">
@@ -905,7 +881,7 @@ function loadDemo(){
 // ═══════════════════════════════════════════════════════════
 function initDash(){
   localStorage.removeItem(STATUS_OVERRIDES_KEY);
-  document.getElementById('cp').style.display='none';
+  document.getElementById('loginScreen').style.display='none';
   document.getElementById('dash').style.display='block';
   document.getElementById('sidebar').style.display='flex';
   document.getElementById('viewTabs').style.display='flex';
@@ -1373,12 +1349,13 @@ window.addEventListener('load', () => {
   window.onAuthStateChanged(window.auth, user => {
     if (user) onUserLogin(user);
     else {
-      currentUser = null;
-      document.getElementById('userAvatar').style.display = 'none';
-      document.getElementById('btnLogin').style.display = 'inline-flex';
-      // Exibe painel de connect sem carregar dados
-      document.getElementById('cp').style.display = 'block';
-    }
+  currentUser = null;
+  document.getElementById('userAvatar').style.display = 'none';
+  document.getElementById('btnLogin').style.display = 'inline-flex';
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('dash').style.display = 'none';
+  document.getElementById('sidebar').style.display = 'none';
+}
   });
 });
 async function showAdminTab() {

@@ -1283,12 +1283,14 @@ function copiarOSWhats(idx){
   });
   showSyncToast('✔ OS copiada! Cole no WhatsApp.',true);
 }
-const ADMIN_EMAIL = 'jvtablet05@gmail.com'; // Seu e-mail de admin
+// ═══════════════════════════════════════════════════════════
+//  FIREBASE AUTH — LOGIN, PAPÉIS E ADMIN
+// ═══════════════════════════════════════════════════════════
+const ADMIN_EMAIL = 'jvtablet05@gmail.com'; // ← TROQUE PELO SEU E-MAIL
 
 let currentUser = null;
-let userRole = 'comum'; // papel padrão
+let userRole = 'comum';
 
-// Cria botão de login na topbar
 function injectLoginUI() {
   const bar = document.querySelector('.topbar-right');
   const btn = document.createElement('button');
@@ -1300,7 +1302,7 @@ function injectLoginUI() {
 
   const avatar = document.createElement('div');
   avatar.id = 'userAvatar';
-  avatar.style.cssText = 'display:none;align-items:center;gap:8px;font-size:12px;cursor:pointer';
+  avatar.style.cssText = 'display:none;align-items:center;gap:8px;font-size:12px;cursor:pointer;color:var(--text)';
   avatar.onclick = () => { if(confirm('Sair da conta?')) window.signOutFB(); };
   bar.prepend(avatar);
 }
@@ -1317,7 +1319,6 @@ async function onUserLogin(user) {
   const uid = user.uid;
   const email = user.email;
 
-  // 1) Salva/atualiza registro do usuário no Firestore
   const userRef = window.firestoreDoc(window.db, 'usuarios', uid);
   const snap = await window.firestoreGetDoc(userRef);
 
@@ -1326,10 +1327,9 @@ async function onUserLogin(user) {
   else if (!snap.exists()) role = 'comum';
   else role = snap.data().role || 'comum';
 
-  // Checa se está na lista de equipe
   const equipeRef = window.firestoreDoc(window.db, 'usuarios_equipe', email.replace(/\./g,'_'));
   const equipeSnap = await window.firestoreGetDoc(equipeRef);
-  if (equipeSnap.exists() && role !== 'admin') role = 'equipe';
+  if (equipeSnap.exists() && equipeSnap.data().removido !== true && role !== 'admin') role = 'equipe';
 
   await window.firestoreSetDoc(userRef, {
     uid, email, nome: user.displayName,
@@ -1339,56 +1339,40 @@ async function onUserLogin(user) {
 
   userRole = role;
   updateUI(user, role);
-  autoLoad(); // carrega os dados do dashboard
+  autoLoad();
 }
 
 function updateUI(user, role) {
   document.getElementById('btnLogin').style.display = 'none';
   const av = document.getElementById('userAvatar');
   const roleBadge = role === 'admin' ? '👑' : role === 'equipe' ? '🛠' : '👁';
-  av.innerHTML = `
-    ${user.displayName.split(' ')[0]} ${roleBadge}`;
+  av.innerHTML = `<img src="${user.photoURL}" style="width:28px;height:28px;border-radius:50%;border:2px solid var(--accent)" onerror="this.style.display='none'">
+    <span>${user.displayName.split(' ')[0]} ${roleBadge}</span>`;
   av.style.display = 'flex';
 
-  // Esconde ações de edição para visitantes comuns
   if (role === 'comum') {
-    document.querySelectorAll('.btn-nova-os, #btnLog').forEach(el => el.style.opacity = '0.3');
-    document.querySelectorAll('.btn-nova-os, #btnLog').forEach(el => el.style.pointerEvents = 'none');
-    document.querySelectorAll('.badge[data-idx]').forEach(b => b.style.cursor = 'default');
-    // Sobrescreve função de modal para bloquear
+    document.querySelectorAll('.btn-nova-os, #btnLog').forEach(el => { el.style.opacity='0.3'; el.style.pointerEvents='none'; });
     window.openStatusModal = () => alert('⛔ Apenas membros da equipe podem alterar status.');
     window.openNovaOS = () => alert('⛔ Apenas membros da equipe podem abrir OS.');
   }
 
-  // Mostra painel admin se for admin
   if (role === 'admin') showAdminTab();
 }
 
-// Observa mudança de autenticação
-window.addEventListener('load', () => {
-  injectLoginUI();
-  window.onAuthStateChanged(window.auth, user => {
-    if (user) onUserLogin(user);
-    else {
-      currentUser = null;
-      document.getElementById('userAvatar').style.display = 'none';
-      document.getElementById('btnLogin').style.display = 'inline-flex';
-      // Exibe painel de connect sem carregar dados
-      document.getElementById('cp').style.display = 'block';
-    }
-  });
-});
 async function showAdminTab() {
   const tabs = document.getElementById('viewTabs');
   if (!tabs || document.getElementById('vtabAdmin')) return;
   const btn = document.createElement('button');
-  btn.className = 'vtab'; btn.id = 'vtabAdmin';
+  btn.className = 'vtab';
+  btn.id = 'vtabAdmin';
   btn.textContent = '👑 Admin';
   btn.onclick = () => setView('admin', btn);
   tabs.appendChild(btn);
+
   const main = document.querySelector('.main');
   const view = document.createElement('div');
-  view.id = 'adminView'; view.style.display = 'none';
+  view.id = 'adminView';
+  view.style.display = 'none';
   view.innerHTML = `<div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:1.5rem">
     <h2 style="font-size:16px;margin-bottom:4px">👑 Painel de Administração</h2>
     <p style="font-size:12px;color:var(--muted);margin-bottom:1.5rem">Todos que fizeram login. Clique para mudar o papel.</p>
@@ -1405,20 +1389,21 @@ async function loadAdminView() {
   snap.forEach(d => users.push(d.data()));
   users.sort((a,b) => (a.email > b.email ? 1 : -1));
   list.innerHTML = users.map(u => {
-    const isEquipe = u.role === 'equipe', isAdmin = u.role === 'admin';
-    const badge = isAdmin ? '👑 admin' : isEquipe ? '🛠 equipe' : '👁 comum';
+    const isEquipe = u.role === 'equipe';
+    const isAdmin  = u.role === 'admin';
+    const badge    = isAdmin ? '👑 admin' : isEquipe ? '🛠 equipe' : '👁 comum';
     const btnLabel = isEquipe ? 'Remover da equipe' : (isAdmin ? '—' : 'Promover p/ equipe');
     const btnStyle = isEquipe
       ? 'background:rgba(247,95,95,.15);color:#f75f5f;border-color:rgba(247,95,95,.3)'
       : 'background:rgba(45,232,164,.15);color:#2de8a4;border-color:rgba(45,232,164,.3)';
     return `<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">
-      <img src="${u.foto||''}" style="width:32px;height:32px;border-radius:50%" onerror="this.style.display='none'">
+      <img src="${u.foto||''}" style="width:32px;height:32px;border-radius:50%;background:var(--bg3)" onerror="this.style.display='none'">
       <div style="flex:1">
         <div style="font-size:13px;font-weight:600">${u.nome||'—'}</div>
-        <div style="font-size:11px;color:var(--muted)">${u.email}</div>
+        <div style="font-size:11px;color:var(--muted);font-family:var(--fm)">${u.email}</div>
       </div>
       <span class="badge ${isAdmin?'bo':isEquipe?'bd':'bw'}">${badge}</span>
-      ${!isAdmin?`<button class="btn" style="${btnStyle};font-size:11px" onclick="toggleEquipe('${u.email}','${u.uid}',${isEquipe})">${btnLabel}</button>`:''}
+      ${!isAdmin ? `<button class="btn" style="${btnStyle};font-size:11px" onclick="toggleEquipe('${u.email}','${u.uid}',${isEquipe})">${btnLabel}</button>` : ''}
     </div>`;
   }).join('');
 }
@@ -1432,7 +1417,7 @@ async function toggleEquipe(email, uid, isEquipe) {
     await window.firestoreSetDoc(uRef, { role: 'comum' }, { merge: true });
   } else {
     await window.firestoreSetDoc(eqRef, { email, uid, desde: new Date().toISOString(), removido: false });
-    await window.firestoreSetDoc(uRef, { role: 'equipe' }, { merge: true });
+    await window.firestoreSetDoc(uRef,  { role: 'equipe' }, { merge: true });
   }
   loadAdminView();
 }
@@ -1447,8 +1432,26 @@ window.setView = function(v, el) {
     document.getElementById('dash').style.display = 'none';
     document.getElementById('kanbanView').style.display = 'none';
     if (adminView) { adminView.style.display = 'block'; loadAdminView(); }
-  } else { _origSetView(v, el); }
+  } else {
+    _origSetView(v, el);
+  }
 };
+
+window.addEventListener('load', () => {
+  injectLoginUI();
+  window.onAuthStateChanged(window.auth, user => {
+    if (user) {
+      onUserLogin(user);
+    } else {
+      currentUser = null;
+      const av = document.getElementById('userAvatar');
+      const bl = document.getElementById('btnLogin');
+      if (av) av.style.display = 'none';
+      if (bl) bl.style.display = 'inline-flex';
+      document.getElementById('cp').style.display = 'block';
+    }
+  });
+});
 </script>
 </body>
 </html>

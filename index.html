@@ -409,7 +409,7 @@ tr:hover td{background:rgba(255,255,255,.025)}
   <!-- MAIN -->
   <main class="main">
     <!-- LOGIN SCREEN -->
-<div class="login-screen" id="loginScreen" style="display:flex">
+<div class="login-screen" id="loginScreen" style="display:none">
   <div class="login-card">
     <svg width="40" height="40" viewBox="0 0 20 20" fill="none"><rect x="1" y="1" width="7" height="7" rx="2" fill="#4f8ef7"/><rect x="12" y="1" width="7" height="7" rx="2" fill="#4f8ef7" opacity=".5"/><rect x="1" y="12" width="7" height="7" rx="2" fill="#4f8ef7" opacity=".5"/><rect x="12" y="12" width="7" height="7" rx="2" fill="#2de8a4"/></svg>
     <h2>Dashboard OS</h2>
@@ -1343,27 +1343,19 @@ function updateUI(user, role) {
   if (role === 'admin') showAdminTab();
 }
 
+// Observa mudança de autenticação
 window.addEventListener('load', () => {
   injectLoginUI();
-
-  // Mostra loading enquanto Firebase verifica sessão
+  window.onAuthStateChanged(window.auth, user => {
+    if (user) onUserLogin(user);
+    else {
+  currentUser = null;
+  document.getElementById('userAvatar').style.display = 'none';
+  document.getElementById('btnLogin').style.display = 'inline-flex';
   document.getElementById('loginScreen').style.display = 'flex';
-  document.getElementById('loadInd').style.display = 'flex';
-
-  window.onAuthStateChanged(window.auth, async user => {
-    document.getElementById('loadInd').style.display = 'none';
-
-    if (user) {
-      // Garante que onUserLogin termina ANTES de atualizar a UI
-      await onUserLogin(user);
-    } else {
-      currentUser = null;
-      document.getElementById('userAvatar').style.display = 'none';
-      document.getElementById('btnLogin').style.display = 'inline-flex';
-      document.getElementById('loginScreen').style.display = 'flex';
-      document.getElementById('dash').style.display = 'none';
-      document.getElementById('sidebar').style.display = 'none';
-    }
+  document.getElementById('dash').style.display = 'none';
+  document.getElementById('sidebar').style.display = 'none';
+}
   });
 });
 async function showAdminTab() {

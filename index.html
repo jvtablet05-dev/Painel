@@ -1283,7 +1283,6 @@ function copiarOSWhats(idx){
   });
   showSyncToast('✔ OS copiada! Cole no WhatsApp.',true);
 }
-const ADMIN_EMAIL = 'jvtablet05@gmail.com'; // Seu e-mail de admin
 
 let currentUser = null;
 let userRole = 'comum'; // papel padrão
@@ -1322,14 +1321,18 @@ async function onUserLogin(user) {
   const snap = await window.firestoreGetDoc(userRef);
 
   let role = 'comum';
-  if (email === ADMIN_EMAIL) role = 'admin';
-  else if (!snap.exists()) role = 'comum';
-  else role = snap.data().role || 'comum';
 
-  // Checa se está na lista de equipe
+// Verifica se é admin pelo Firestore (seguro)
+const adminRef = window.firestoreDoc(window.db, 'admins', email);
+const adminSnap = await window.firestoreGetDoc(adminRef);
+if (adminSnap.exists()) {
+  role = 'admin';
+} else {
+  // Verifica equipe
   const equipeRef = window.firestoreDoc(window.db, 'usuarios_equipe', email.replace(/\./g,'_'));
   const equipeSnap = await window.firestoreGetDoc(equipeRef);
-  if (equipeSnap.exists() && role !== 'admin') role = 'equipe';
+  if (equipeSnap.exists() && !equipeSnap.data().removido) role = 'equipe';
+}
 
   await window.firestoreSetDoc(userRef, {
     uid, email, nome: user.displayName,

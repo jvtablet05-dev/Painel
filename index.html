@@ -451,6 +451,7 @@ tr:hover td{background:rgba(255,255,255,.025)}
         <div class="ccard"><div class="ctitle">Status <span class="ccnt" id="cntS"></span></div><div class="legend" id="legS"></div><div class="cwrap" style="height:170px"><canvas id="cSt"></canvas></div></div>
         <div class="ccard"><div class="ctitle">Tipo de OS <span class="ccnt" id="cntT"></span></div><div class="cwrap" id="wTp" style="height:190px"><canvas id="cTp"></canvas></div></div>
         <div class="ccard"><div class="ctitle">Abertura por mês <span class="ccnt" id="cntP"></span></div><div class="cwrap" style="height:190px"><canvas id="cPr"></canvas></div></div>
+        <div class="ccard"><div class="ctitle">Concluídas por mês <span class="ccnt" id="cntC"></span></div><div class="cwrap" style="height:190px"><canvas id="cCn"></canvas></div></div>
       </div>
       <div class="tcard">
         <div class="thead2">
@@ -1034,7 +1035,7 @@ function dChart(id){if(charts[id]){charts[id].destroy();delete charts[id]}}
 const tx={color:'#7a7f94',font:{size:10}};const grd={color:'rgba(255,255,255,.05)'};
 
 function renderCharts(){
-  dChart('e');dChart('s');dChart('t');dChart('p');
+  dChart('e');dChart('s');dChart('t');dChart('p');dChart('c');
   const eM=cntBy(r=>gf(r,'Edificação','Edificacao')),eL=Object.keys(eM).slice(0,10);
   document.getElementById('cntE').textContent=eL.length+' unidades';
   charts.e=new Chart(document.getElementById('cEdif'),{type:'bar',data:{labels:eL,datasets:[{data:eL.map(l=>eM[l]),backgroundColor:'#4f8ef7',borderRadius:4,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{...tx,maxRotation:30,autoSkip:false},grid:{display:false}},y:{ticks:{...tx,stepSize:1},grid:grd}}}});
@@ -1047,7 +1048,9 @@ function renderCharts(){
   charts.t=new Chart(document.getElementById('cTp'),{type:'bar',data:{labels:tL,datasets:[{data:tL.map(l=>tM[l]),backgroundColor:'#2de8a4',borderRadius:4,borderSkipped:false}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{...tx,stepSize:1},grid:grd},y:{ticks:{color:'#e8eaf0',font:{size:11}},grid:{display:false}}}}});
   const pM={};FIL.forEach(r=>{const d=pDate(gf(r,'DATA DE ABERTURA','DATA'));if(!d||isNaN(d))return;const k=`${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}`;pM[k]=(pM[k]||0)+1});
   const pL=Object.keys(pM).sort().slice(-12);document.getElementById('cntP').textContent=pL.length+' meses';
-  charts.p=new Chart(document.getElementById('cPr'),{type:'line',data:{labels:pL,datasets:[{data:pL.map(l=>pM[l]),borderColor:'#f7a94f',backgroundColor:'rgba(247,169,79,.1)',tension:.4,fill:true,pointBackgroundColor:'#f7a94f',pointRadius:4,pointHoverRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{...tx,autoSkip:false,maxRotation:30},grid:{display:false}},y:{ticks:{...tx,stepSize:1},grid:grd}}}});
+  charts.p=new Chart(document.getElementById('cPr'),{type:'line',data:{labels:pL,datasets:[{data:pL.map(l=>pM[l]),borderColor:'#f7a94f',backgroundColor:'rgba(247,169,79,.1)',tension:.4,fill:true,pointBackgroundColor:'#f7a94f',pointRadius:4,pointHoverRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{...tx,autoSkip:false,maxRotation:30},grid:{display:false}},y:{ticks:{...tx,stepSize:1},grid:grd}}}});const cM={};FIL.forEach(r=>{if(getSit(r)!=='05')return;const d=pDate(gf(r,'Data da Conclusão da OS','Data da Conclusao da OS'));if(!d||isNaN(d))return;const k=`${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}`;cM[k]=(cM[k]||0)+1});
+  const cL=Object.keys(cM).sort().slice(-12);document.getElementById('cntC').textContent=cL.length+' meses';
+  charts.c=new Chart(document.getElementById('cCn'),{type:'line',data:{labels:cL,datasets:[{data:cL.map(l=>cM[l]),borderColor:'#2de8a4',backgroundColor:'rgba(45,232,164,.1)',tension:.4,fill:true,pointBackgroundColor:'#2de8a4',pointRadius:4,pointHoverRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{...tx,autoSkip:false,maxRotation:30},grid:{display:false}},y:{ticks:{...tx,stepSize:1},grid:grd}}}});
 }
 
 // ═══════════════════════════════════════════════════════════

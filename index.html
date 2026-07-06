@@ -13,7 +13,7 @@
     "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
   import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut }
     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-  import { getFirestore, doc, getDoc, setDoc, collection, getDocs }
+  import { getFirestore, doc, getDoc, setDoc, collection, getDocs, query, orderBy, limit }
     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -37,6 +37,10 @@
   window.firestoreSetDoc = setDoc;
   window.firestoreCollection = collection;
   window.firestoreGetDocs = getDocs;
+  window.firestoreQuery = query;
+  window.firestoreOrderBy = orderBy;
+  window.firestoreLimit = limit;
+  
 </script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -720,8 +724,22 @@ function getOverrides(){try{return JSON.parse(localStorage.getItem(STATUS_OVERRI
 function saveOverrides(o){try{localStorage.setItem(STATUS_OVERRIDES_KEY,JSON.stringify(o))}catch{}}
 
 function addLogEntry(e){
-  const l=getLog();l.unshift({...e,ts:new Date().toISOString(),id:Date.now()});
+  const userInfo = currentUser
+    ? {userEmail: currentUser.email, userNome: currentUser.displayName}
+    : {userEmail:'—', userNome:'Sistema'};
+  const entry = {...e, ...userInfo, ts:new Date().toISOString(), id:Date.now()};
+  const l=getLog();l.unshift(entry);
   if(l.length>500)l.splice(500);saveLog(l);updateLogBadge();
+  syncLogToFirestore(entry);
+}
+
+async function syncLogToFirestore(entry){
+  try{
+    const ref = window.firestoreDoc(window.firestoreCollection(window.db,'log_edicoes'));
+    await window.firestoreSetDoc(ref, entry);
+  }catch(err){
+    console.warn('Falha ao sincronizar log com Firestore:', err);
+  }
 }
 
 function updateLogBadge(){
@@ -1383,10 +1401,19 @@ async function showAdminTab() {
     <h2 style="font-size:16px;margin-bottom:4px">👑 Painel de Administração</h2>
     <p style="font-size:12px;color:var(--muted);margin-bottom:1.5rem">Todos que fizeram login. Clique para mudar o papel.</p>
     <div id="adminList">Carregando...</div>
+  </div>
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-top:1.1rem">
+    <h2 style="font-size:16px;margin-bottom:4px">📋 Atividades por usuário</h2>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:1rem">Todas as OS abertas e status alterados, com autor e horário.</p>
+    <div style="display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap">
+      <select class="fi" id="adminLogUserFilter" style="max-width:260px" onchange="renderAdminLog()"><option value="">Todos os usuários</option></select>
+      <input class="fi" type="text" id="adminLogSearch" placeholder="Filtrar por SS, solicitante, status..." style="max-width:240px" oninput="renderAdminLog()">
+      <button class="btn" onclick="loadAdminActivityLog()">⟳ Atualizar</button>
+    </div>
+    <div id="adminLogList" style="max-height:420px;overflow-y:auto;display:flex;flex-direction:column;gap:8px">Carregando...</div>
   </div>`;
   main.appendChild(view);
 }
-
 async function loadAdminView() {
   const snap = await window.firestoreGetDocs(window.firestoreCollection(window.db, 'usuarios'));
   const list = document.getElementById('adminList');
@@ -1412,6 +1439,7 @@ async function loadAdminView() {
       ${!isAdmin ? `<button class="btn" style="${btnStyle};font-size:11px" onclick="toggleEquipe('${u.email}','${u.uid}',${isEquipe})">${btnLabel}</button>` : ''}
     </div>`;
   }).join('');
+  loadAdminActivityLog();
 }
 
 async function toggleEquipe(email, uid, isEquipe) {
@@ -1426,6 +1454,56 @@ async function toggleEquipe(email, uid, isEquipe) {
     await window.firestoreSetDoc(uRef,  { role: 'equipe' }, { merge: true });
   }
   loadAdminView();
+}
+let adminLogData = [];
+
+async function loadAdminActivityLog(){
+  const listEl = document.getElementById('adminLogList');
+  if(!listEl) return;
+  listEl.innerHTML = 'Carregando...';
+  try{
+    const q = window.firestoreQuery(
+      window.firestoreCollection(window.db,'log_edicoes'),
+      window.firestoreOrderBy('ts','desc'),
+      window.firestoreLimit(300)
+    );
+    const snap = await window.firestoreGetDocs(q);
+    adminLogData = [];
+    snap.forEach(d=>adminLogData.push(d.data()));
+    const sel = document.getElementById('adminLogUserFilter');
+    const emails = [...new Set(adminLogData.map(e=>e.userEmail).filter(Boolean))].sort();
+    sel.innerHTML = '<option value="">Todos os usuários</option>' +
+      emails.map(em=>`<option value="${em}">${em}</option>`).join('');
+    renderAdminLog();
+  }catch(err){
+    listEl.innerHTML = '<div class="log-empty">Erro ao carregar atividades: '+err.message+'</div>';
+  }
+}
+
+function renderAdminLog(){
+  const listEl = document.getElementById('adminLogList');
+  if(!listEl) return;
+  const userF = (document.getElementById('adminLogUserFilter')||{}).value || '';
+  const q = ((document.getElementById('adminLogSearch')||{}).value || '').toLowerCase();
+  let data = adminLogData;
+  if(userF) data = data.filter(e=>e.userEmail===userF);
+  if(q) data = data.filter(e=>
+    (e.ss||'').toLowerCase().includes(q) ||
+    (e.sol||'').toLowerCase().includes(q) ||
+    (e.toLabel||'').toLowerCase().includes(q)
+  );
+  if(!data.length){ listEl.innerHTML = '<div class="log-empty">Nenhuma atividade encontrada.</div>'; return; }
+  listEl.innerHTML = data.map(e=>{
+    const fromInfo = KANBAN_STATUSES.find(s=>s.code===e.from);
+    const fromLabel = fromInfo ? `${e.from} - ${fromInfo.label}` : (e.from || '—');
+    const toLabel = e.toLabel || e.to || '—';
+    const cls = e.type==='created' ? 'created' : 'moved';
+    return `<div class="log-entry ${cls}">
+      <div class="log-ts">${fmtTs(e.ts)} · <span style="color:var(--accent);font-weight:600">${e.userNome||e.userEmail||'—'}</span></div>
+      <div class="log-ss">${e.ss||'—'} · ${e.sol||'—'} · ${e.edif||'—'}</div>
+      <div class="log-action"><span class="log-arrow"><span class="log-from">${fromLabel}</span><span style="color:var(--muted)">→</span><span class="log-to">${toLabel}</span></span></div>
+    </div>`;
+  }).join('');
 }
 
 const _origSetView = window.setView;

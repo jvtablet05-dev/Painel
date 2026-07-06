@@ -809,7 +809,7 @@ function setView(v,el){
 // ═══════════════════════════════════════════════════════════
 //  HELPERS
 // ═══════════════════════════════════════════════════════════
-function gf(r,...ks){for(const k of ks){for(const rk of Object.keys(r)){if(rk.trim().toLowerCase()===k.toLowerCase())return(r[rk]||'').trim()}}return''}
+function gf(r,...ks){for(const k of ks){for(const rk of Object.keys(r)){if(rk.trim().toLowerCase()===k.toLowerCase()){const v=(r[rk]||'').trim();if(v!=='')return v}}}return''}
 
 function getEffectiveStatus(r){const ss=getRecordKey(r);const ov=getOverrides();if(ov[ss])return ov[ss];return getOriginalSit(r)}
 

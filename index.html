@@ -239,6 +239,30 @@ tr:hover td{background:rgba(255,255,255,.025)}
 .sopt-label{font-size:12px;font-weight:600;color:var(--text)}
 .modal-actions{display:flex;gap:8px;margin-top:1rem;justify-content:flex-end}
 
+/* BAIXA DE OS (foto + assinatura) */
+.baixa-overlay{position:fixed;top:0;left:0;right:0;bottom:0;width:100%;height:100%;background:rgba(0,0,0,.7);z-index:400;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.baixa-overlay.open{display:flex}
+.baixa-modal{background:var(--bg2);border:1px solid var(--border2);border-radius:16px;padding:1.5rem;width:480px;max-width:94vw;max-height:92vh;overflow-y:auto;animation:popIn .18s ease;position:relative}
+.baixa-modal h4{font-size:14px;font-weight:700;margin-bottom:4px}
+.baixa-close{position:absolute;top:14px;right:14px;background:none;border:none;font-size:20px;cursor:pointer;color:var(--muted);line-height:1}
+.baixa-close:hover{color:var(--danger)}
+.bx-fr{margin-bottom:14px}
+.bx-fr label{display:block;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.bx-fr textarea,.bx-fr input[type=text]{width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);font-family:var(--fh);font-size:12px;padding:8px 11px;border-radius:6px;outline:none;resize:vertical}
+.bx-fr textarea{min-height:60px}
+.bx-fr textarea:focus,.bx-fr input[type=text]:focus{border-color:var(--accent)}
+.bx-btn-foto{width:100%;background:rgba(79,142,247,.1);color:var(--accent);border:1.5px dashed var(--accent);font-family:var(--fh);font-size:12px;font-weight:600;padding:9px 12px;border-radius:8px;cursor:pointer;transition:background .15s}
+.bx-btn-foto:hover{background:rgba(79,142,247,.18)}
+.bx-previews{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}
+.bx-th{position:relative;width:70px;height:70px;border-radius:8px;overflow:hidden;border:1px solid var(--border2)}
+.bx-th img{width:100%;height:100%;object-fit:cover}
+.bx-th button{position:absolute;top:2px;right:2px;background:rgba(0,0,0,.6);color:#fff;border:none;border-radius:50%;width:18px;height:18px;cursor:pointer;font-size:10px;line-height:1}
+.bx-ok{position:absolute;bottom:2px;right:4px;color:#0d1a14;background:var(--green);border-radius:50%;width:16px;height:16px;font-size:10px;display:flex;align-items:center;justify-content:center;font-weight:700}
+.sig-wrap{position:relative;border:1.5px dashed var(--border2);border-radius:9px;overflow:hidden;background:#fff;margin-bottom:8px}
+.sig-wrap canvas{display:block;width:100%;height:150px;touch-action:none;cursor:crosshair}
+.sig-clear{position:absolute;top:6px;right:6px;background:var(--bg2);border:1px solid var(--border2);border-radius:6px;font-size:10px;padding:3px 8px;cursor:pointer;color:var(--text)}
+.bx-prog{font-size:11px;color:var(--accent);font-weight:700;padding:8px 0;font-family:var(--fm)}
+
 /* NOVA OS MODAL */
 .nos-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.78);z-index:400;display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px);padding:1rem}
 .nos-overlay.open{display:flex}
@@ -283,7 +307,7 @@ tr:hover td{background:rgba(255,255,255,.025)}
   *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   @page{size:A4 landscape;margin:6mm}
   body{background:#0d0f14!important;color:#e8eaf0!important;font-family:Arial,sans-serif;font-size:8px}
-  .topbar,.sidebar,.connect,#dash .cgrid,#dash .metrics,.thead2,#dash .tfoot,.pgn,.btn,#loadInd,.view-tabs,#kanbanView,.log-overlay,.modal-overlay,.nos-overlay{display:none!important}
+  .topbar,.sidebar,.connect,#dash .cgrid,#dash .metrics,.thead2,#dash .tfoot,.pgn,.btn,#loadInd,.view-tabs,#kanbanView,.log-overlay,.modal-overlay,.nos-overlay,.baixa-overlay{display:none!important}
   .layout{display:block!important}
   .main{padding:0!important;overflow:visible!important}
   #dash{display:block!important}
@@ -515,8 +539,46 @@ tr:hover td{background:rgba(255,255,255,.025)}
     <div class="modal-meta" id="modalMeta"></div>
     <div class="status-grid" id="statusGrid"></div>
     <div class="modal-actions">
+      <button class="btn" onclick="openBaixa(modalRecord)" style="margin-right:auto">📷 Registrar baixa</button>
       <button class="btn" onclick="closeModal()">Cancelar</button>
       <button class="btn btn-p" onclick="confirmStatusChange()">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<!-- BAIXA DE OS MODAL (foto + assinatura) -->
+<div class="baixa-overlay" id="baixaOverlay" onclick="if(event.target===this)closeBaixa()">
+  <div class="baixa-modal">
+    <button class="baixa-close" onclick="closeBaixa()">×</button>
+    <h4 id="baixaTitle">Baixa de OS</h4>
+    <div class="modal-meta" id="baixaMeta"></div>
+
+    <div class="bx-fr">
+      <label>Serviço executado *</label>
+      <textarea id="bxDesc" placeholder="Descreva o que foi feito..."></textarea>
+    </div>
+
+    <div class="bx-fr">
+      <label>Registro fotográfico * (até 5 fotos)</label>
+      <input type="file" id="bxFile" accept="image/*" capture="environment" multiple style="display:none" onchange="onFotosSelected(event)">
+      <button class="bx-btn-foto" onclick="document.getElementById('bxFile').click()">📷 Tirar / escolher fotos</button>
+      <div class="bx-previews" id="bxPreviews"></div>
+    </div>
+
+    <div class="bx-fr">
+      <label>Assinatura / aprovação do solicitante *</label>
+      <div class="sig-wrap">
+        <canvas id="bxCanvas" width="600" height="200"></canvas>
+        <button class="sig-clear" onclick="clearSig()">✕ Limpar</button>
+      </div>
+      <input type="text" id="bxNome" placeholder="Nome de quem está assinando">
+    </div>
+
+    <div class="bx-prog" id="bxProg" style="display:none"></div>
+
+    <div class="modal-actions">
+      <button class="btn" onclick="closeBaixa()">Cancelar</button>
+      <button class="btn btn-p" id="bxSend" onclick="confirmBaixa()">✔ Confirmar baixa</button>
     </div>
   </div>
 </div>
@@ -1162,6 +1224,120 @@ function openStatusModal(r,preselect){
 
 function selectStatus(code,el){modalSelectedStatus=code;document.querySelectorAll('.sopt').forEach(e=>e.classList.remove('selected'));el.classList.add('selected')}
 function closeModal(){document.getElementById('modalOverlay').classList.remove('open');modalRecord=null;modalSelectedStatus=null}
+
+// ═══════════════════════════════════════════════════════════
+//  BAIXA DE OS (foto + assinatura)
+// ═══════════════════════════════════════════════════════════
+let baixaRecord=null,baixaFotos=[],baixaEnviando=false,sigDrawn=false,sigInit=false;
+
+function openBaixa(r){
+  if(!r)return;
+  baixaRecord=r;
+  document.getElementById('baixaTitle').textContent='Baixa da OS #'+(gf(r,'SS')||'—');
+  document.getElementById('baixaMeta').textContent=`${gf(r,'Solicitante')||'—'} · ${gf(r,'Edificação','Edificacao')||'—'} · Status atual: ${getSit(r)}`;
+  document.getElementById('bxDesc').value='';
+  document.getElementById('bxNome').value=gf(r,'Solicitante')||'';
+  const prog=document.getElementById('bxProg');prog.style.display='none';prog.textContent='';
+  baixaFotos=[];renderBxPreviews();
+  initSig();clearSig();
+  document.getElementById('baixaOverlay').classList.add('open');
+}
+function closeBaixa(){
+  if(baixaEnviando)return;
+  document.getElementById('baixaOverlay').classList.remove('open');
+  baixaRecord=null;
+}
+
+// Compressão no cliente: lado máximo 1280px, JPEG qualidade 0.7
+function onFotosSelected(ev){
+  const room=5-baixaFotos.length;
+  const files=[...ev.target.files].slice(0,room);
+  if(ev.target.files.length>room)showSyncToast('⚠ Máximo de 5 fotos por baixa.',false);
+  files.forEach(f=>{
+    const img=new Image();
+    img.onload=()=>{
+      const max=1280;
+      let w=img.width,h=img.height;
+      if(Math.max(w,h)>max){const k=max/Math.max(w,h);w=Math.round(w*k);h=Math.round(h*k);}
+      const c=document.createElement('canvas');c.width=w;c.height=h;
+      c.getContext('2d').drawImage(img,0,0,w,h);
+      baixaFotos.push({dataUrl:c.toDataURL('image/jpeg',0.7)});
+      URL.revokeObjectURL(img.src);
+      renderBxPreviews();
+    };
+    img.onerror=()=>{URL.revokeObjectURL(img.src);showSyncToast('⚠ Não foi possível ler uma das imagens.',false);};
+    img.src=URL.createObjectURL(f);
+  });
+  ev.target.value='';
+}
+function removeFoto(i){if(baixaEnviando)return;baixaFotos.splice(i,1);renderBxPreviews();}
+function renderBxPreviews(){
+  document.getElementById('bxPreviews').innerHTML=baixaFotos.map((f,i)=>
+    `<div class="bx-th"><img src="${f.dataUrl}"><button onclick="removeFoto(${i})" title="Remover">×</button></div>`).join('');
+}
+
+// Assinatura em canvas (dedo ou mouse)
+function initSig(){
+  if(sigInit)return;
+  sigInit=true;
+  const cv=document.getElementById('bxCanvas');
+  const ctx=cv.getContext('2d');
+  ctx.lineWidth=2.4;ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle='#1A1A2E';
+  let drawing=false;
+  const pos=e=>{const r=cv.getBoundingClientRect();return{x:(e.clientX-r.left)*cv.width/r.width,y:(e.clientY-r.top)*cv.height/r.height};};
+  cv.addEventListener('pointerdown',e=>{e.preventDefault();drawing=true;const p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);try{cv.setPointerCapture(e.pointerId);}catch(_){}});
+  cv.addEventListener('pointermove',e=>{if(!drawing)return;e.preventDefault();const p=pos(e);ctx.lineTo(p.x,p.y);ctx.stroke();sigDrawn=true;});
+  ['pointerup','pointercancel','pointerleave'].forEach(ev=>cv.addEventListener(ev,()=>{drawing=false;}));
+}
+function clearSig(){
+  const cv=document.getElementById('bxCanvas');
+  const ctx=cv.getContext('2d');
+  ctx.fillStyle='#fff';ctx.fillRect(0,0,cv.width,cv.height);
+  sigDrawn=false;
+}
+
+async function confirmBaixa(){
+  if(!baixaRecord)return;
+  const desc=document.getElementById('bxDesc').value.trim();
+  const nome=document.getElementById('bxNome').value.trim();
+  if(!desc){showSyncToast('⚠ Descreva o serviço executado.',false);return;}
+  if(!baixaFotos.length){showSyncToast('⚠ Inclua pelo menos 1 foto do serviço.',false);return;}
+  if(!sigDrawn){showSyncToast('⚠ Colha a assinatura do solicitante.',false);return;}
+  if(!nome){showSyncToast('⚠ Informe o nome de quem assinou.',false);return;}
+  const prog=document.getElementById('bxProg');prog.style.display='block';prog.textContent='Registrando baixa...';
+  const btn=document.getElementById('bxSend');btn.disabled=true;baixaEnviando=true;
+  try{
+    const assinatura=document.getElementById('bxCanvas').toDataURL('image/png');
+    const ssNum=gf(baixaRecord,'SS');
+    const url=getSyncUrl();
+    if(url){
+      const params=new URLSearchParams({
+        action:'baixa',
+        ss:ssNum,
+        descricaoServico:desc,
+        nomeAssinante:nome,
+        assinaturaBase64:assinatura,
+        fotos:JSON.stringify(baixaFotos.map(f=>f.dataUrl))
+      });
+      const res=await fetch(url,{method:'POST',body:params});
+      const json=await res.json();
+      if(json.result!=='success')throw new Error(json.message||json.result||'Falha no servidor');
+    }
+    const key=getRecordKey(baixaRecord),oldStatus=getSit(baixaRecord),newStatus='05';
+    const ov=getOverrides();ov[key]=newStatus;saveOverrides(ov);
+    const sInfo=KANBAN_STATUSES.find(s=>s.code===newStatus);
+    addLogEntry({type:'moved',ss:ssNum,sol:gf(baixaRecord,'Solicitante'),edif:gf(baixaRecord,'Edificação','Edificacao'),from:oldStatus,to:newStatus,toLabel:sInfo?`${newStatus} - ${sInfo.label}`:newStatus,baixa:true});
+    baixaEnviando=false;
+    closeBaixa();closeModal();
+    apply();if(currentView==='kanban')renderKanban();
+    showSyncToast('✔ Baixa registrada com sucesso!',true);
+  }catch(e){
+    showSyncToast('⚠ Erro ao registrar baixa: '+e.message,false);
+    prog.textContent='Falha no envio. Toque em "Confirmar baixa" para tentar novamente.';
+  }finally{
+    baixaEnviando=false;btn.disabled=false;
+  }
+}
 
 // ═══════════════════════════════════════════════════════════
 //  SYNC TO SHEET

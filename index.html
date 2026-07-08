@@ -8,6 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;500;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <script type="module">
   import { initializeApp } from
     "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -197,6 +198,7 @@ tr:hover td{background:rgba(255,255,255,.025)}
 .kcard-ed{font-size:10px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .kcard-dias{font-size:10px;font-family:var(--fm);margin-top:6px;font-weight:600}
 .kcard-desc{font-size:10px;color:var(--muted);margin-top:4px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.45}
+.kcard-resp{font-size:10px;margin-top:6px;font-weight:600;color:var(--violet);display:flex;align-items:center;gap:4px}
 
 /* LOG DRAWER */
 .log-overlay{position:fixed;top:0;left:0;right:0;bottom:0;width:100%;height:100%;background:rgba(0,0,0,.6);z-index:200;display:none;backdrop-filter:blur(3px)}
@@ -215,6 +217,7 @@ tr:hover td{background:rgba(255,255,255,.025)}
 .log-entry{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;position:relative;border-left:3px solid var(--border)}
 .log-entry.moved{border-left-color:var(--accent)}
 .log-entry.created{border-left-color:var(--green)}
+.log-entry.assigned{border-left-color:var(--violet)}
 .log-ts{font-size:10px;color:var(--muted);font-family:var(--fm);margin-bottom:5px}
 .log-ss{font-size:11px;font-weight:700;color:var(--accent);margin-bottom:4px}
 .log-action{font-size:12px;color:var(--text);line-height:1.5}
@@ -301,13 +304,33 @@ tr:hover td{background:rgba(255,255,255,.025)}
 .nos-submit:hover{opacity:.85}
 .nos-submit:disabled{opacity:.4;cursor:not-allowed}
 
+/* ASSIGN MODAL */
+.assign-overlay{position:fixed;top:0;left:0;right:0;bottom:0;width:100%;height:100%;background:rgba(0,0,0,.7);z-index:300;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.assign-overlay.open{display:flex}
+.assign-modal{background:var(--bg2);border:1px solid var(--border2);border-radius:16px;padding:1.5rem;width:400px;max-width:94vw;animation:popIn .18s ease}
+.assign-modal h4{font-size:14px;font-weight:700;margin-bottom:4px}
+.assign-list{display:flex;flex-direction:column;gap:6px;max-height:280px;overflow-y:auto;margin-top:.8rem}
+.aopt{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:9px 12px;cursor:pointer;display:flex;align-items:center;gap:9px;transition:all .12s}
+.aopt:hover{border-color:var(--border2)}
+.aopt.selected{border-color:var(--violet);background:rgba(167,139,250,.1)}
+.aopt img{width:24px;height:24px;border-radius:50%;background:var(--bg)}
+.aopt-label{font-size:12px;font-weight:600}
+.aopt-email{font-size:10px;color:var(--muted);font-family:var(--fm)}
+
+/* ADMIN — Atribuir OS do dia */
+.assign-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.assign-row .arow-info{flex:1;min-width:180px}
+.assign-row .arow-ss{font-size:11px;font-family:var(--fm);color:var(--accent);font-weight:700}
+.assign-row .arow-desc{font-size:11px;color:var(--muted)}
+.resp-tag{display:inline-flex;align-items:center;gap:4px;font-size:10px;color:var(--violet);font-weight:600;background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.25);border-radius:12px;padding:2px 9px;margin-left:6px}
+
 /* PRINT */
 #printTable{display:none}
 @media print{
   *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   @page{size:A4 landscape;margin:6mm}
   body{background:#0d0f14!important;color:#e8eaf0!important;font-family:Arial,sans-serif;font-size:8px}
-  .topbar,.sidebar,.connect,#dash .cgrid,#dash .metrics,.thead2,#dash .tfoot,.pgn,.btn,#loadInd,.view-tabs,#kanbanView,.log-overlay,.modal-overlay,.nos-overlay,.baixa-overlay{display:none!important}
+  .topbar,.sidebar,.connect,#dash .cgrid,#dash .metrics,.thead2,#dash .tfoot,.pgn,.btn,#loadInd,.view-tabs,#kanbanView,.log-overlay,.modal-overlay,.nos-overlay,.baixa-overlay,.assign-overlay{display:none!important}
   .layout{display:block!important}
   .main{padding:0!important;overflow:visible!important}
   #dash{display:block!important}
@@ -418,6 +441,8 @@ tr:hover td{background:rgba(255,255,255,.025)}
     <div><span class="slabel">Pavimento</span><select class="fi" id="fPv" onchange="apply()"><option value="">Todos</option></select></div>
     <div><span class="slabel">Tipo de problema</span><select class="fi" id="fPr" onchange="apply()"><option value="">Todos</option></select></div>
     <div><span class="slabel">Envio</span><select class="fi" id="fEn" onchange="apply()"><option value="">Todos</option></select></div>
+    <div><span class="slabel">Responsável</span><select class="fi" id="fResp" onchange="apply()"><option value="">Todos</option></select></div>
+    <div id="fMinhasWrap" style="display:none"><label class="chk-item"><input type="checkbox" id="fMinhas" onchange="apply()"><span>Mostrar apenas minhas OS</span></label></div>
     <div><span class="slabel">Dias sem atend. (máx)</span><div class="range-row"><input type="range" id="fDi" min="0" max="90" value="90" step="1" oninput="document.getElementById('rv').textContent=this.value;apply()"><span class="rval" id="rv">90</span></div></div>
     <hr class="sdiv">
     <button class="btn" style="width:100%;justify-content:center" onclick="reset()">✕ Limpar filtros</button>
@@ -499,6 +524,7 @@ tr:hover td{background:rgba(255,255,255,.025)}
           <th onclick="sortBy('dias')">Dias s/ atend. <span class="si" id="sdias">↕</span></th>
           <th onclick="sortBy('status')">Status <span class="si" id="sstatus">↕</span></th>
           <th onclick="sortBy('concl')">Conclusão <span class="si" id="sconcl">↕</span></th>
+          <th>Responsável</th>
         </tr></thead><tbody id="tb"></tbody></table>
         <div class="nodata" id="nd" style="display:none">Nenhum registro encontrado</div>
         <table id="printTable" style="display:none"></table></div>
@@ -542,6 +568,20 @@ tr:hover td{background:rgba(255,255,255,.025)}
       <button class="btn" onclick="openBaixa(modalRecord)" style="margin-right:auto">📷 Registrar baixa</button>
       <button class="btn" onclick="closeModal()">Cancelar</button>
       <button class="btn btn-p" onclick="confirmStatusChange()">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ASSIGN MODAL -->
+<div class="assign-overlay" id="assignOverlay" onclick="if(event.target===this)closeAssign()">
+  <div class="assign-modal">
+    <h4 id="assignTitle">Atribuir responsável</h4>
+    <div class="modal-meta" id="assignMeta"></div>
+    <div class="assign-list" id="assignList"></div>
+    <div class="modal-actions">
+      <button class="btn" onclick="clearAssign()" style="margin-right:auto;color:var(--danger);border-color:rgba(247,95,95,.3)">✕ Remover atribuição</button>
+      <button class="btn" onclick="closeAssign()">Cancelar</button>
+      <button class="btn btn-p" onclick="confirmAssign()">Atribuir</button>
     </div>
   </div>
 </div>
@@ -991,6 +1031,7 @@ function initDash(){
   document.getElementById('viewTabs').style.display='flex';
   document.getElementById('btnLog').style.display='inline-flex';
   buildDrop();apply();updateLogBadge();
+  loadAssignments();loadTeamMembers();
 }
 
 function uniq(fn){return[...new Set(ALL.map(fn).filter(Boolean))].sort()}
@@ -1040,6 +1081,8 @@ function apply(){
   const ed=document.getElementById('fEd').value,tp=document.getElementById('fTp').value,pv=document.getElementById('fPv').value,pr=document.getElementById('fPr').value,en=document.getElementById('fEn').value,df=document.getElementById('fDf').value,dt=document.getElementById('fDt').value,mes=document.getElementById('fMes').value;
   const mx=parseInt(document.getElementById('fDi').value)||9999;
   const dcf=document.getElementById('fDcf').value,dct=document.getElementById('fDct').value;
+  const resp=document.getElementById('fResp')?document.getElementById('fResp').value:'';
+  const minhas=document.getElementById('fMinhas')?document.getElementById('fMinhas').checked:false;
   const chk=[...document.querySelectorAll('#chkSt input:checked')].map(c=>c.value);
   FIL=ALL.filter(r=>{
     if(!hasValidOS(r))return false;
@@ -1057,6 +1100,9 @@ function apply(){
     if(dt&&da){if(da>new Date(dt+'T23:59:59'))return false}
     if(mes&&da){const k=`${da.getFullYear()}-${String(da.getMonth()+1).padStart(2,'0')}`;if(k!==mes)return false}
     if(dcf||dct){const dC=pDate(gf(r,'Data da Conclusão da OS','Data da Conclusao da OS'));if(!dC)return false;if(dcf&&dC<new Date(dcf+'T00:00:00'))return false;if(dct&&dC>new Date(dct+'T23:59:59'))return false}
+    const ass=getAssignment(gf(r,'SS'));
+    if(resp&&(!ass||ass.responsavelEmail!==resp))return false;
+    if(minhas&&currentUser&&(!ass||ass.responsavelEmail!==currentUser.email))return false;
     return true;
   });
   pg=0;doSort();renderAll();if(currentView==='kanban')renderKanban();
@@ -1064,7 +1110,8 @@ function apply(){
 
 function reset(){
   ['fSearch','tSrch','fDf','fDt','fDcf','fDct'].forEach(id=>document.getElementById(id).value='');
-  ['fEd','fTp','fPv','fPr','fEn','fMes'].forEach(id=>document.getElementById(id).value='');
+  ['fEd','fTp','fPv','fPr','fEn','fMes','fResp'].forEach(id=>{if(document.getElementById(id))document.getElementById(id).value=''});
+  if(document.getElementById('fMinhas'))document.getElementById('fMinhas').checked=false;
   document.querySelectorAll('#chkSt input').forEach(c=>c.checked=true);
   const sl=document.getElementById('fDi');sl.value=sl.max;document.getElementById('rv').textContent=sl.max;apply();
 }
@@ -1152,8 +1199,13 @@ function renderTable(){
       if(dAb){if(dCo&&dCo>=dAb){dc=Math.round((dCo-dAb)/(1000*60*60*24))+'d';col='var(--green)'}else{dc=Math.round((hoje-dAb)/(1000*60*60*24))+'d';col='var(--danger)'}}
       const sitLabel=KANBAN_STATUSES.find(k=>k.code===sit)?`${sit} - ${KANBAN_STATUSES.find(k=>k.code===sit).label}`:sit;
       const idx=FIL.indexOf(r);
+      const ssVal=gf(r,'SS');
+      const ass=getAssignment(ssVal);
+      const respCell=ass
+        ?`<span class="resp-tag" onclick="openAssignByIdx(${idx})" style="cursor:${userRole==='admin'?'pointer':'default'}">👤 ${ass.responsavelNome||ass.responsavelEmail}</span>`
+        :(userRole==='admin'?`<button class="btn" style="padding:2px 8px;font-size:10px" onclick="openAssignByIdx(${idx})">+ Atribuir</button>`:`<span style="color:var(--muted)">—</span>`);
       // ▼ CORREÇÃO: min-width:380px na célula de Serviço, sem max-width restritivo
-      return`<tr><td style="width:32px;text-align:center;padding:6px 4px"><button title="Copiar para WhatsApp" onclick="copiarOSWhats(${idx})" style="background:none;border:none;cursor:pointer;font-size:15px;padding:2px 5px;border-radius:4px;color:var(--muted)" onmouseover="this.style.color='#25D366'" onmouseout="this.style.color='var(--muted)'">📲</button></td><td>${gf(r,'SS')||'—'}</td><td>${fmtDate(gf(r,'DATA','DATA DE ABERTURA'))}</td><td style="font-family:var(--fh);font-size:12px">${gf(r,'Solicitante')||'—'}</td><td style="font-family:var(--fh);font-size:12px">${gf(r,'Edificação','Edificacao')||'—'}</td><td>${gf(r,'Pavimento')||'—'}</td><td>${gf(r,'Sala')||'—'}</td><td style="font-family:var(--fm);font-size:11px;color:var(--muted);min-width:380px;white-space:normal;word-break:break-word;line-height:1.5">${desc||'—'}</td><td style="color:${col};font-weight:600;font-family:var(--fm)">${dc}</td><td><span class="badge ${bCls(sit)}" title="${sitLabel}" data-idx="${FIL.indexOf(r)}" style="cursor:pointer;user-select:none">${sitLabel.length>20?sitLabel.slice(0,18)+'…':sitLabel}</span></td><td style="color:${dCo?'var(--green)':'var(--muted)'}">${fmtDate(conc)||'—'}</td></tr>`;
+      return`<tr><td style="width:32px;text-align:center;padding:6px 4px"><button title="Copiar para WhatsApp" onclick="copiarOSWhats(${idx})" style="background:none;border:none;cursor:pointer;font-size:15px;padding:2px 5px;border-radius:4px;color:var(--muted)" onmouseover="this.style.color='#25D366'" onmouseout="this.style.color='var(--muted)'">📲</button></td><td>${ssVal||'—'}</td><td>${fmtDate(gf(r,'DATA','DATA DE ABERTURA'))}</td><td style="font-family:var(--fh);font-size:12px">${gf(r,'Solicitante')||'—'}</td><td style="font-family:var(--fh);font-size:12px">${gf(r,'Edificação','Edificacao')||'—'}</td><td>${gf(r,'Pavimento')||'—'}</td><td>${gf(r,'Sala')||'—'}</td><td style="font-family:var(--fm);font-size:11px;color:var(--muted);min-width:380px;white-space:normal;word-break:break-word;line-height:1.5">${desc||'—'}</td><td style="color:${col};font-weight:600;font-family:var(--fm)">${dc}</td><td><span class="badge ${bCls(sit)}" title="${sitLabel}" data-idx="${FIL.indexOf(r)}" style="cursor:pointer;user-select:none">${sitLabel.length>20?sitLabel.slice(0,18)+'…':sitLabel}</span></td><td style="color:${dCo?'var(--green)':'var(--muted)'}">${fmtDate(conc)||'—'}</td><td>${respCell}</td></tr>`;
     }).join('');
   }
   const tot=FIL.length,tp=Math.ceil(tot/PS);
@@ -1196,7 +1248,9 @@ function createKanbanCard(r,colColor){
   const hoje=new Date();hoje.setHours(0,0,0,0);
   let diasTxt='—',diasColor='var(--muted)';
   if(dAb){if(dCo&&dCo>=dAb){diasTxt=Math.round((dCo-dAb)/(1000*60*60*24))+'d';diasColor='var(--green)'}else{const d=Math.round((hoje-dAb)/(1000*60*60*24));diasTxt=d+'d';diasColor=d>15?'var(--danger)':d>7?'var(--warn)':'var(--muted)'}}
-  card.innerHTML=`<div class="kcard-ss">${gf(r,'SS')||'—'}</div><div class="kcard-sol">${gf(r,'Solicitante')||'—'}</div><div class="kcard-ed">${gf(r,'Edificação','Edificacao')||'—'} · ${gf(r,'Sala')||'—'}</div><div class="kcard-desc" title="${desc}">${desc||'—'}</div><div class="kcard-dias" style="color:${diasColor}">⏱ ${diasTxt}</div>`;
+  const ass=getAssignment(gf(r,'SS'));
+  const respHtml=ass?`<div class="kcard-resp">👤 ${ass.responsavelNome||ass.responsavelEmail}</div>`:'';
+  card.innerHTML=`<div class="kcard-ss">${gf(r,'SS')||'—'}</div><div class="kcard-sol">${gf(r,'Solicitante')||'—'}</div><div class="kcard-ed">${gf(r,'Edificação','Edificacao')||'—'} · ${gf(r,'Sala')||'—'}</div><div class="kcard-desc" title="${desc}">${desc||'—'}</div><div class="kcard-dias" style="color:${diasColor}">⏱ ${diasTxt}</div>${respHtml}`;
   card.style.borderLeft=`3px solid ${colColor}`;
   card.addEventListener('dragstart',e=>{dragRecord=r;card.classList.add('dragging');e.dataTransfer.effectAllowed='move'});
   card.addEventListener('dragend',()=>{card.classList.remove('dragging');dragRecord=null});
@@ -1340,6 +1394,103 @@ async function confirmBaixa(){
 }
 
 // ═══════════════════════════════════════════════════════════
+//  ATRIBUIÇÃO DE RESPONSÁVEL (equipe)
+// ═══════════════════════════════════════════════════════════
+let ASSIGNMENTS={},TEAM_MEMBERS=[],assignSS=null,assignSelected=null;
+
+function ssKey(ss){return String(ss||'').trim().replace(/[\/\.\#\$\[\]]/g,'_')}
+
+async function loadAssignments(){
+  try{
+    const snap=await window.firestoreGetDocs(window.firestoreCollection(window.db,'atribuicoes'));
+    ASSIGNMENTS={};
+    snap.forEach(d=>{const data=d.data();if(data.ss)ASSIGNMENTS[data.ss]=data});
+  }catch(err){
+    console.warn('Falha ao carregar atribuições:',err);
+  }
+  renderTable();if(currentView==='kanban')renderKanban();
+  fillRespFilter();
+}
+
+async function loadTeamMembers(){
+  try{
+    const snap=await window.firestoreGetDocs(window.firestoreCollection(window.db,'usuarios'));
+    TEAM_MEMBERS=[];
+    snap.forEach(d=>{const u=d.data();if(u.role==='equipe'||u.role==='admin')TEAM_MEMBERS.push(u)});
+  }catch(err){
+    console.warn('Falha ao carregar equipe:',err);
+  }
+  fillRespFilter();
+  const wrap=document.getElementById('fMinhasWrap');
+  if(wrap)wrap.style.display=(userRole==='equipe'||userRole==='admin')?'block':'none';
+}
+
+function fillRespFilter(){
+  const sel=document.getElementById('fResp');if(!sel)return;
+  const pv=sel.value;
+  sel.innerHTML='<option value="">Todos</option>';
+  TEAM_MEMBERS.forEach(u=>{const o=document.createElement('option');o.value=u.email;o.textContent=u.nome||u.email;sel.appendChild(o)});
+  if(pv)sel.value=pv;
+}
+
+function getAssignment(ss){return ASSIGNMENTS[ss]||null}
+
+function openAssignByIdx(idx){const r=FIL[idx];if(r)openAssign(r)}
+
+function openAssign(r){
+  if(userRole!=='admin'){showSyncToast('⛔ Apenas administradores atribuem responsáveis.',false);return;}
+  assignSS=gf(r,'SS');
+  const current=getAssignment(assignSS);
+  assignSelected=current?current.responsavelEmail:null;
+  document.getElementById('assignTitle').textContent='Atribuir responsável — '+assignSS;
+  document.getElementById('assignMeta').textContent=`${gf(r,'Solicitante')||'—'} · ${gf(r,'Edificação','Edificacao')||'—'}`;
+  renderAssignList();
+  document.getElementById('assignOverlay').classList.add('open');
+}
+function closeAssign(){document.getElementById('assignOverlay').classList.remove('open');assignSS=null;assignSelected=null}
+
+function renderAssignList(){
+  const list=document.getElementById('assignList');
+  if(!TEAM_MEMBERS.length){list.innerHTML='<div style="font-size:12px;color:var(--muted);padding:.5rem 0">Nenhum membro de equipe cadastrado ainda. Promova alguém no painel Admin → Equipe.</div>';return}
+  list.innerHTML=TEAM_MEMBERS.map(u=>`<div class="aopt ${assignSelected===u.email?'selected':''}" onclick="selectAssignee('${u.email}',this)">
+    <img src="${u.foto||''}" onerror="this.style.display='none'">
+    <div><div class="aopt-label">${u.nome||'—'} ${u.role==='admin'?'👑':'🛠'}</div><div class="aopt-email">${u.email}</div></div>
+  </div>`).join('');
+}
+function selectAssignee(email,el){assignSelected=email;document.querySelectorAll('.aopt').forEach(e=>e.classList.remove('selected'));el.classList.add('selected')}
+
+async function confirmAssign(){
+  if(!assignSS||!assignSelected){showSyncToast('⚠ Escolha um responsável.',false);return}
+  const u=TEAM_MEMBERS.find(t=>t.email===assignSelected);
+  await assignOS(assignSS,assignSelected,u?u.nome:assignSelected);
+  closeAssign();
+}
+async function clearAssign(){
+  if(!assignSS)return;
+  try{
+    await window.firestoreSetDoc(window.firestoreDoc(window.db,'atribuicoes',ssKey(assignSS)),{ss:assignSS,responsavelEmail:null,responsavelNome:null,removidoEm:new Date().toISOString()},{merge:true});
+    delete ASSIGNMENTS[assignSS];
+    addLogEntry({type:'assigned',ss:assignSS,sol:'',edif:'',from:'atribuído',to:'—',toLabel:'Sem responsável'});
+    apply();if(currentView==='kanban')renderKanban();
+    showSyncToast('✔ Atribuição removida.',true);
+  }catch(err){showSyncToast('⚠ Erro ao remover: '+err.message,false);}
+  closeAssign();
+}
+
+async function assignOS(ss,email,nome){
+  try{
+    const data={ss,responsavelEmail:email,responsavelNome:nome,atribuidoPor:currentUser?currentUser.email:'—',atribuidoEm:new Date().toISOString()};
+    await window.firestoreSetDoc(window.firestoreDoc(window.db,'atribuicoes',ssKey(ss)),data);
+    ASSIGNMENTS[ss]=data;
+    addLogEntry({type:'assigned',ss:ss,sol:'',edif:'',from:'—',to:nome,toLabel:'Atribuído a '+nome});
+    apply();if(currentView==='kanban')renderKanban();
+    showSyncToast('✔ OS '+ss+' atribuída a '+nome,true);
+  }catch(err){
+    showSyncToast('⚠ Erro ao atribuir: '+err.message,false);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
 //  SYNC TO SHEET
 // ═══════════════════════════════════════════════════════════
 function getSyncUrl(){const typed=(document.getElementById('scriptUrl')||{}).value||'';return typed.trim()||SCRIPT_URL}
@@ -1383,7 +1534,7 @@ function renderLog(){
   body.innerHTML=filtered.map(e=>{
     const fromLabel=KANBAN_STATUSES.find(s=>s.code===e.from)?`${e.from} - ${KANBAN_STATUSES.find(s=>s.code===e.from).label}`:e.from;
     const toLabel=e.toLabel||e.to;
-    const cls=e.type==='created'?'created':'moved';
+    const cls=e.type==='created'?'created':(e.type==='assigned'?'assigned':'moved');
     return`<div class="log-entry ${cls}"><div class="log-ts">${fmtTs(e.ts)}</div><div class="log-ss">${e.ss||'—'} · ${e.sol||'—'} · ${e.edif||'—'}</div><div class="log-action"><span class="log-arrow"><span class="log-from">${fromLabel||'—'}</span><span style="color:var(--muted)">→</span><span class="log-to">${toLabel||'—'}</span></span></div></div>`;
   }).join('');
 }
@@ -1550,6 +1701,9 @@ function updateUI(user, role) {
     <span>${user.displayName.split(' ')[0]} ${roleBadge}</span>`;
   av.style.display = 'flex';
 
+  const respWrap=document.getElementById('fMinhasWrap');
+  if(respWrap)respWrap.style.display=(role==='equipe'||role==='admin')?'block':'none';
+
   if (role === 'comum') {
     document.querySelectorAll('.btn-nova-os, #btnLog').forEach(el => { el.style.opacity='0.3'; el.style.pointerEvents='none'; });
     window.openStatusModal = () => alert('⛔ Apenas membros da equipe podem alterar status.');
@@ -1579,12 +1733,26 @@ async function showAdminTab() {
     <div id="adminList">Carregando...</div>
   </div>
   <div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-top:1.1rem">
+    <h2 style="font-size:16px;margin-bottom:4px">📤 Atribuir OS do dia à equipe</h2>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:1rem">Escolha o responsável de cada OS aberta hoje (ou ainda não concluída) para execução.</p>
+    <div style="display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap">
+      <select class="fi" id="adminAssignScope" style="max-width:220px" onchange="renderAdminAssignList()">
+        <option value="hoje">Abertas hoje</option>
+        <option value="pendentes">Todas não concluídas</option>
+      </select>
+      <input class="fi" type="text" id="adminAssignSearch" placeholder="Filtrar por SS, solicitante..." style="max-width:220px" oninput="renderAdminAssignList()">
+      <button class="btn" onclick="renderAdminAssignList()">⟳ Atualizar</button>
+    </div>
+    <div id="adminAssignList" style="display:flex;flex-direction:column"></div>
+  </div>
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-top:1.1rem">
     <h2 style="font-size:16px;margin-bottom:4px">📋 Atividades por usuário</h2>
-    <p style="font-size:12px;color:var(--muted);margin-bottom:1rem">Todas as OS abertas e status alterados, com autor e horário.</p>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:1rem">Todas as OS abertas, status alterados e atribuições, com autor e horário.</p>
     <div style="display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap">
       <select class="fi" id="adminLogUserFilter" style="max-width:260px" onchange="renderAdminLog()"><option value="">Todos os usuários</option></select>
       <input class="fi" type="text" id="adminLogSearch" placeholder="Filtrar por SS, solicitante, status..." style="max-width:240px" oninput="renderAdminLog()">
       <button class="btn" onclick="loadAdminActivityLog()">⟳ Atualizar</button>
+      <button class="btn btn-p" onclick="salvarLogNoDrive()">💾 Salvar no Drive</button>
     </div>
     <div id="adminLogList" style="max-height:420px;overflow-y:auto;display:flex;flex-direction:column;gap:8px">Carregando...</div>
   </div>`;
@@ -1615,6 +1783,8 @@ async function loadAdminView() {
       ${!isAdmin ? `<button class="btn" style="${btnStyle};font-size:11px" onclick="toggleEquipe('${u.email}','${u.uid}',${isEquipe})">${btnLabel}</button>` : ''}
     </div>`;
   }).join('');
+  loadTeamMembers();
+  renderAdminAssignList();
   loadAdminActivityLog();
 }
 
@@ -1631,6 +1801,42 @@ async function toggleEquipe(email, uid, isEquipe) {
   }
   loadAdminView();
 }
+
+// ── Atribuir OS do dia (painel admin) ──
+function renderAdminAssignList(){
+  const box=document.getElementById('adminAssignList');
+  if(!box)return;
+  const scope=(document.getElementById('adminAssignScope')||{}).value||'hoje';
+  const q=((document.getElementById('adminAssignSearch')||{}).value||'').toLowerCase();
+  const hoje=new Date();hoje.setHours(0,0,0,0);
+  let recs=ALL.filter(hasValidOS).filter(r=>getSit(r)!=='05'&&getSit(r)!=='01');
+  if(scope==='hoje'){
+    recs=recs.filter(r=>{const d=pDate(gf(r,'DATA DE ABERTURA','DATA'));return d&&d.getFullYear()===hoje.getFullYear()&&d.getMonth()===hoje.getMonth()&&d.getDate()===hoje.getDate()});
+  }
+  if(q){
+    recs=recs.filter(r=>{const hay=[gf(r,'SS'),gf(r,'Solicitante'),gf(r,'Edificação','Edificacao')].join(' ').toLowerCase();return hay.includes(q)});
+  }
+  if(!recs.length){box.innerHTML='<div style="font-size:12px;color:var(--muted);padding:.8rem 0">Nenhuma OS encontrada para este filtro.</div>';return}
+  box.innerHTML=recs.map(r=>{
+    const ss=gf(r,'SS'),ass=getAssignment(ss);
+    const options=['<option value="">— Selecionar —</option>'].concat(TEAM_MEMBERS.map(u=>`<option value="${u.email}" ${ass&&ass.responsavelEmail===u.email?'selected':''}>${u.nome||u.email}</option>`)).join('');
+    return `<div class="assign-row">
+      <div class="arow-info">
+        <span class="arow-ss">${ss}</span> — ${gf(r,'Solicitante')||'—'} · ${gf(r,'Edificação','Edificacao')||'—'}
+        <div class="arow-desc">${(gf(r,'Descrição do serviço','Descricao do servico')||'').slice(0,80)}</div>
+      </div>
+      <select class="fi" style="max-width:200px" onchange="adminQuickAssign('${ss}',this.value)">${options}</select>
+    </div>`;
+  }).join('');
+}
+
+async function adminQuickAssign(ss,email){
+  if(!email)return;
+  const u=TEAM_MEMBERS.find(t=>t.email===email);
+  await assignOS(ss,email,u?u.nome:email);
+  renderAdminAssignList();
+}
+
 let adminLogData = [];
 
 async function loadAdminActivityLog(){
@@ -1638,21 +1844,18 @@ async function loadAdminActivityLog(){
   if(!listEl) return;
   listEl.innerHTML = 'Carregando...';
   try{
-    const q = window.firestoreQuery(
-      window.firestoreCollection(window.db,'log_edicoes'),
-      window.firestoreOrderBy('ts','desc'),
-      window.firestoreLimit(300)
-    );
-    const snap = await window.firestoreGetDocs(q);
+    const snap = await window.firestoreGetDocs(window.firestoreCollection(window.db,'log_edicoes'));
     adminLogData = [];
     snap.forEach(d=>adminLogData.push(d.data()));
+    adminLogData.sort((a,b)=>(b.ts||'').localeCompare(a.ts||''));
+    if(adminLogData.length>300) adminLogData = adminLogData.slice(0,300);
     const sel = document.getElementById('adminLogUserFilter');
     const emails = [...new Set(adminLogData.map(e=>e.userEmail).filter(Boolean))].sort();
     sel.innerHTML = '<option value="">Todos os usuários</option>' +
       emails.map(em=>`<option value="${em}">${em}</option>`).join('');
     renderAdminLog();
   }catch(err){
-    listEl.innerHTML = '<div class="log-empty">Erro ao carregar atividades: '+err.message+'</div>';
+    listEl.innerHTML = '<div class="log-empty">Erro ao carregar atividades: '+err.message+'<br><small>Verifique as regras de segurança do Firestore (coleção log_edicoes precisa permitir leitura para usuários autenticados).</small></div>';
   }
 }
 
@@ -1673,7 +1876,7 @@ function renderAdminLog(){
     const fromInfo = KANBAN_STATUSES.find(s=>s.code===e.from);
     const fromLabel = fromInfo ? `${e.from} - ${fromInfo.label}` : (e.from || '—');
     const toLabel = e.toLabel || e.to || '—';
-    const cls = e.type==='created' ? 'created' : 'moved';
+    const cls = e.type==='created' ? 'created' : (e.type==='assigned'?'assigned':'moved');
     return `<div class="log-entry ${cls}">
       <div class="log-ts">${fmtTs(e.ts)} · <span style="color:var(--accent);font-weight:600">${e.userNome||e.userEmail||'—'}</span></div>
       <div class="log-ss">${e.ss||'—'} · ${e.sol||'—'} · ${e.edif||'—'}</div>
@@ -1697,8 +1900,83 @@ window.setView = function(v, el) {
   }
 };
 
+// ═══════════════════════════════════════════════════════════
+//  GOOGLE DRIVE — BACKUP DO LOG
+// ═══════════════════════════════════════════════════════════
+// ⚠ TROQUE pelo seu Client ID OAuth (Google Cloud Console → APIs & Services → Credentials
+//    → Create Credentials → OAuth Client ID → tipo "Web application" → adicione a URL
+//    onde este dashboard está hospedado em "Authorized JavaScript origins").
+//    Também é necessário ativar a "Google Drive API" no projeto.
+const GOOGLE_DRIVE_CLIENT_ID = 'SEU_CLIENT_ID_AQUI.apps.googleusercontent.com';
+
+let driveTokenClient = null, driveAccessToken = null;
+
+function initDriveAuth(){
+  if (!window.google || !window.google.accounts || !window.google.accounts.oauth2) { setTimeout(initDriveAuth, 600); return; }
+  if (GOOGLE_DRIVE_CLIENT_ID.indexOf('SEU_CLIENT_ID_AQUI') === 0) return; // não configurado ainda
+  driveTokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: GOOGLE_DRIVE_CLIENT_ID,
+    scope: 'https://www.googleapis.com/auth/drive.file',
+    callback: (resp) => {
+      if (resp.error) { showSyncToast('⚠ Falha na autorização do Drive: ' + resp.error, false); return; }
+      driveAccessToken = resp.access_token;
+      uploadLogToDrive();
+    }
+  });
+}
+
+async function salvarLogNoDrive(){
+  if (GOOGLE_DRIVE_CLIENT_ID.indexOf('SEU_CLIENT_ID_AQUI') === 0) {
+    showSyncToast('⚠ Configure o GOOGLE_DRIVE_CLIENT_ID no código para ativar o backup no Drive.', false);
+    return;
+  }
+  if (!driveTokenClient) { showSyncToast('⚠ Google ainda carregando, tente novamente em instantes.', false); return; }
+  if (!adminLogData.length) await loadAdminActivityLog();
+  driveTokenClient.requestAccessToken({ prompt: driveAccessToken ? '' : 'consent' });
+}
+
+async function uploadLogToDrive(){
+  try{
+    const rows=['Data/Hora,SS,Solicitante,Edificação,Usuário,De,Para',
+      ...adminLogData.map(e=>`"${fmtTs(e.ts)}","${e.ss||''}","${e.sol||''}","${e.edif||''}","${e.userEmail||''}","${e.from||''}","${e.toLabel||e.to||''}"`)];
+    const csv = rows.join('\n');
+    const fileName = 'log_edicoes_os.csv';
+
+    const q = encodeURIComponent(`name='${fileName}' and trashed=false`);
+    const listRes = await fetch(`https://www.googleapis.com/drive/v3/files?q=${q}&spaces=drive`, {
+      headers: { Authorization: 'Bearer ' + driveAccessToken }
+    });
+    const listJson = await listRes.json();
+    const existing = (listJson.files || [])[0];
+
+    const metadata = { name: fileName, mimeType: 'text/csv' };
+    const boundary = '-------314159265358979323846';
+    const delim = '\r\n--' + boundary + '\r\n';
+    const closeDelim = '\r\n--' + boundary + '--';
+    const body = delim + 'Content-Type: application/json\r\n\r\n' + JSON.stringify(metadata)
+      + delim + 'Content-Type: text/csv\r\n\r\n' + csv + closeDelim;
+
+    const url = existing
+      ? `https://www.googleapis.com/upload/drive/v3/files/${existing.id}?uploadType=multipart`
+      : `https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart`;
+    const method = existing ? 'PATCH' : 'POST';
+
+    const res = await fetch(url, {
+      method,
+      headers: { Authorization: 'Bearer ' + driveAccessToken, 'Content-Type': 'multipart/related; boundary=' + boundary },
+      body
+    });
+    const json = await res.json();
+    if (json.id) showSyncToast('✔ Log salvo no Google Drive!', true);
+    else throw new Error(json.error?.message || 'Erro desconhecido');
+  }catch(err){
+    showSyncToast('⚠ Erro ao salvar no Drive: ' + err.message, false);
+  }
+}
+
 window.addEventListener('load', () => {
   injectLoginUI();
+  initDriveAuth();
   window.onAuthStateChanged(window.auth, user => {
     if (user) {
       onUserLogin(user);

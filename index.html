@@ -1206,8 +1206,8 @@ function renderTable(){
       const ssVal=gf(r,'SS');
       const ass=getAssignment(ssVal);
       const respCell=ass
-        ?`<span class="resp-tag" onclick="openAssignByIdx(${idx})" style="cursor:${userRole==='admin'?'pointer':'default'}">👤 ${ass.responsavelNome||ass.responsavelEmail}</span>`
-        :(userRole==='admin'?`<button class="btn" style="padding:2px 8px;font-size:10px" onclick="openAssignByIdx(${idx})">+ Atribuir</button>`:`<span style="color:var(--muted)">—</span>`);
+        ?`<span class="resp-tag" onclick="openAssignByIdx(${idx})" style="cursor:${(userRole==='admin'||userRole==='encarregado')?'pointer':'default'}">👤 ${ass.responsavelNome||ass.responsavelEmail}</span>`
+        :((userRole==='admin'||userRole==='encarregado')?`<button class="btn" style="padding:2px 8px;font-size:10px" onclick="openAssignByIdx(${idx})">+ Atribuir</button>`:`<span style="color:var(--muted)">—</span>`);
       // ▼ CORREÇÃO: min-width:380px na célula de Serviço, sem max-width restritivo
       return`<tr><td style="width:32px;text-align:center;padding:6px 4px"><button title="Copiar para WhatsApp" onclick="copiarOSWhats(${idx})" style="background:none;border:none;cursor:pointer;font-size:15px;padding:2px 5px;border-radius:4px;color:var(--muted)" onmouseover="this.style.color='#25D366'" onmouseout="this.style.color='var(--muted)'">📲</button></td><td>${ssVal||'—'}</td><td>${fmtDate(gf(r,'DATA','DATA DE ABERTURA'))}</td><td style="font-family:var(--fh);font-size:12px">${gf(r,'Solicitante')||'—'}</td><td style="font-family:var(--fh);font-size:12px">${gf(r,'Edificação','Edificacao')||'—'}</td><td>${gf(r,'Pavimento')||'—'}</td><td>${gf(r,'Sala')||'—'}</td><td style="font-family:var(--fm);font-size:11px;color:var(--muted);min-width:380px;white-space:normal;word-break:break-word;line-height:1.5">${desc||'—'}</td><td style="color:${col};font-weight:600;font-family:var(--fm)">${dc}</td><td><span class="badge ${bCls(sit)}" title="${sitLabel}" data-idx="${FIL.indexOf(r)}" style="cursor:pointer;user-select:none">${sitLabel.length>20?sitLabel.slice(0,18)+'…':sitLabel}</span></td><td style="color:${dCo?'var(--green)':'var(--muted)'}">${fmtDate(conc)||'—'}</td><td>${respCell}</td></tr>`;
     }).join('');
@@ -1420,13 +1420,13 @@ async function loadTeamMembers(){
   try{
     const snap=await window.firestoreGetDocs(window.firestoreCollection(window.db,'usuarios'));
     TEAM_MEMBERS=[];
-    snap.forEach(d=>{const u=d.data();if(u.role==='equipe'||u.role==='campo'||u.role==='admin')TEAM_MEMBERS.push(u)});
+    snap.forEach(d=>{const u=d.data();if(u.role==='equipe'||u.role==='campo'||u.role==='admin'||u.role==='encarregado')TEAM_MEMBERS.push(u)});
   }catch(err){
     console.warn('Falha ao carregar equipe:',err);
   }
   fillRespFilter();
   const wrap=document.getElementById('fMinhasWrap');
-  if(wrap)wrap.style.display=(userRole==='equipe'||userRole==='campo'||userRole==='admin')?'block':'none';
+  if(wrap)wrap.style.display=(userRole==='equipe'||userRole==='campo'||userRole==='admin'||userRole==='encarregado')?'block':'none';
 }
 
 function fillRespFilter(){
@@ -1442,7 +1442,7 @@ function getAssignment(ss){return ASSIGNMENTS[ss]||null}
 function openAssignByIdx(idx){const r=FIL[idx];if(r)openAssign(r)}
 
 function openAssign(r){
-  if(userRole!=='admin'){showSyncToast('⛔ Apenas administradores atribuem responsáveis.',false);return;}
+  if(userRole!=='admin'&&userRole!=='encarregado'){showSyncToast('⛔ Apenas administradores ou encarregados atribuem responsáveis.',false);return;}
   assignSS=gf(r,'SS');
   const current=getAssignment(assignSS);
   assignSelected=current?current.responsavelEmail:null;
@@ -1458,7 +1458,7 @@ function renderAssignList(){
   if(!TEAM_MEMBERS.length){list.innerHTML='<div style="font-size:12px;color:var(--muted);padding:.5rem 0">Nenhum membro de equipe cadastrado ainda. Promova alguém no painel Admin → Equipe.</div>';return}
   list.innerHTML=TEAM_MEMBERS.map(u=>`<div class="aopt ${assignSelected===u.email?'selected':''}" onclick="selectAssignee('${u.email}',this)">
     <img src="${u.foto||''}" onerror="this.style.display='none'">
-    <div><div class="aopt-label">${u.nome||'—'} ${u.role==='admin'?'👑':u.role==='campo'?'🚶':'🛠'}</div><div class="aopt-email">${u.email}</div></div>
+    <div><div class="aopt-label">${u.nome||'—'} ${u.role==='admin'?'👑':u.role==='encarregado'?'👔':u.role==='campo'?'🚶':'🛠'}</div><div class="aopt-email">${u.email}</div></div>
   </div>`).join('');
 }
 function selectAssignee(email,el){assignSelected=email;document.querySelectorAll('.aopt').forEach(e=>e.classList.remove('selected'));el.classList.add('selected')}
@@ -1685,7 +1685,8 @@ async function onUserLogin(user) {
   const equipeRef = window.firestoreDoc(window.db, 'usuarios_equipe', email.replace(/\./g,'_'));
   const equipeSnap = await window.firestoreGetDoc(equipeRef);
   if (equipeSnap.exists() && equipeSnap.data().removido !== true && role !== 'admin') {
-    role = equipeSnap.data().tipo === 'campo' ? 'campo' : 'equipe';
+    const tipo = equipeSnap.data().tipo;
+    role = tipo === 'campo' ? 'campo' : tipo === 'encarregado' ? 'encarregado' : 'equipe';
   }
 
   await window.firestoreSetDoc(userRef, {
@@ -1702,13 +1703,13 @@ async function onUserLogin(user) {
 function updateUI(user, role) {
   document.getElementById('btnLogin').style.display = 'none';
   const av = document.getElementById('userAvatar');
-  const roleBadge = role === 'admin' ? '👑' : role === 'equipe' ? '🛠' : '👁';
+  const roleBadge = role === 'admin' ? '👑' : role === 'encarregado' ? '👔' : role === 'equipe' ? '🛠' : '👁';
   av.innerHTML = `<img src="${user.photoURL}" style="width:28px;height:28px;border-radius:50%;border:2px solid var(--accent)" onerror="this.style.display='none'">
     <span>${user.displayName.split(' ')[0]} ${roleBadge}</span>`;
   av.style.display = 'flex';
 
   const respWrap=document.getElementById('fMinhasWrap');
-  if(respWrap)respWrap.style.display=(role==='equipe'||role==='campo'||role==='admin')?'block':'none';
+  if(respWrap)respWrap.style.display=(role==='equipe'||role==='campo'||role==='admin'||role==='encarregado')?'block':'none';
 
   if (role === 'comum') {
     const bl=document.getElementById('btnLog');if(bl){bl.style.opacity='0.3';bl.style.pointerEvents='none';}
@@ -1721,9 +1722,11 @@ function updateUI(user, role) {
     window.openStatusModal = () => alert('⛔ Equipe de campo não pode alterar status. Use o botão "📷 Baixa".');
   }
 
-  if (role === 'equipe' || role === 'campo' || role === 'admin') showEquipeTab();
+  if (role === 'equipe' || role === 'campo' || role === 'admin' || role === 'encarregado') showEquipeTab();
 
   if (role === 'admin') showAdminTab();
+
+  if (role === 'encarregado') showEncarregadoTab();
 }
 
 function showEquipeTab() {
@@ -1777,6 +1780,38 @@ function renderEquipeList(){
       <button class="btn" onclick="openBaixa(ALL.find(x=>gf(x,'SS')==='${ssEsc}'))">📷 Baixa</button>
     </div>`;
   }).join('');
+}
+
+function showEncarregadoTab() {
+  const tabs = document.getElementById('viewTabs');
+  if (!tabs || document.getElementById('vtabEncarregado')) return;
+  const btn = document.createElement('button');
+  btn.className = 'vtab';
+  btn.id = 'vtabEncarregado';
+  btn.textContent = '📤 Atribuir OS';
+  btn.onclick = () => setView('encarregado', btn);
+  tabs.appendChild(btn);
+
+  const main = document.querySelector('.main');
+  const view = document.createElement('div');
+  view.id = 'encarregadoView';
+  view.style.display = 'none';
+  view.innerHTML = `<div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:1.5rem">
+    <h2 style="font-size:16px;margin-bottom:4px">📤 Atribuir OS à equipe</h2>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:1rem">Escolha o responsável de cada OS aberta hoje (ou ainda não concluída) para execução.</p>
+    <div style="display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap">
+      <select class="fi" id="adminAssignScope" style="max-width:220px" onchange="renderAdminAssignList()">
+        <option value="hoje">Abertas hoje</option>
+        <option value="pendentes">Todas não concluídas</option>
+      </select>
+      <input class="fi" type="text" id="adminAssignSearch" placeholder="Filtrar por SS, solicitante..." style="max-width:220px" oninput="renderAdminAssignList()">
+      <button class="btn" onclick="renderAdminAssignList()">⟳ Atualizar</button>
+    </div>
+    <div id="adminAssignList" style="display:flex;flex-direction:column"></div>
+  </div>`;
+  main.appendChild(view);
+  loadTeamMembers();
+  renderAdminAssignList();
 }
 
 async function showAdminTab() {
@@ -1834,14 +1869,16 @@ async function loadAdminView() {
   list.innerHTML = users.map(u => {
     const isEquipe = u.role === 'equipe';
     const isCampo  = u.role === 'campo';
+    const isEncarregado = u.role === 'encarregado';
     const isAdmin  = u.role === 'admin';
-    const badge    = isAdmin ? '👑 admin' : isEquipe ? '🛠 equipe CMPE' : isCampo ? '🚶 equipe campo' : '👁 comum';
-    const badgeCls = isAdmin?'bo':isEquipe?'bd':isCampo?'bd':'bw';
+    const badge    = isAdmin ? '👑 admin' : isEncarregado ? '👔 encarregado' : isEquipe ? '🛠 equipe CMPE' : isCampo ? '🚶 equipe campo' : '👁 comum';
+    const badgeCls = isAdmin?'bo':isEncarregado?'bo':isEquipe?'bd':isCampo?'bd':'bw';
     let btns = '';
     if (!isAdmin) {
       if (!isEquipe) btns += `<button class="btn" style="background:rgba(45,232,164,.15);color:#2de8a4;border-color:rgba(45,232,164,.3);font-size:11px" onclick="setUserRole('${u.email}','${u.uid}','equipe')">CMPE</button>`;
       if (!isCampo) btns += `<button class="btn" style="background:rgba(255,180,60,.15);color:#ffb43c;border-color:rgba(255,180,60,.3);font-size:11px;margin-left:6px" onclick="setUserRole('${u.email}','${u.uid}','campo')">Campo</button>`;
-      if (isEquipe || isCampo) btns += `<button class="btn" style="background:rgba(247,95,95,.15);color:#f75f5f;border-color:rgba(247,95,95,.3);font-size:11px;margin-left:6px" onclick="setUserRole('${u.email}','${u.uid}','comum')">Remover</button>`;
+      if (!isEncarregado) btns += `<button class="btn" style="background:rgba(167,139,250,.15);color:#a78bfa;border-color:rgba(167,139,250,.3);font-size:11px;margin-left:6px" onclick="setUserRole('${u.email}','${u.uid}','encarregado')">Encarregado</button>`;
+      if (isEquipe || isCampo || isEncarregado) btns += `<button class="btn" style="background:rgba(247,95,95,.15);color:#f75f5f;border-color:rgba(247,95,95,.3);font-size:11px;margin-left:6px" onclick="setUserRole('${u.email}','${u.uid}','comum')">Remover</button>`;
     }
     return `<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">
       <img src="${u.foto||''}" style="width:32px;height:32px;border-radius:50%;background:var(--bg3)" onerror="this.style.display='none'">
@@ -1958,10 +1995,13 @@ function renderAdminLog(){
 const _origSetView = window.setView;
 window.setView = function(v, el) {
   if (v === 'kanban' && (userRole === 'comum' || userRole === 'campo')) { alert('⛔ Kanban (mudança de status) não disponível para equipe de campo.'); return; }
+  if (v === 'encarregado' && userRole !== 'admin' && userRole !== 'encarregado') { alert('⛔ Apenas administradores ou encarregados atribuem OS à equipe.'); return; }
   const adminView = document.getElementById('adminView');
   const equipeView = document.getElementById('equipeView');
+  const encarregadoView = document.getElementById('encarregadoView');
   if (adminView) adminView.style.display = 'none';
   if (equipeView) equipeView.style.display = 'none';
+  if (encarregadoView) encarregadoView.style.display = 'none';
   if (v === 'admin') {
     document.querySelectorAll('.vtab').forEach(t => t.classList.remove('active'));
     el.classList.add('active');
@@ -1974,6 +2014,12 @@ window.setView = function(v, el) {
     document.getElementById('dash').style.display = 'none';
     document.getElementById('kanbanView').style.display = 'none';
     if (equipeView) { equipeView.style.display = 'block'; renderEquipeList(); }
+  } else if (v === 'encarregado') {
+    document.querySelectorAll('.vtab').forEach(t => t.classList.remove('active'));
+    if (el) el.classList.add('active');
+    document.getElementById('dash').style.display = 'none';
+    document.getElementById('kanbanView').style.display = 'none';
+    if (encarregadoView) { encarregadoView.style.display = 'block'; loadTeamMembers(); renderAdminAssignList(); }
   } else {
     _origSetView(v, el);
   }

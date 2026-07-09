@@ -414,7 +414,8 @@ tr:hover td{background:rgba(255,255,255,.025)}
     <div id="loadInd"><div class="spinner"></div>Carregando...</div>
     <div class="view-tabs" id="viewTabs" style="display:none">
       <button class="vtab active" onclick="setView('dash',this)">📊 Dashboard</button>
-      <button class="vtab" onclick="setView('kanban',this)">🗂 Kanban</button>
+      <button class="vtab" id="vtabKanban" onclick="setView('kanban',this)">🗂 Kanban</button>
+      <button class="vtab" id="vtabEquipe" style="display:none" onclick="setView('equipe',this)">📥 Minhas OS</button>
     </div>
     <button class="btn-nova-os" onclick="openNovaOS()">＋ Nova OS</button>
     <button class="btn" onclick="openLog()" id="btnLog" style="display:none" title="Histórico de edições">📋 Log <span id="logBadge" style="display:none;background:var(--warn);color:#000;border-radius:8px;font-size:10px;padding:1px 5px;margin-left:2px"></span></button>
@@ -1705,12 +1706,74 @@ function updateUI(user, role) {
   if(respWrap)respWrap.style.display=(role==='equipe'||role==='admin')?'block':'none';
 
   if (role === 'comum') {
-    document.querySelectorAll('.btn-nova-os, #btnLog').forEach(el => { el.style.opacity='0.3'; el.style.pointerEvents='none'; });
+    const bl=document.getElementById('btnLog');if(bl){bl.style.opacity='0.3';bl.style.pointerEvents='none';}
+    const kt=document.getElementById('vtabKanban');if(kt)kt.style.display='none';
     window.openStatusModal = () => alert('⛔ Apenas membros da equipe podem alterar status.');
-    window.openNovaOS = () => alert('⛔ Apenas membros da equipe podem abrir OS.');
   }
 
+  if (role === 'equipe' || role === 'admin') showEquipeTab();
+
   if (role === 'admin') showAdminTab();
+
+  if (role === 'equipe') {
+    setTimeout(() => {
+      const t = document.getElementById('vtabEquipe');
+      if (t) setView('equipe', t);
+    }, 300);
+  }
+}
+
+function showEquipeTab() {
+  const btn = document.getElementById('vtabEquipe');
+  if (btn) btn.style.display = 'flex';
+  if (document.getElementById('equipeView')) return;
+  const main = document.querySelector('.main');
+  const view = document.createElement('div');
+  view.id = 'equipeView';
+  view.style.display = 'none';
+  view.innerHTML = `<div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:1.5rem">
+    <h2 style="font-size:16px;margin-bottom:4px">📥 OS atribuídas a mim</h2>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:1rem">Ordens de serviço enviadas para você executar.</p>
+    <div style="display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap">
+      <select class="fi" id="eqScope" style="max-width:220px" onchange="renderEquipeList()">
+        <option value="pendentes">Pendentes (não concluídas)</option>
+        <option value="todas">Todas as minhas OS</option>
+      </select>
+      <input class="fi" type="text" id="eqSearch" placeholder="Filtrar por SS, solicitante..." style="max-width:220px" oninput="renderEquipeList()">
+      <button class="btn" onclick="renderEquipeList()">⟳ Atualizar</button>
+    </div>
+    <div id="eqList" style="display:flex;flex-direction:column"></div>
+  </div>`;
+  main.appendChild(view);
+}
+
+function renderEquipeList(){
+  const box=document.getElementById('eqList');
+  if(!box||!currentUser)return;
+  const scope=(document.getElementById('eqScope')||{}).value||'pendentes';
+  const q=((document.getElementById('eqSearch')||{}).value||'').toLowerCase();
+  let recs=ALL.filter(hasValidOS).filter(r=>{
+    const ass=getAssignment(gf(r,'SS'));
+    return ass && ass.responsavelEmail===currentUser.email;
+  });
+  if(scope==='pendentes') recs=recs.filter(r=>getSit(r)!=='05'&&getSit(r)!=='01');
+  if(q) recs=recs.filter(r=>{const hay=[gf(r,'SS'),gf(r,'Solicitante'),gf(r,'Edificação','Edificacao')].join(' ').toLowerCase();return hay.includes(q)});
+  if(!recs.length){box.innerHTML='<div style="font-size:12px;color:var(--muted);padding:.8rem 0">Nenhuma OS atribuída a você neste filtro.</div>';return}
+  box.innerHTML=recs.map(r=>{
+    const ss=gf(r,'SS'),sit=getSit(r);
+    const sInfo=KANBAN_STATUSES.find(s=>s.code===sit);
+    const stLabel=sInfo?`${sit} - ${sInfo.label}`:sit;
+    const ssEsc=ss.replace(/'/g,"\\'");
+    return `<div class="assign-row">
+      <div class="arow-info">
+        <span class="arow-ss">${ss}</span> — ${gf(r,'Solicitante')||'—'} · ${gf(r,'Edificação','Edificacao')||'—'}
+        <div class="arow-desc">${(gf(r,'Descrição do serviço','Descricao do servico')||'').slice(0,90)}</div>
+      </div>
+      <span class="badge ${bCls(sit)}">${stLabel}</span>
+      <button class="btn" style="margin-left:8px" onclick="openStatusModal(ALL.find(x=>gf(x,'SS')==='${ssEsc}'),null)">Alterar status</button>
+      <button class="btn" onclick="openBaixa(ALL.find(x=>gf(x,'SS')==='${ssEsc}'))">📷 Baixa</button>
+    </div>`;
+  }).join('');
 }
 
 async function showAdminTab() {
@@ -1887,14 +1950,23 @@ function renderAdminLog(){
 
 const _origSetView = window.setView;
 window.setView = function(v, el) {
+  if (v === 'kanban' && userRole === 'comum') { alert('⛔ Kanban disponível apenas para a equipe.'); return; }
   const adminView = document.getElementById('adminView');
+  const equipeView = document.getElementById('equipeView');
   if (adminView) adminView.style.display = 'none';
+  if (equipeView) equipeView.style.display = 'none';
   if (v === 'admin') {
     document.querySelectorAll('.vtab').forEach(t => t.classList.remove('active'));
     el.classList.add('active');
     document.getElementById('dash').style.display = 'none';
     document.getElementById('kanbanView').style.display = 'none';
     if (adminView) { adminView.style.display = 'block'; loadAdminView(); }
+  } else if (v === 'equipe') {
+    document.querySelectorAll('.vtab').forEach(t => t.classList.remove('active'));
+    if (el) el.classList.add('active');
+    document.getElementById('dash').style.display = 'none';
+    document.getElementById('kanbanView').style.display = 'none';
+    if (equipeView) { equipeView.style.display = 'block'; renderEquipeList(); }
   } else {
     _origSetView(v, el);
   }

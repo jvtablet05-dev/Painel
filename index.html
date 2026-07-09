@@ -1033,6 +1033,9 @@ function initDash(){
   document.getElementById('btnLog').style.display='inline-flex';
   buildDrop();apply();updateLogBadge();
   loadAssignments();loadTeamMembers();
+  if((userRole==='equipe'||userRole==='campo')&&document.getElementById('vtabEquipe')){
+    setView('equipe',document.getElementById('vtabEquipe'));
+  }
 }
 
 function uniq(fn){return[...new Set(ALL.map(fn).filter(Boolean))].sort()}
@@ -1417,13 +1420,13 @@ async function loadTeamMembers(){
   try{
     const snap=await window.firestoreGetDocs(window.firestoreCollection(window.db,'usuarios'));
     TEAM_MEMBERS=[];
-    snap.forEach(d=>{const u=d.data();if(u.role==='equipe'||u.role==='admin')TEAM_MEMBERS.push(u)});
+    snap.forEach(d=>{const u=d.data();if(u.role==='equipe'||u.role==='campo'||u.role==='admin')TEAM_MEMBERS.push(u)});
   }catch(err){
     console.warn('Falha ao carregar equipe:',err);
   }
   fillRespFilter();
   const wrap=document.getElementById('fMinhasWrap');
-  if(wrap)wrap.style.display=(userRole==='equipe'||userRole==='admin')?'block':'none';
+  if(wrap)wrap.style.display=(userRole==='equipe'||userRole==='campo'||userRole==='admin')?'block':'none';
 }
 
 function fillRespFilter(){
@@ -1455,7 +1458,7 @@ function renderAssignList(){
   if(!TEAM_MEMBERS.length){list.innerHTML='<div style="font-size:12px;color:var(--muted);padding:.5rem 0">Nenhum membro de equipe cadastrado ainda. Promova alguém no painel Admin → Equipe.</div>';return}
   list.innerHTML=TEAM_MEMBERS.map(u=>`<div class="aopt ${assignSelected===u.email?'selected':''}" onclick="selectAssignee('${u.email}',this)">
     <img src="${u.foto||''}" onerror="this.style.display='none'">
-    <div><div class="aopt-label">${u.nome||'—'} ${u.role==='admin'?'👑':'🛠'}</div><div class="aopt-email">${u.email}</div></div>
+    <div><div class="aopt-label">${u.nome||'—'} ${u.role==='admin'?'👑':u.role==='campo'?'🚶':'🛠'}</div><div class="aopt-email">${u.email}</div></div>
   </div>`).join('');
 }
 function selectAssignee(email,el){assignSelected=email;document.querySelectorAll('.aopt').forEach(e=>e.classList.remove('selected'));el.classList.add('selected')}
@@ -1681,7 +1684,9 @@ async function onUserLogin(user) {
 
   const equipeRef = window.firestoreDoc(window.db, 'usuarios_equipe', email.replace(/\./g,'_'));
   const equipeSnap = await window.firestoreGetDoc(equipeRef);
-  if (equipeSnap.exists() && equipeSnap.data().removido !== true && role !== 'admin') role = 'equipe';
+  if (equipeSnap.exists() && equipeSnap.data().removido !== true && role !== 'admin') {
+    role = equipeSnap.data().tipo === 'campo' ? 'campo' : 'equipe';
+  }
 
   await window.firestoreSetDoc(userRef, {
     uid, email, nome: user.displayName,
@@ -1703,7 +1708,7 @@ function updateUI(user, role) {
   av.style.display = 'flex';
 
   const respWrap=document.getElementById('fMinhasWrap');
-  if(respWrap)respWrap.style.display=(role==='equipe'||role==='admin')?'block':'none';
+  if(respWrap)respWrap.style.display=(role==='equipe'||role==='campo'||role==='admin')?'block':'none';
 
   if (role === 'comum') {
     const bl=document.getElementById('btnLog');if(bl){bl.style.opacity='0.3';bl.style.pointerEvents='none';}
@@ -1711,16 +1716,14 @@ function updateUI(user, role) {
     window.openStatusModal = () => alert('⛔ Apenas membros da equipe podem alterar status.');
   }
 
-  if (role === 'equipe' || role === 'admin') showEquipeTab();
+  if (role === 'campo') {
+    const kt=document.getElementById('vtabKanban');if(kt)kt.style.display='none';
+    window.openStatusModal = () => alert('⛔ Equipe de campo não pode alterar status. Use o botão "📷 Baixa".');
+  }
+
+  if (role === 'equipe' || role === 'campo' || role === 'admin') showEquipeTab();
 
   if (role === 'admin') showAdminTab();
-
-  if (role === 'equipe') {
-    setTimeout(() => {
-      const t = document.getElementById('vtabEquipe');
-      if (t) setView('equipe', t);
-    }, 300);
-  }
 }
 
 function showEquipeTab() {
@@ -1770,7 +1773,7 @@ function renderEquipeList(){
         <div class="arow-desc">${(gf(r,'Descrição do serviço','Descricao do servico')||'').slice(0,90)}</div>
       </div>
       <span class="badge ${bCls(sit)}">${stLabel}</span>
-      <button class="btn" style="margin-left:8px" onclick="openStatusModal(ALL.find(x=>gf(x,'SS')==='${ssEsc}'),null)">Alterar status</button>
+      ${userRole!=='campo'?`<button class="btn" style="margin-left:8px" onclick="openStatusModal(ALL.find(x=>gf(x,'SS')==='${ssEsc}'),null)">Alterar status</button>`:''}
       <button class="btn" onclick="openBaixa(ALL.find(x=>gf(x,'SS')==='${ssEsc}'))">📷 Baixa</button>
     </div>`;
   }).join('');
@@ -1830,20 +1833,24 @@ async function loadAdminView() {
   users.sort((a,b) => (a.email > b.email ? 1 : -1));
   list.innerHTML = users.map(u => {
     const isEquipe = u.role === 'equipe';
+    const isCampo  = u.role === 'campo';
     const isAdmin  = u.role === 'admin';
-    const badge    = isAdmin ? '👑 admin' : isEquipe ? '🛠 equipe' : '👁 comum';
-    const btnLabel = isEquipe ? 'Remover da equipe' : (isAdmin ? '—' : 'Promover p/ equipe');
-    const btnStyle = isEquipe
-      ? 'background:rgba(247,95,95,.15);color:#f75f5f;border-color:rgba(247,95,95,.3)'
-      : 'background:rgba(45,232,164,.15);color:#2de8a4;border-color:rgba(45,232,164,.3)';
+    const badge    = isAdmin ? '👑 admin' : isEquipe ? '🛠 equipe CMPE' : isCampo ? '🚶 equipe campo' : '👁 comum';
+    const badgeCls = isAdmin?'bo':isEquipe?'bd':isCampo?'bd':'bw';
+    let btns = '';
+    if (!isAdmin) {
+      if (!isEquipe) btns += `<button class="btn" style="background:rgba(45,232,164,.15);color:#2de8a4;border-color:rgba(45,232,164,.3);font-size:11px" onclick="setUserRole('${u.email}','${u.uid}','equipe')">CMPE</button>`;
+      if (!isCampo) btns += `<button class="btn" style="background:rgba(255,180,60,.15);color:#ffb43c;border-color:rgba(255,180,60,.3);font-size:11px;margin-left:6px" onclick="setUserRole('${u.email}','${u.uid}','campo')">Campo</button>`;
+      if (isEquipe || isCampo) btns += `<button class="btn" style="background:rgba(247,95,95,.15);color:#f75f5f;border-color:rgba(247,95,95,.3);font-size:11px;margin-left:6px" onclick="setUserRole('${u.email}','${u.uid}','comum')">Remover</button>`;
+    }
     return `<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">
       <img src="${u.foto||''}" style="width:32px;height:32px;border-radius:50%;background:var(--bg3)" onerror="this.style.display='none'">
       <div style="flex:1">
         <div style="font-size:13px;font-weight:600">${u.nome||'—'}</div>
         <div style="font-size:11px;color:var(--muted);font-family:var(--fm)">${u.email}</div>
       </div>
-      <span class="badge ${isAdmin?'bo':isEquipe?'bd':'bw'}">${badge}</span>
-      ${!isAdmin ? `<button class="btn" style="${btnStyle};font-size:11px" onclick="toggleEquipe('${u.email}','${u.uid}',${isEquipe})">${btnLabel}</button>` : ''}
+      <span class="badge ${badgeCls}">${badge}</span>
+      ${btns}
     </div>`;
   }).join('');
   loadTeamMembers();
@@ -1851,16 +1858,16 @@ async function loadAdminView() {
   loadAdminActivityLog();
 }
 
-async function toggleEquipe(email, uid, isEquipe) {
+async function setUserRole(email, uid, newRole) {
   const key = email.replace(/\./g,'_');
   const eqRef = window.firestoreDoc(window.db, 'usuarios_equipe', key);
   const uRef  = window.firestoreDoc(window.db, 'usuarios', uid);
-  if (isEquipe) {
+  if (newRole === 'comum') {
     await window.firestoreSetDoc(eqRef, { removido: true }, { merge: true });
     await window.firestoreSetDoc(uRef, { role: 'comum' }, { merge: true });
   } else {
-    await window.firestoreSetDoc(eqRef, { email, uid, desde: new Date().toISOString(), removido: false });
-    await window.firestoreSetDoc(uRef,  { role: 'equipe' }, { merge: true });
+    await window.firestoreSetDoc(eqRef, { email, uid, desde: new Date().toISOString(), removido: false, tipo: newRole }, { merge: true });
+    await window.firestoreSetDoc(uRef,  { role: newRole }, { merge: true });
   }
   loadAdminView();
 }
@@ -1950,7 +1957,7 @@ function renderAdminLog(){
 
 const _origSetView = window.setView;
 window.setView = function(v, el) {
-  if (v === 'kanban' && userRole === 'comum') { alert('⛔ Kanban disponível apenas para a equipe.'); return; }
+  if (v === 'kanban' && (userRole === 'comum' || userRole === 'campo')) { alert('⛔ Kanban (mudança de status) não disponível para equipe de campo.'); return; }
   const adminView = document.getElementById('adminView');
   const equipeView = document.getElementById('equipeView');
   if (adminView) adminView.style.display = 'none';

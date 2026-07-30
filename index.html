@@ -1616,6 +1616,10 @@ function copiarOSWhats(idx){
   const hoje=new Date();hoje.setHours(0,0,0,0);
   const ss   =gf(r,'SS')||'—';
   const sol  =gf(r,'Solicitante')||'—';
+  // Telefone: tenta nomes de coluna comuns, senão pega a 5ª coluna (coluna E) pela posição
+  const telNome = gf(r,'Telefone','Contato','Telefone do solicitante','Whatsapp','WhatsApp','Celular');
+  const colE = Object.keys(r)[4]; // índice 4 = coluna E (A=0,B=1,C=2,D=3,E=4)
+  const tel = telNome || (colE ? (r[colE]||'').trim() : '') || '—';
   const edif =gf(r,'Edificação','Edificacao')||'—';
   const pav  =gf(r,'Pavimento')||'—';
   const sala =gf(r,'Sala')||'—';
@@ -1630,7 +1634,7 @@ function copiarOSWhats(idx){
     if(dCo&&dCo>=dAb)dias=Math.round((dCo-dAb)/864e5)+'d (concluída)';
     else dias=Math.round((hoje-dAb)/864e5)+'d em aberto';
   }
-  const texto=`📋 *${ss}*\n👤 ${sol}\n🏢 ${edif} · ${pav} · Sala ${sala}\n🔧 ${desc}\n⏱ ${dias}\n📌 ${stLabel}`;
+  const texto=`📋 *${ss}*\n👤 ${sol}\n📞 ${tel}\n🏢 ${edif} · ${pav} · Sala ${sala}\n🔧 ${desc}\n⏱ ${dias}\n📌 ${stLabel}`;
   navigator.clipboard.writeText(texto).catch(()=>{
     const ta=document.createElement('textarea');
     ta.value=texto;document.body.appendChild(ta);ta.select();

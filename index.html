@@ -961,9 +961,10 @@ function bCls(s){const f=KANBAN_STATUSES.find(k=>k.code===s);return f?f.cls:'bw'
 
 function pDate(s){
   if(!s||s==='')return null;s=String(s).trim();
-  const n=Number(s);if(!isNaN(n)&&n>1&&s!==''){const d=new Date(Date.UTC(1899,11,30));d.setUTCDate(d.getUTCDate()+Math.floor(n));return d;}
-  const sl=s.split('/');if(sl.length===3){let [d,m,y]=sl;if(y.length===2)y='20'+y;const dt=new Date(`${y}-${m.padStart(2,'0')}-${d.padStart(2,'0')}`);if(!isNaN(dt))return dt;}
-  const iso=s.match(/^(\d{4})-(\d{2})-(\d{2})/);if(iso)return new Date(`${iso[1]}-${iso[2]}-${iso[3]}`);
+  // Construção sempre em horário LOCAL (evita o desvio de -1 dia causado por UTC)
+  const n=Number(s);if(!isNaN(n)&&n>1&&s!==''){const d=new Date(1899,11,30);d.setDate(d.getDate()+Math.floor(n));return d;}
+  const sl=s.split('/');if(sl.length===3){let [d,m,y]=sl;if(y.length===2)y='20'+y;const dt=new Date(Number(y),Number(m)-1,Number(d));if(!isNaN(dt))return dt;}
+  const iso=s.match(/^(\d{4})-(\d{2})-(\d{2})/);if(iso)return new Date(Number(iso[1]),Number(iso[2])-1,Number(iso[3]));
   const fb=new Date(s);return isNaN(fb)?null:fb;
 }
 

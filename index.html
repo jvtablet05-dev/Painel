@@ -442,6 +442,7 @@ tr:hover td{background:rgba(255,255,255,.025)}
     <div><span class="slabel">Pavimento</span><select class="fi" id="fPv" onchange="apply()"><option value="">Todos</option></select></div>
     <div><span class="slabel">Tipo de problema</span><select class="fi" id="fPr" onchange="apply()"><option value="">Todos</option></select></div>
     <div><span class="slabel">Envio</span><select class="fi" id="fEn" onchange="apply()"><option value="">Todos</option></select></div>
+    <div><span class="slabel">AREA_CODIG</span><select class="fi" id="fColO" onchange="apply()"><option value="">Todos</option></select></div>
     <div><span class="slabel">Responsável</span><select class="fi" id="fResp" onchange="apply()"><option value="">Todos</option></select></div>
     <div id="fMinhasWrap" style="display:none"><label class="chk-item"><input type="checkbox" id="fMinhas" onchange="apply()"><span>Mostrar apenas minhas OS</span></label></div>
     <div><span class="slabel">Dias sem atend. (máx)</span><div class="range-row"><input type="range" id="fDi" min="0" max="90" value="90" step="1" oninput="document.getElementById('rv').textContent=this.value;apply()"><span class="rval" id="rv">90</span></div></div>
@@ -1054,6 +1055,7 @@ function buildDrop(){
   fillSel('fPv',uniq(r=>gf(r,'Pavimento')));
   fillSel('fPr',uniq(r=>gf(r,'Tipo de problema predial')));
   fillSel('fEn',uniq(r=>gf(r,'Envio')));
+  fillSel('fColO',uniq(r=>gf(r,'AREA_CODIG')));
   const meses={};
   const nomeMes=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
   ALL.forEach(r=>{
@@ -1087,6 +1089,7 @@ function apply(){
   const mx=parseInt(document.getElementById('fDi').value)||9999;
   const dcf=document.getElementById('fDcf').value,dct=document.getElementById('fDct').value;
   const resp=document.getElementById('fResp')?document.getElementById('fResp').value:'';
+  const colO=document.getElementById('fColO').value;
   const minhas=document.getElementById('fMinhas')?document.getElementById('fMinhas').checked:false;
   const chk=[...document.querySelectorAll('#chkSt input:checked')].map(c=>c.value);
   FIL=ALL.filter(r=>{
@@ -1099,6 +1102,7 @@ function apply(){
     if(pv&&gf(r,'Pavimento')!==pv)return false;
     if(pr&&gf(r,'Tipo de problema predial')!==pr)return false;
     if(en&&gf(r,'Envio')!==en)return false;
+    if(colO&&gf(r,'AREA_CODIG')!==colO)return false;
     if(!chk.includes(sit))return false;
     if(dias>mx)return false;
     if(df&&da){if(da<new Date(df+'T00:00:00'))return false}
@@ -1116,6 +1120,7 @@ function apply(){
 function reset(){
   ['fSearch','tSrch','fDf','fDt','fDcf','fDct'].forEach(id=>document.getElementById(id).value='');
   ['fEd','fTp','fPv','fPr','fEn','fMes','fResp'].forEach(id=>{if(document.getElementById(id))document.getElementById(id).value=''});
+  ['fEd','fTp','fPv','fPr','fEn','fMes','fResp','fColO'].forEach(id=>{if(document.getElementById(id))document.getElementById(id).value=''});
   if(document.getElementById('fMinhas'))document.getElementById('fMinhas').checked=false;
   document.querySelectorAll('#chkSt input').forEach(c=>c.checked=true);
   const sl=document.getElementById('fDi');sl.value=sl.max;document.getElementById('rv').textContent=sl.max;apply();

@@ -1076,6 +1076,7 @@ async function autoLoad(){
   localStorage.removeItem(STATUS_OVERRIDES_KEY);
   try{
     const json = await api({action:'getData'});
+    console.log('RESPOSTA:', json);
     ALL = Array.isArray(json) ? json : (json.data || []);
     if(!ALL.length) throw new Error('Sem dados');
     initDash();

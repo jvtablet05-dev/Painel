@@ -909,7 +909,7 @@ function nosSubmit(){
     const hoje=new Date();
     const ds=`${String(hoje.getDate()).padStart(2,'0')}/${String(hoje.getMonth()+1).padStart(2,'0')}/${hoje.getFullYear()}`;
     const p=new URLSearchParams({action:'insertOS',email:email,solicitante:nome,contato:contato,edificacao:edif,pavimento:pav,sala:sala,tipoGeral:tipoGeral,tipoManut:tipoManut,tipoProblema:tipoProb,descricao:desc,areaCod:areaCod,tipoOS:tipoOS,patrimonio:patrimonio,fotos:fotos,data:ds});
-    fetch(url+'?'+p.toString()).then(r=>r.json()).then(json=>{
+    api(Object.fromEntries(p)).then(json=>{
       if(json.ss){
         const hoje2=new Date();
         const ds2=`${String(hoje2.getDate()).padStart(2,'0')}/${String(hoje2.getMonth()+1).padStart(2,'0')}/${hoje2.getFullYear()}`;
@@ -918,7 +918,7 @@ function nosSubmit(){
       }
       addLogEntry({type:'created',ss:json.ss||'Nova OS',sol:nome,edif:edif,from:'—',to:'02',toLabel:'02 - Aguardando empresa'});
       nosShowSuccess();
-    }).catch(()=>nosShowSuccess());
+    }).catch(e=>{btn.disabled=false;btn.textContent='↑ Abrir OS';info.innerHTML='<span style="color:var(--danger)">Erro: '+e.message+'</span>';});
   }else{setTimeout(()=>nosShowSuccess(),900);}
 }
 
@@ -1042,7 +1042,7 @@ function indeferirSemCadastro(idx){
   if(url){
     const desc=gf(r,'Descrição do serviço','Descricao do servico');
     const params=new URLSearchParams({action:'indeferirSemCadastro',ss:novaSS,solicitante:gf(r,'Solicitante'),edificacao:gf(r,'Edificação','Edificacao'),pavimento:gf(r,'Pavimento'),sala:gf(r,'Sala'),descricao:desc});
-    fetch(url+'?'+params.toString()).catch(()=>{});
+    api(Object.fromEntries(params)).catch(()=>{});
   }
   showSyncToast('✔ Solicitação indeferida como '+novaSS,true);
   buildDrop();apply();renderSemCadastro();updateSemCadBadge();
@@ -1061,20 +1061,29 @@ function showLoading(v){document.getElementById('loadInd').style.display=v?'flex
 // ═══════════════════════════════════════════════════════════
 const SCRIPT_URL='https://script.google.com/macros/s/AKfycbzsiNvnxQz031wzM49ybwx_tH0rFBEtaMtWbOIynr0z59R-MYuSkn-SD6Epv0FbiqjQIw/exec';
 
-function autoLoad(){
-  showLoading(true);
-  localStorage.removeItem(STATUS_OVERRIDES_KEY);
-  fetch(SCRIPT_URL).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json()})
-    .then(json=>{ALL=Array.isArray(json)?json:(json.data||[]);if(!ALL.length)throw new Error('Sem dados');initDash();showLoading(false);})
-    .catch(e=>{showLoading(false);alert('Erro ao carregar dados: '+e.message);});
+async function api(params){
+  if(!currentUser) throw new Error('Faça login primeiro');
+  const token = await currentUser.getIdToken();
+  const res = await fetch(getSyncUrl(), {method:'POST', body:new URLSearchParams({...params, token})});
+  const json = await res.json();
+  if(json.error) throw new Error(json.error);
+  return json;
 }
 
-function loadScript(){
-  const url=document.getElementById('scriptUrl').value.trim();if(!url)return;showLoading(true);
-  fetch(url).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json()})
-    .then(json=>{ALL=Array.isArray(json)?json:(json.data||[]);initDash();showLoading(false);})
-    .catch(e=>{showLoading(false);alert('Erro: '+e.message);});
+async function autoLoad(){
+  if(!currentUser){ alert('Faça login primeiro.'); return; }
+  showLoading(true);
+  localStorage.removeItem(STATUS_OVERRIDES_KEY);
+  try{
+    const json = await api({action:'getData'});
+    ALL = Array.isArray(json) ? json : (json.data || []);
+    if(!ALL.length) throw new Error('Sem dados');
+    initDash();
+  }catch(e){ alert('Erro ao carregar dados: ' + e.message); }
+  showLoading(false);
 }
+
+function loadScript(){ autoLoad(); }
 
 function refreshScript(){const url=document.getElementById('scriptUrl').value.trim();if(url)loadScript()}
 function loadPaste(){const txt=document.getElementById('csvPaste').value.trim();if(!txt)return;parseCsv(txt)}
@@ -1456,16 +1465,7 @@ async function confirmBaixa(){
     const ssNum=gf(baixaRecord,'SS');
     const url=getSyncUrl();
     if(url){
-      const params=new URLSearchParams({
-        action:'baixa',
-        ss:ssNum,
-        descricaoServico:desc,
-        nomeAssinante:nome,
-        assinaturaBase64:assinatura,
-        fotos:JSON.stringify(baixaFotos.map(f=>f.dataUrl))
-      });
-      const res=await fetch(url,{method:'POST',body:params});
-      const json=await res.json();
+      const json=await api({action:'baixa',ss:ssNum,descricaoServico:desc,nomeAssinante:nome,assinaturaBase64:assinatura,fotos:JSON.stringify(baixaFotos.map(f=>f.dataUrl))});
       if(json.result!=='success')throw new Error(json.message||json.result||'Falha no servidor');
     }
     const key=getRecordKey(baixaRecord),oldStatus=getSit(baixaRecord),newStatus='05';
@@ -1593,21 +1593,13 @@ function showSyncToast(msg,ok){
 }
 
 async function syncToSheet(ss,newStatusCode){
-  const url=getSyncUrl();if(!url)return;
-  const sInfo=KANBAN_STATUSES.find(s=>s.code===newStatusCode);const statusText=sInfo?`${newStatusCode} - ${sInfo.label}`:newStatusCode;
-  try{const params=new URLSearchParams({action:'updateStatus',ss:ss,statusText:statusText});const res=await fetch(url+'?'+params.toString());const json=await res.json();if(json.result==='success')showSyncToast('✔ Planilha atualizada: '+ss,true);else showSyncToast('⚠ Erro: '+(json.message||json.result),false)}
-  catch(e){showSyncToast('⚠ Não foi possível sincronizar',false)}
-}
-
-function confirmStatusChange(){
-  if(!modalRecord||!modalSelectedStatus)return closeModal();
-  const key=getRecordKey(modalRecord),oldStatus=getSit(modalRecord),newStatus=modalSelectedStatus;
-  if(oldStatus===newStatus){closeModal();return}
-  const ov=getOverrides();ov[key]=newStatus;saveOverrides(ov);
-  const sInfo=KANBAN_STATUSES.find(s=>s.code===newStatus);
-  addLogEntry({type:'moved',ss:gf(modalRecord,'SS'),sol:gf(modalRecord,'Solicitante'),edif:gf(modalRecord,'Edificação','Edificacao'),from:oldStatus,to:newStatus,toLabel:sInfo?`${newStatus} - ${sInfo.label}`:newStatus});
-  const ssNum=gf(modalRecord,'SS');if(ssNum)syncToSheet(ssNum,newStatus);
-  closeModal();apply();if(currentView==='kanban')renderKanban();
+  const sInfo=KANBAN_STATUSES.find(s=>s.code===newStatusCode);
+  const statusText=sInfo?`${newStatusCode} - ${sInfo.label}`:newStatusCode;
+  try{
+    const json=await api({action:'updateStatus',ss:ss,statusText:statusText});
+    if(json.result==='success')showSyncToast('✔ Planilha atualizada: '+ss,true);
+    else showSyncToast('⚠ Erro: '+(json.message||json.result),false);
+  }catch(e){showSyncToast('⚠ Não foi possível sincronizar: '+e.message,false)}
 }
 
 // ═══════════════════════════════════════════════════════════

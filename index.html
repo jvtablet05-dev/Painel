@@ -2200,6 +2200,55 @@ window.addEventListener('load', () => {
     }
   });
 });
+  // ===== ONLINE / VISTO POR ÚLTIMO (admin) =====
+(function(){
+  let timer=null;
+  async function ping(){
+    const u=window.auth.currentUser; if(!u)return;
+    try{await window.firestoreSetDoc(window.firestoreDoc(window.db,'presenca',u.uid),
+      {uid:u.uid,email:u.email,nome:u.displayName,lastSeen:new Date().toISOString()},{merge:true});}catch(e){}
+  }
+  window.addEventListener('load',()=>{
+    window.onAuthStateChanged(window.auth,u=>{
+      clearInterval(timer);
+      if(u){ping();timer=setInterval(ping,60000);}
+    });
+  });
+
+  async function showOnline(){
+    const view=document.getElementById('adminView'); if(!view)return;
+    let box=document.getElementById('adminOnline');
+    if(!box){
+      box=document.createElement('div'); box.id='adminOnline';
+      box.style.cssText='background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-bottom:1.1rem';
+      view.prepend(box);
+    }
+    try{
+      const us=await window.firestoreGetDocs(window.firestoreCollection(window.db,'usuarios'));
+      const ps=await window.firestoreGetDocs(window.firestoreCollection(window.db,'presenca'));
+      const pres={}; ps.forEach(d=>pres[d.id]=d.data());
+      const now=Date.now(), arr=[];
+      us.forEach(d=>{
+        const u=d.data(), p=pres[u.uid||d.id];
+        const last=(p&&p.lastSeen)||u.ultimoLogin||'';
+        arr.push({nome:u.nome,email:u.email,role:u.role,last,on:!!(p&&now-new Date(p.lastSeen).getTime()<150000)});
+      });
+      arr.sort((a,b)=>(b.on-a.on)||(b.last||'').localeCompare(a.last||''));
+      const qtd=arr.filter(x=>x.on).length;
+      box.innerHTML=`<h2 style="font-size:16px;margin-bottom:4px">🟢 Online agora: ${qtd}</h2>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:1rem">Online = ativo nos últimos 2 min. Atualiza sozinho.</p>`+
+        arr.map(x=>`<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border)">
+          <span style="width:9px;height:9px;border-radius:50%;background:${x.on?'#2de8a4':'#7a7f94'}"></span>
+          <div style="flex:1"><div style="font-size:13px;font-weight:600">${x.nome||'—'} <span style="color:var(--muted);font-weight:400">(${x.role||''})</span></div>
+          <div style="font-size:11px;color:var(--muted);font-family:var(--fm)">${x.email} · ${x.on?'online agora':(x.last?'visto por último: '+fmtTs(x.last):'nunca entrou')}</div></div>
+          <span class="badge ${x.on?'bd':'bw'}">${x.on?'online':'offline'}</span></div>`).join('');
+    }catch(e){box.innerHTML='Erro: '+e.message;}
+  }
+
+  const orig=loadAdminView;
+  loadAdminView=async function(){ await orig(); showOnline(); };
+  setInterval(()=>{const v=document.getElementById('adminView'); if(v&&v.style.display==='block')showOnline();},30000);
+})();
 </script>
 </body>
 </html>
